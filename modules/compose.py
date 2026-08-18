@@ -22,6 +22,7 @@ from fontTools.pens.ttGlyphPen import TTGlyphPen
 from modules.glyph import image_to_contours, draw_contour
 from modules.hangul import (
     VOWEL_GROUP,
+    GROUP_MACRO,
     ZONE_LAYOUTS,
     KIND_SCALE,
     component_id,
@@ -133,11 +134,12 @@ def _fit_contours(entry, zone, kind, jamo):
 
 def compose_syllable_glyph(cache, cho, jung, jong=None):
     """초/중/종성 자모 하나로 완성형 음절 하나의 TTGlyph를 조합한다."""
-    group = VOWEL_GROUP[jung]
+    fine_group = VOWEL_GROUP[jung]        # 배치 좌표(zone)용 세부 그룹 (9종류)
+    macro_group = GROUP_MACRO[fine_group]  # 손글씨(컴포넌트)용 상위 그룹 (3종류)
     has_batchim = jong is not None
-    layout = ZONE_LAYOUTS[(has_batchim, group)]
+    layout = ZONE_LAYOUTS[(has_batchim, fine_group)]
 
-    cho_entry = cache.get(component_id("cho", cho, has_batchim, group))
+    cho_entry = cache.get(component_id("cho", cho, has_batchim, macro_group))
     jung_entry = cache.get(component_id("jung", jung, has_batchim))
 
     if cho_entry is None or jung_entry is None:

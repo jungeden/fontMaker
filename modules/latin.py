@@ -50,6 +50,16 @@ LATIN_CHARS = ASCII_CHARS + EXTRA_CHARS  # 총 94 + 33 = 127자
 #  전체 지표와 템플릿 안내선이 어긋나지 않게 한다)
 BASELINE_RATIO = ASCENDER / (ASCENDER - DESCENDER)  # 기본값: 0.8
 
+# 대문자 기준 목표 높이 (폰트 유닛, UPM=1000 기준). 한글 음절이 보통
+# 800~900 유닛 정도 높이로 그려지므로, 라틴 대문자도 비슷한 시각적
+# 무게감을 갖도록 이 값을 목표로 전체 배율을 자동으로 맞춘다.
+TARGET_CAP_HEIGHT = 720
+
+# 배율 보정이 너무 과하게 걸리지 않도록 하는 안전 범위.
+MIN_AUTO_SCALE = 0.5
+MAX_AUTO_SCALE = 2.5
+
+SIDE_BEARING = 60
 SPACE_ADVANCE = UNITS_PER_EM // 3
 
 
@@ -110,20 +120,41 @@ def image_to_contours_latin(path):
     return result
 
 
-def _advance_and_lsb(path, side_bearing=60, upm=UNITS_PER_EM, image_size=GLYPH_SIZE):
-    img = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
-    if img is None:
-        return upm // 2, side_bearing
+def _calc_global_scale(raw_glyphs):
+    """
+    대문자 A~Z의 실제 손글씨 높이(중앙값)를 측정해서, 그 높이가
+    TARGET_CAP_HEIGHT에 오도록 하는 전체 배율을 계산한다.
 
-    inv = 255 - img
-    pts = cv2.findNonZero(inv)
-    if pts is None:
-        return upm // 2, side_bearing
+    한글은 segment.py에서 자모마다 목표 높이로 강제 확대/축소하지만,
+    라틴 문자는 baseline 정보를 지키기 위해 그런 보정을 하지 않아서
+    사용자가 쓴 크기 그대로 들어간다. 그 결과 한글 옆에 놓았을 때
+    상대적으로 작아 보이는 문제가 있었는데, 여기서 대문자 높이를
+    기준으로 전체적으로 한 번에 배율을 맞춰서 해결한다. (개별 문자마다
+    다른 배율을 적용하면 문자 간 상대적 크기 비율이 깨지므로, 반드시
+    모든 라틴/기호 문자에 "같은" 배율 하나만 적용해야 한다)
+    """
+    cap_heights = []
+    for code in range(ord('A'), ord('Z') + 1):
+        gname = f"latin{code:04X}"
+        entry = raw_glyphs.get(gname)
+        if not entry:
+            continue
+        ys = [y for pts, _ in entry["contours"] for _, y in pts]
+        if ys:
+            cap_heights.append(max(ys))
 
-    _, _, w, _ = cv2.boundingRect(pts)
-    glyph_width = w * upm / image_size
-    advance = int(round(glyph_width + side_bearing * 2))
-    return advance, side_bearing
+    if not cap_heights:
+        return 1.0, 0
+
+    cap_heights.sort()
+    median_cap = cap_heights[len(cap_heights) // 2]
+
+    if median_cap <= 0:
+        return 1.0, len(cap_heights)
+
+    scale = TARGET_CAP_HEIGHT / median_cap
+    scale = max(MIN_AUTO_SCALE, min(MAX_AUTO_SCALE, scale))
+    return scale, len(cap_heights)
 
 
 def build_latin_glyphs(glyph_dir, manifest):
@@ -135,11 +166,8 @@ def build_latin_glyphs(glyph_dir, manifest):
     """
     glyph_dir = Path(glyph_dir)
 
-    glyphs = {"space": TTGlyphPen(None).glyph()}
-    metrics = {"space": (SPACE_ADVANCE, 0)}
-    cmap = {0x20: "space"}
-
-    built = 0
+    # 1차: 모든 라틴/기호 컴포넌트의 원본 윤곽선을 먼저 읽어온다.
+    raw = {}
     for i, comp in enumerate(manifest):
         if comp["kind"] != "latin":
             continue
@@ -149,20 +177,38 @@ def build_latin_glyphs(glyph_dir, manifest):
             continue
 
         contours = image_to_contours_latin(png)
-        if contours is None:
+        if not contours:
             continue
-
-        pen = TTGlyphPen(None)
-        for pts, _is_hole in contours:
-            draw_contour(pen, pts)
 
         ch = comp["jamo"]
         gname = f"latin{ord(ch):04X}"
+        raw[gname] = {"contours": contours, "char": ch}
+
+    # 2차: 대문자 높이를 기준으로 전체 배율을 한 번 계산해서 모두에게 적용.
+    global_scale, n_samples = _calc_global_scale(raw)
+    if n_samples:
+        print(f"라틴 문자 크기 보정: 대문자 {n_samples}개 기준 배율 {global_scale:.2f}배 적용")
+
+    glyphs = {"space": TTGlyphPen(None).glyph()}
+    metrics = {"space": (SPACE_ADVANCE, 0)}
+    cmap = {0x20: "space"}
+
+    built = 0
+    for gname, entry in raw.items():
+        pen = TTGlyphPen(None)
+        xs = []
+        for pts, _is_hole in entry["contours"]:
+            scaled = [(x * global_scale, y * global_scale) for x, y in pts]
+            xs.extend(x for x, _ in scaled)
+            draw_contour(pen, scaled)
+
         glyphs[gname] = pen.glyph()
 
-        advance, lsb = _advance_and_lsb(png)
-        metrics[gname] = (advance, lsb)
-        cmap[ord(ch)] = gname
+        glyph_w = (max(xs) - min(xs)) if xs else 0
+        advance = int(round(glyph_w + SIDE_BEARING * 2))
+        metrics[gname] = (advance, SIDE_BEARING)
+
+        cmap[ord(entry["char"])] = gname
         built += 1
 
     return glyphs, cmap, metrics, built

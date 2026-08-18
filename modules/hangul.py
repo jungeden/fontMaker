@@ -6,20 +6,33 @@
 11,172자를 전부 손글씨로 받는 대신, "모양이 실제로 달라지는" 최소 단위만
 손글씨로 받고 나머지는 좌표 기반으로 자동 조합한다.
 
-- 초성(19개): 받침 유무(2) x 뒤에 오는 모음의 세부 그룹(9) 에 따라 글자의
-  폭/위치가 달라지므로 18가지 형태를 모두 받는다.  19 x 18 = 342
+- 초성(19개): 받침 유무(2) x 뒤에 오는 모음의 방향(3: 세로/가로/복합) 에 따라
+  글자의 폭/위치가 크게 달라지므로 6가지 형태를 모두 받는다.  19 x 6 = 114
 - 중성(21개): 받침 유무(2)에 따라 세로 길이가 달라지므로 2가지 형태를 받는다.
   21 x 2 = 42
 - 종성/받침(27개): 항상 글자 하단의 같은 자리에만 오므로 형태 변화가 없다.
   1가지만 받는다.  27 x 1 = 27
 
-합계 342 + 42 + 27 = 411칸만 손글씨로 받으면, 11,172자 전체를 조합할 수 있다.
+합계 114 + 42 + 27 = 183개만 손글씨로 받으면, 11,172자 전체를 조합할 수 있다.
 
-모음 세부 그룹 (9개)
---------------------
-큰 방향(세로형 V / 가로형 H / 복합형 C) 안에서도 초성이 붙는 모양이 살짝
-달라지는 경우가 있어서, 아래처럼 3단계로 더 세분화한다.
+손글씨(컴포넌트)와 배치 좌표(zone)는 분리되어 있다
+----------------------------------------------------
+"어떤 손글씨를 쓸지"는 위처럼 큰 방향(V/H/C) 3종류만 받지만, "그걸 어디에
+배치할지"는 그보다 더 세밀하게 조정할 수 있다. 같은 세로모음(V)이라도
+ㅏ 뒤에 오는 초성과 ㅓ 뒤에 오는 초성은 위치가 아주 살짝 다를 수 있기
+때문에, 배치 좌표만 9개 세부 그룹(V1/V2/V3, H1/H2/H3, C1/C2/C3)으로
+나눠서 독립적으로 조정할 수 있게 했다. 즉:
 
+- 손글씨(컴포넌트) 종류: V, H, C (3종류만 손으로 씀)
+- 배치 좌표(zone) 종류: V1, V2, V3, H1, H2, H3, C1, C2, C3 (9종류, 좌표만 세밀 조정)
+
+예를 들어 초성 ㄱ을 "세로모음(V)" 한 번만 쓰면, "가"(V1)와 "거"(V2)를 조합할
+때 같은 ㄱ 손글씨를 재사용하되, 정확히 어느 위치/크기로 놓을지는
+ZONE_LAYOUTS[(False,"V1")]와 ZONE_LAYOUTS[(False,"V2")]를 따로 조정해서
+미세하게 다르게 만들 수 있다.
+
+모음 세부 그룹 (9개, 배치 좌표 전용)
+------------------------------------
 - V1 (ㅏ계열): ㅏ ㅑ ㅐ ㅒ
 - V2 (ㅓ계열): ㅓ ㅕ ㅔ ㅖ
 - V3 (ㅣ계열): ㅣ
@@ -40,7 +53,7 @@ assert len(CHO_LIST) == 19
 assert len(JUNG_LIST) == 21
 assert len(JONG_LIST) == 27
 
-# 중성을 9개 세부 그룹으로 분류 (모듈 docstring 참고)
+# 중성을 9개 "세부" 그룹으로 분류 (배치 좌표 전용, 손글씨 종류와는 무관)
 VOWEL_GROUP = {
     "ㅏ": "V1", "ㅑ": "V1", "ㅐ": "V1", "ㅒ": "V1",
     "ㅓ": "V2", "ㅕ": "V2", "ㅔ": "V2", "ㅖ": "V2",
@@ -54,14 +67,17 @@ VOWEL_GROUP = {
 }
 assert set(VOWEL_GROUP) == set(JUNG_LIST)
 
-# 세부 그룹 -> 상위 그룹(V/H/C) 매핑, 세부 그룹 목록
+# 세부 그룹 -> 상위(손글씨) 그룹 매핑 및 상위 그룹 -> 세부 그룹 목록
 SUBGROUPS = {
     "V": ["V1", "V2", "V3"],
     "H": ["H1", "H2", "H3"],
     "C": ["C1", "C2", "C3"],
 }
-ALL_GROUPS = [g for subs in SUBGROUPS.values() for g in subs]  # 9개
+ALL_SUBGROUPS = [g for subs in SUBGROUPS.values() for g in subs]  # 9개
 
+GROUP_MACRO = {sub: macro for macro, subs in SUBGROUPS.items() for sub in subs}
+
+MACRO_LABEL = {"V": "세로모음", "H": "가로모음", "C": "복합모음"}
 GROUP_LABEL = {
     "V1": "세로모음(ㅏ계열)", "V2": "세로모음(ㅓ계열)", "V3": "세로모음(ㅣ계열)",
     "H1": "가로모음(ㅗ계열)", "H2": "가로모음(ㅜ계열)", "H3": "가로모음(ㅡ계열)",
@@ -70,7 +86,7 @@ GROUP_LABEL = {
 
 # ────────────────────────────────────────────────────────────
 # 조합 좌표(zone) 테이블
-# UPM 1000x1000 정사각형 안에서, (받침유무, 모음그룹) 조합마다
+# UPM 1000x1000 정사각형 안에서, (받침유무, 모음 세부그룹) 조합마다
 # 초성/중성/종성이 차지할 사각형 영역(x0,y0,x1,y1)을 정의한다.
 # y=0이 베이스라인, y=1000이 글자 상단이다.
 #
@@ -118,6 +134,8 @@ _BASE_ZONE_LAYOUTS = {
     },
 }
 
+# 위 3그룹(V/H/C) 좌표를 9개 세부 그룹으로 그대로 복제해서 시작한다.
+# (나중에 ZONE_LAYOUTS[(batchim, "V1")] 처럼 개별적으로 덮어써서 세밀 조정 가능)
 ZONE_LAYOUTS = {}
 for (_batchim, _macro), _layout in _BASE_ZONE_LAYOUTS.items():
     for _sub in SUBGROUPS[_macro]:
@@ -165,7 +183,11 @@ def get_component_offset(kind, jamo):
 
 
 def component_id(kind, jamo, batchim=None, group=None):
-    """컴포넌트를 유일하게 식별하는 문자열 id를 만든다."""
+    """
+    컴포넌트(손글씨 조각)를 유일하게 식별하는 문자열 id를 만든다.
+    cho의 group은 항상 상위 그룹(V/H/C)이어야 한다 - 손글씨는 3종류만
+    받기 때문. 세부 그룹(V1 등)은 zone 좌표를 찾을 때만 쓴다.
+    """
     if kind == "cho":
         b = "B" if batchim else "N"
         return f"cho_{jamo}_{b}_{group}"
@@ -199,9 +221,9 @@ def decompose_code(code):
     return cho, jung, jong
 
 
-def _example_for_cho(cho, batchim, group):
-    # 해당 세부 그룹에 속한 모음 중 아무거나 하나로 예시를 만든다.
-    jung = next(v for v, g in VOWEL_GROUP.items() if g == group)
+def _example_for_cho(cho, batchim, macro):
+    # 이 상위 그룹(macro)에 속하는 세부 그룹 중 아무 모음이나 하나로 예시를 만든다.
+    jung = next(v for v, g in VOWEL_GROUP.items() if GROUP_MACRO[g] == macro)
     jong = JONG_LIST[0] if batchim else None
     return compose_char(cho, jung, jong)
 
@@ -217,28 +239,36 @@ def _example_for_jong(jong):
 
 def build_component_list():
     """
-    손글씨로 받아야 할 411개 컴포넌트 목록을 순서대로 만든다.
+    손글씨로 받아야 할 183개 컴포넌트 목록을 순서대로 만든다.
     이 순서가 곧 템플릿 칸 순서 = data/glyphs 안 PNG 인덱스 순서가 된다.
     """
     components = []
 
     for cho in CHO_LIST:
         for batchim in (False, True):
-            for group in ALL_GROUPS:
+            for macro in ("V", "H", "C"):
+                # 이 컴포넌트가 실제로 쓰일 대표 예시(및 zone) 선택: 해당
+                # 상위 그룹의 첫 번째 세부 그룹을 기준으로 안내 상자를 그린다.
+                # (watermark/guide box는 이 예시 하나로 표시되지만, 실제
+                # 조합 시에는 각 세부 그룹의 정확한 zone이 개별 적용된다)
+                example = _example_for_cho(cho, batchim, macro)
+                example_cho, example_jung, example_jong = decompose_code(ord(example))
+                fine_group = VOWEL_GROUP[example_jung]
+
                 components.append({
-                    "id": component_id("cho", cho, batchim, group),
+                    "id": component_id("cho", cho, batchim, macro),
                     "kind": "cho",
                     "jamo": cho,
                     "batchim": batchim,
-                    "group": group,
-                    "label": f"초성 {cho} · {'받침있음' if batchim else '받침없음'} · {GROUP_LABEL[group]}",
-                    "example": _example_for_cho(cho, batchim, group),
-                    "zone_shape": ZONE_LAYOUTS[(batchim, group)]["cho"],
+                    "group": macro,
+                    "label": f"초성 {cho} · {'받침있음' if batchim else '받침없음'} · {MACRO_LABEL[macro]}",
+                    "example": example,
+                    "zone_shape": ZONE_LAYOUTS[(batchim, fine_group)]["cho"],
                 })
 
     for jung in JUNG_LIST:
         for batchim in (False, True):
-            group = VOWEL_GROUP[jung]
+            fine_group = VOWEL_GROUP[jung]
             components.append({
                 "id": component_id("jung", jung, batchim),
                 "kind": "jung",
@@ -247,7 +277,7 @@ def build_component_list():
                 "group": None,
                 "label": f"중성 {jung} · {'받침있음' if batchim else '받침없음'}",
                 "example": _example_for_jung(jung, batchim),
-                "zone_shape": ZONE_LAYOUTS[(batchim, group)]["jung"],
+                "zone_shape": ZONE_LAYOUTS[(batchim, fine_group)]["jung"],
             })
 
     for jong in JONG_LIST:
@@ -270,13 +300,13 @@ def build_component_list():
 #
 # "ㄱ", "ㅏ" 처럼 완성형 음절이 아니라 낱자 하나만 입력해도 폰트가
 # 적용되도록, 각 자모마다 대표로 쓸 컴포넌트를 하나씩 지정한다.
-# - 초성 목록에 있는 자모(ㄱ,ㄴ,ㄷ... 19개)는 "받침없음 + ㅏ계열(V1)"
+# - 초성 목록에 있는 자모(ㄱ,ㄴ,ㄷ... 19개)는 "받침없음 + 세로모음(V)"
 #   초성 컴포넌트를 대표로 쓴다 (가장 기본적인/친숙한 형태).
 # - 중성(모음, 21개)은 "받침없음" 중성 컴포넌트를 대표로 쓴다.
 # - 종성에만 있는 겹받침(ㄳ,ㄵ,ㄶ,ㄺ,ㄻ,ㄼ,ㄽ,ㄾ,ㄿ,ㅀ,ㅄ)은 종성
 #   컴포넌트를 그대로 쓴다 (이 자모들은 초성으로 쓰이지 않기 때문).
 # ────────────────────────────────────────────────────────────
-STANDALONE_REPRESENTATIVE_GROUP = "V1"
+STANDALONE_REPRESENTATIVE_GROUP = "V"
 
 
 def build_standalone_jamo_list():

@@ -5,7 +5,10 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from config import ROWS, COLS, GLYPH_SIZE, TARGET_HEIGHT, BASELINE_MARGIN
+from config import (
+    ROWS, COLS, GLYPH_SIZE, TARGET_HEIGHT, BASELINE_MARGIN,
+    STROKE_NORMALIZE, TARGET_STROKE_PX,
+)
 
 CELLS_PER_PAGE = ROWS * COLS
 
@@ -41,6 +44,55 @@ def crop_content(cell):
 
     x, y, w, h = cv2.boundingRect(pts)
     return inner[y:y + h, x:x + w]
+
+
+def _estimate_stroke_width(ink_mask):
+    """
+    전체 잉크 영역과 둘레 길이로 평균 획 굵기를 추정한다.
+
+    가늘고 긴 직사각형이라고 가정하면 area ≈ width * length,
+    perimeter ≈ 2 * length 이므로 width ≈ 2 * area / perimeter 로 근사할
+    수 있다 (스켈레톤 추출 없이 빠르게 계산 가능한 표준적인 근사법).
+    """
+    contours, _ = cv2.findContours(ink_mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+    area = cv2.countNonZero(ink_mask)
+    perimeter = sum(cv2.arcLength(c, True) for c in contours)
+    if perimeter <= 0:
+        return 0
+    return 2 * area / perimeter
+
+
+def normalize_stroke_width(img, target_width=TARGET_STROKE_PX):
+    """
+    모든 글자의 획 굵기가 서로 비슷해지도록 팽창(dilate)/침식(erode)으로
+    보정한다.
+
+    왜 필요한가: 벡터 도형을 확대/축소하면 획 굵기도 같이 확대/축소된다.
+    한글은 자모마다 목표 높이(TARGET_HEIGHT)에 맞춰 강제로 확대/축소되고,
+    라틴 문자는 사용자가 쓴 크기 그대로 들어가기 때문에, 아무 보정 없이는
+    자모/문자마다 최종 획 굵기가 들쭉날쭉해진다. 이 함수가 그 차이를
+    최종 굵기 기준으로 다시 맞춰준다.
+    """
+    if not STROKE_NORMALIZE:
+        return img
+
+    inv = 255 - img
+    current = _estimate_stroke_width(inv)
+    if current <= 1:
+        return img
+
+    delta = (target_width - current) / 2  # 반지름 기준 보정량
+    k = int(round(abs(delta)))
+    if k < 1:
+        return img
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k * 2 + 1, k * 2 + 1))
+    if delta > 0:
+        inv = cv2.dilate(inv, kernel)
+    else:
+        inv = cv2.erode(inv, kernel)
+
+    return 255 - inv
 
 
 def normalize_glyph(
@@ -79,7 +131,7 @@ def normalize_glyph(
 
     canvas[y_offset:y_offset + new_h, x_offset:x_offset + new_w] = resized
 
-    return canvas
+    return normalize_stroke_width(canvas)
 
 
 def _extract_cell(image, r, col):
@@ -100,11 +152,17 @@ def normalize_latin_cell(cell, canvas_size=GLYPH_SIZE, margin_ratio=0.12):
     하기 때문에, 칸에서 테두리만 제거(inset)한 뒤 있는 그대로 정사각형
     캔버스로 리사이즈한다. (baseline의 실제 위치는 modules/latin.py의
     BASELINE_RATIO 와, 이 칸에 인쇄된 안내선이 서로 맞아떨어진다고 가정한다)
+
+    전체적인 크기(대문자 기준 높이) 보정은 여기서 하지 않고
+    modules/latin.py의 build_latin_glyphs()에서 폰트 좌표계로 변환한 뒤
+    한 번에 처리한다 (모든 라틴 글자에 같은 배율을 적용해야 서로 비율이
+    안 흐트러지기 때문).
     """
     inner = _inset(cell, margin_ratio=margin_ratio)
     if inner.shape[0] == 0 or inner.shape[1] == 0:
         return None
-    return cv2.resize(inner, (canvas_size, canvas_size), interpolation=cv2.INTER_AREA)
+    resized = cv2.resize(inner, (canvas_size, canvas_size), interpolation=cv2.INTER_AREA)
+    return normalize_stroke_width(resized)
 
 
 def segment(images, output_dir="data/glyphs", manifest_path="data/manifest.json"):
