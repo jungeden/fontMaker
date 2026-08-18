@@ -1,54 +1,54 @@
+import json
 from pathlib import Path
 
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-from config import CHARS, UNITS_PER_EM, ASCENDER, DESCENDER
-from modules.glyph import image_to_glyph, glyph_advance_width
+from config import UNITS_PER_EM, ASCENDER, DESCENDER, ADVANCE_WIDTH
+from modules.compose import compose_all
+from modules.latin import build_latin_glyphs
 
 
 def build_font(
     glyph_dir="data/glyphs",
+    manifest_path="data/manifest.json",
     output_path="output/MyHandwriting.ttf",
     family_name="MyHandwriting",
     style_name="Regular",
 ):
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+
+    hangul_glyphs, hangul_cmap, hangul_built, hangul_skipped = compose_all(
+        glyph_dir, manifest_path
+    )
+    latin_glyphs, latin_cmap, latin_metrics, latin_built = build_latin_glyphs(
+        glyph_dir, manifest
+    )
+
+    if hangul_built == 0 and latin_built == 0:
+        raise RuntimeError(
+            "조합/생성된 글자가 하나도 없습니다. data/glyphs 에 컴포넌트 PNG가 "
+            "있는지, data/manifest.json이 있는지 확인하세요."
+        )
+
     glyph_order = [".notdef"]
     glyphs = {".notdef": TTGlyphPen(None).glyph()}
     metrics = {".notdef": (UNITS_PER_EM, 0)}
     cmap = {}
 
-    files = sorted(Path(glyph_dir).glob("*.png"))
+    # 한글 음절은 전부 정사각형(전각) 글자이므로 advance width를 고정값으로 준다.
+    for gname, glyph in hangul_glyphs.items():
+        glyph_order.append(gname)
+        glyphs[gname] = glyph
+        metrics[gname] = (ADVANCE_WIDTH, 0)
+    cmap.update(hangul_cmap)
 
-    used = 0
-    for file in files:
-        idx = int(file.stem)  # segment.py가 "000.png", "001.png" ... 형식으로 저장
-
-        if idx >= len(CHARS):
-            # 문자셋(CHARS)에 정의되지 않은 칸은 건너뛴다.
-            continue
-
-        char = CHARS[idx]
-        glyph_name = f"glyph{idx:03}"
-
-        glyph = image_to_glyph(file)
-        if glyph is None:
-            continue
-
-        glyph_order.append(glyph_name)
-        glyphs[glyph_name] = glyph
-
-        advance, lsb = glyph_advance_width(file)
-        metrics[glyph_name] = (advance, lsb)
-
-        cmap[ord(char)] = glyph_name
-        used += 1
-
-    if used == 0:
-        raise RuntimeError(
-            "생성된 글리프가 없습니다. data/glyphs 폴더에 분리된 글자 PNG가 "
-            "있는지, config.py의 CHARS 설정이 맞는지 확인하세요."
-        )
+    # 라틴/숫자/특수문자는 글자마다 실제 폭에 맞는 advance width를 쓴다.
+    for gname, glyph in latin_glyphs.items():
+        glyph_order.append(gname)
+        glyphs[gname] = glyph
+        metrics[gname] = latin_metrics[gname]
+    cmap.update(latin_cmap)
 
     fb = FontBuilder(UNITS_PER_EM, isTTF=True)
 
@@ -78,5 +78,7 @@ def build_font(
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     fb.save(output_path)
 
-    print(f"{used}개 글자로 '{output_path}' 생성 완료")
+    print(f"한글 {hangul_built}자 (미완성 컴포넌트로 {hangul_skipped}자 제외) + "
+          f"영문/숫자/특수문자 {latin_built}자, 총 {hangul_built + latin_built}자 "
+          f"'{output_path}' 생성 완료")
     return output_path
