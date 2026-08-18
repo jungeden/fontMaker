@@ -180,6 +180,20 @@ def normalize_glyph(
     return normalize_stroke_width(canvas)
 
 
+def normalize_hangul_cell(cell, canvas_size=GLYPH_SIZE, margin_ratio=CELL_INSET_RATIO):
+    """한글 자모를 잉크 기준으로 자르지 않고, 동일한 칸 캔버스로 보존한다.
+
+    모든 컴포넌트는 같은 원고지 칸(테두리만 제외)을 같은 정사각형으로 옮긴다.
+    따라서 손으로 쓴 크기와 칸 안 위치, 의도적으로 남긴 여백이 그대로 남는다.
+    조합 단계에서 이 공통 캔버스를 기준으로 크기와 위치를 각각 조절한다.
+    """
+    inner = _inset(cell, margin_ratio=margin_ratio)
+    if inner.shape[0] == 0 or inner.shape[1] == 0:
+        return None
+    resized = cv2.resize(inner, (canvas_size, canvas_size), interpolation=cv2.INTER_AREA)
+    return normalize_stroke_width(resized)
+
+
 def _extract_cell(image, r, col):
     h, w = image.shape
     cell_w = w // COLS
@@ -249,9 +263,7 @@ def segment(images, output_dir="data/glyphs", manifest_path="data/manifest.json"
                 if kind == "latin":
                     glyph = normalize_latin_cell(cell)
                 else:
-                    glyph = crop_content(cell)
-                    if glyph is not None:
-                        glyph = normalize_glyph(glyph)
+                    glyph = normalize_hangul_cell(cell)
 
                 if glyph is None:
                     idx += 1

@@ -1,26 +1,12 @@
 """
 183개 컴포넌트를 로드해서 11,172자 전체 완성형 한글을 좌표 기반으로 자동 조합.
 
-핵심 설계: "위치(zone)"와 "크기(scale)"를 분리한다
----------------------------------------------------
-이전 버전은 각 컴포넌트를 "자기 zone에 맞춰 최대한 크게(letterbox)" 개별적으로
-맞췄다. 문제는 손글씨가 자모마다 미세하게 비율이 다르기 때문에, "가로/세로 중
-어느 쪽이 꽉 차는지"가 자모마다 문맥마다 흔들려서 최종 크기가 들쭉날쭉해지는
-것이었다 (크기가 흔들리면, 벡터를 확대/축소할 때 획 굵기도 같이 흔들리므로
-굵기도 같이 들쭉날쭉해진다). 예를 들어 "차"의 ㅊ과 "초"의 ㅊ처럼, 같은 자모라도
-문맥(zone)이 다르면 크기가 안정적이지 않았다.
-
-지금은 같은 문맥(예: "받침없음 + 세로모음" 초성 19개)에 속한 컴포넌트들이 실제
-손글씨로 그려진 높이의 "중앙값"을 계산해서, 그 문맥에 속한 모든 컴포넌트가
-"공통 배율 하나"를 공유하도록 바꿨다. zone의 크기는 "이 문맥은 대략 이 정도
-크기여야 한다"는 목표치를 정할 뿐, 개별 컴포넌트의 배율을 direct로 흔들지
-않는다. 그 결과:
-
-- 같은 문맥 안에서는 항상 같은 배율을 쓰므로 (예: "가"의 ㄱ과 "차"의 ㅊ) 크기가
-  안정적이다.
-- 다른 문맥(V/H/C, 받침 유무)끼리는 의도한 대로 다른 크기를 가질 수 있다
-  (zone 크기가 다르므로 - 이건 버그가 아니라 의도된 디자인이다).
-- 손글�씨 굵기도 크기가 안정되면서 자연히 더 일관되게 나온다.
+핵심 설계: 공통 원고지 칸(frame)과 조합 zone을 분리한다
+--------------------------------------------------------
+분할 단계는 잉크만 잘라내지 않고 모든 컴포넌트를 같은 칸 캔버스로 보존한다.
+조합은 이 공통 frame을 zone에 한 번 배치하므로, 손글씨의 실제 크기·여백·칸 안
+위치가 유지된다. 문맥별 중앙값 보정과 넘침 뒤 재축소는 쓰지 않는다. 필요한
+수동 조정은 component id별 크기와 위치가 독립된 값으로 적용된다.
 """
 
 import json
@@ -28,7 +14,7 @@ from pathlib import Path
 
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-from config import HANGUL_FILL_RATIO, HANGUL_MAX_OVERFLOW_RATIO
+from config import HANGUL_FILL_RATIO, UNITS_PER_EM
 from modules.glyph import image_to_contours, draw_contour
 from modules.hangul import (
     CHO_LIST,
@@ -37,42 +23,23 @@ from modules.hangul import (
     VOWEL_GROUP,
     GROUP_MACRO,
     ZONE_LAYOUTS,
-    KIND_SCALE,
     STANDALONE_HEIGHT_OVERRIDE,
     component_id,
     decompose_code,
     get_component_scale,
     get_component_offset,
+    get_layout_component_scale,
+    get_layout_component_offset,
+    STANDALONE_JAMO_SCALE,
+    STANDALONE_JAMO_OFFSET,
     build_standalone_jamo_list,
 )
 
 HANGUL_START = 0xAC00
 HANGUL_END = 0xD7A3  # inclusive
 
-# 목표 높이 = zone 높이의 이 비율, 자모 하나가 zone 폭/높이를 얼마나 넘어갈
-# 때까지 허용할지 - 둘 다 config.py에서 관리한다 (크기/자간 관련 설정을
-# 한 곳에 모아두기 위함). "한글 글자가 작다"/"COMPONENT_SCALE을 올렸는데
-# 반영이 안 된다" 싶으면 config.py의 HANGUL_FILL_RATIO / HANGUL_MAX_OVERFLOW_RATIO
-# 를 조정하면 된다.
+# 모든 컴포넌트의 공통 frame은 zone 내부에서 이 비율만큼 채워진다.
 FILL_RATIO = HANGUL_FILL_RATIO
-MAX_OVERFLOW_RATIO = HANGUL_MAX_OVERFLOW_RATIO
-
-# COMPONENT_SCALE로 키운(1.0이 아닌) 자모인데 안전장치(MAX_OVERFLOW_RATIO)에
-# 걸려서 실제로는 원하는 만큼 커지지 못한 (kind, jamo) -> 초과 비율 기록.
-# get_overflow_clamp_warnings()로 조회해서 사용자에게 알려준다.
-_OVERFLOW_CLAMP_LOG = {}
-
-
-def get_overflow_clamp_warnings():
-    """
-    COMPONENT_SCALE 설정이 안전장치에 의해 무력화된 (kind, jamo, 초과배율)
-    목록. 초과배율이 1.5보다 훨씬 크다면(예: 2~3배), 이건 COMPONENT_SCALE
-    문제가 아니라 그 자모가 원래도 zone 폭에 비해 훨씬 넓게 쓰여진 것이다
-    (쌍자음 ㄲ,ㄸ,ㅃ,ㅆ,ㅉ처럼 옆으로 넓은 모양에서 흔하다). 이런 경우
-    HANGUL_MAX_OVERFLOW_RATIO를 크게 올려도 되지만, 너무 올리면 옆 자모
-    (중성)와 겹칠 수 있으니 조금씩 올려가며 확인하는 것을 권장한다.
-    """
-    return sorted(_OVERFLOW_CLAMP_LOG.items())
 
 
 def _contours_bbox(contours):
@@ -109,127 +76,69 @@ def load_component_contours(glyph_dir="data/glyphs", manifest_path="data/manifes
         bbox = _contours_bbox(contours) if contours else None
 
         if contours and bbox:
-            cache[comp["id"]] = {"contours": contours, "bbox": bbox}
+            cache[comp["id"]] = {
+                "contours": contours,
+                "bbox": bbox,
+                # PNG 전체가 같은 원고지 칸이다. bbox는 빈 칸 검증용일 뿐,
+                # 조합 배율이나 기준점 계산에는 쓰지 않는다.
+                "frame": (0, 0, UNITS_PER_EM, UNITS_PER_EM),
+            }
         else:
             missing.append(comp["id"])
 
     return cache, missing
 
 
-def _median_height(cache, comp_ids):
-    """주어진 컴포넌트 id 목록 중 실제로 존재하는 것들의 잉크 높이 중앙값."""
-    heights = []
-    for cid in comp_ids:
-        entry = cache.get(cid)
-        if entry is None:
-            continue
-        gx0, gy0, gx1, gy1 = entry["bbox"]
-        h = gy1 - gy0
-        if h > 0:
-            heights.append(h)
-
-    if not heights:
-        return None
-
-    heights.sort()
-    return heights[len(heights) // 2]
-
-
 def build_calibration(cache):
     """
-    각 문맥(초성: 받침유무x상위그룹 6가지 / 중성: 받침유무 2가지 / 종성: 1가지)
-    별로, 그 문맥에 속한 컴포넌트들의 실제 손글씨 높이 중앙값을 계산한다.
+    이전 API 호환용 빈 설정값.
 
-    반환값은 {(kind, batchim, macro_or_None): median_height} 형태의 딕셔너리.
-    이 값이 나중에 _fit_contours()에서 "이 문맥은 대략 이만큼 크다"는 공통
-    기준으로 쓰인다.
+    문맥별 중앙값 크기 보정은 제거됐다. 조합 크기는 공통 frame과
+    ZONE_LAYOUTS로 계산한다.
     """
-    calibration = {}
-
-    for batchim in (False, True):
-        for macro in ("V", "H", "C"):
-            ids = [component_id("cho", cho, batchim, macro) for cho in CHO_LIST]
-            calibration[("cho", batchim, macro)] = _median_height(cache, ids)
-
-    for batchim in (False, True):
-        ids = [component_id("jung", jung, batchim) for jung in JUNG_LIST]
-        calibration[("jung", batchim, None)] = _median_height(cache, ids)
-
-    ids = [component_id("jong", jong) for jong in JONG_LIST]
-    calibration[("jong", True, None)] = _median_height(cache, ids)
-
-    return calibration
+    return {}
 
 
-def _fit_contours(entry, zone, kind, jamo, calibration_height):
+def _fit_contours(entry, zone, component, calibration_height=None,
+                  scale_adjust=1.0, offset_adjust=(0, 0),
+                  layout_scale=1.0, layout_offset=(0, 0)):
     """
-    entry: {"contours": [...], "bbox": (gx0,gy0,gx1,gy1)} - 컴포넌트 원본 윤곽선.
+    entry: {"contours": [...], "frame": (x0,y0,x1,y1)} - 컴포넌트 원본 윤곽선.
     zone: 이 컴포넌트가 들어갈 사각형 (x0,y0,x1,y1).
-    calibration_height: 같은 문맥에 속한 컴포넌트들이 공유하는 기준 높이
-        (build_calibration()의 결과). 이 값이 있으면 모든 컴포넌트가 같은
-        배율을 쓰게 되어 크기가 안정적이다. 없으면(예외 상황) 이 컴포넌트
-        자신의 높이로 대체한다.
+    calibration_height: 이전 API 호환용 인자. 사용하지 않는다.
 
     비율을 유지한 채(찌그러지지 않게) zone 안에 중앙 정렬로 배치한다.
-    KIND_SCALE / 자모별 보정값(COMPONENT_SCALE, COMPONENT_OFFSET)을 곱/더한다.
+    모든 컴포넌트가 공유하는 원고지 칸(frame)을 기준으로 한 번만 스케일한다.
+    배치 그룹 조정과 개별 수동 조정은 서로 독립적으로 적용된다.
     """
     contours = entry["contours"]
-    gx0, gy0, gx1, gy1 = entry["bbox"]
-    glyph_w = gx1 - gx0
-    glyph_h = gy1 - gy0
+    fx0, fy0, fx1, fy1 = entry["frame"]
+    frame_w = fx1 - fx0
+    frame_h = fy1 - fy0
 
-    if glyph_w <= 0 or glyph_h <= 0:
+    if frame_w <= 0 or frame_h <= 0:
         return []
 
     zx0, zy0, zx1, zy1 = zone
     zone_w = zx1 - zx0
     zone_h = zy1 - zy0
 
-    ref_height = calibration_height if calibration_height else glyph_h
-    target_height = zone_h * FILL_RATIO
+    base_scale = min(zone_w / frame_w, zone_h / frame_h) * FILL_RATIO
+    scale = (base_scale * layout_scale * get_component_scale(component)
+             * scale_adjust)
 
-    # 문맥 공통 배율: 이 컴포넌트만의 bbox가 아니라, 같은 문맥의 대표 높이를
-    # 기준으로 계산하므로 같은 문맥 안에서는 항상 같은 배율이 나온다.
-    base_scale = target_height / ref_height
-    scale = base_scale * KIND_SCALE.get(kind, 1.0) * get_component_scale(kind, jamo)
+    # 원고지 칸 전체가 zone 중앙에 오도록 배치한다. 잉크만 중앙에 맞추지
+    # 않으므로, 사용자가 쓴 실제 크기와 칸 안 여백/위치가 유지된다.
+    frame_center_x = (fx0 + fx1) / 2
+    frame_center_y = (fy0 + fy1) / 2
+    zone_center_x = (zx0 + zx1) / 2
+    zone_center_y = (zy0 + zy1) / 2
+    dx, dy = get_component_offset(component)
+    layout_dx, layout_dy = layout_offset
+    extra_dx, extra_dy = offset_adjust
 
-    draw_w = glyph_w * scale
-    draw_h = glyph_h * scale
-
-    # 안전장치: 이 특정 컴포넌트가 유독 커서 zone을 심하게 벗어나면 그
-    # 컴포넌트에 한해서만 최소한으로 더 줄인다 (공통 배율 자체는 안 건드림).
-    # COMPONENT_SCALE로 일부러 키운 자모가 이 안전장치에 걸리면 사용자
-    # 설정이 무력화된 것처럼 보일 수 있으므로, 그런 경우를 기록해뒀다가
-    # 나중에 경고로 알려준다 (get_overflow_clamp_warnings 참고).
-    clamped = False
-    overflow_ratio = 1.0
-    if draw_w > zone_w * MAX_OVERFLOW_RATIO:
-        overflow_ratio = max(overflow_ratio, draw_w / zone_w)
-        shrink = (zone_w * MAX_OVERFLOW_RATIO) / draw_w
-        scale *= shrink
-        draw_w *= shrink
-        draw_h *= shrink
-        clamped = True
-    if draw_h > zone_h * MAX_OVERFLOW_RATIO:
-        overflow_ratio = max(overflow_ratio, draw_h / zone_h)
-        shrink = (zone_h * MAX_OVERFLOW_RATIO) / draw_h
-        scale *= shrink
-        draw_w *= shrink
-        draw_h *= shrink
-        clamped = True
-
-    if clamped and get_component_scale(kind, jamo) != 1.0:
-        prev = _OVERFLOW_CLAMP_LOG.get((kind, jamo), 0)
-        _OVERFLOW_CLAMP_LOG[(kind, jamo)] = max(prev, overflow_ratio)
-
-    # zone 중앙 정렬
-    center_x = zx0 + (zone_w - draw_w) / 2
-    center_y = zy0 + (zone_h - draw_h) / 2
-
-    dx, dy = get_component_offset(kind, jamo)
-
-    final_x = center_x - gx0 * scale + dx
-    final_y = center_y - gy0 * scale + dy
+    final_x = zone_center_x - frame_center_x * scale + layout_dx + dx + extra_dx
+    final_y = zone_center_y - frame_center_y * scale + layout_dy + dy + extra_dy
 
     out = []
     for pts, is_hole in contours:
@@ -251,19 +160,31 @@ def compose_syllable_glyph(cache, calibration, cho, jung, jong=None):
     if cho_entry is None or jung_entry is None:
         return None  # 아직 손글씨로 채워지지 않은 컴포넌트
 
-    cho_cal = calibration.get(("cho", has_batchim, macro_group))
-    jung_cal = calibration.get(("jung", has_batchim, None))
+    cho_id = component_id("cho", cho, has_batchim, macro_group)
+    jung_id = component_id("jung", jung, has_batchim)
 
     all_contours = []
-    all_contours += _fit_contours(cho_entry, layout["cho"], "cho", cho, cho_cal)
-    all_contours += _fit_contours(jung_entry, layout["jung"], "jung", jung, jung_cal)
+    all_contours += _fit_contours(
+        cho_entry, layout["cho"], cho_id,
+        layout_scale=get_layout_component_scale("cho", has_batchim, fine_group),
+        layout_offset=get_layout_component_offset("cho", has_batchim, fine_group),
+    )
+    all_contours += _fit_contours(
+        jung_entry, layout["jung"], jung_id,
+        layout_scale=get_layout_component_scale("jung", has_batchim, fine_group),
+        layout_offset=get_layout_component_offset("jung", has_batchim, fine_group),
+    )
 
     if has_batchim:
         jong_entry = cache.get(component_id("jong", jong))
         if jong_entry is None:
             return None
-        jong_cal = calibration.get(("jong", True, None))
-        all_contours += _fit_contours(jong_entry, layout["jong"], "jong", jong, jong_cal)
+        jong_id = component_id("jong", jong)
+        all_contours += _fit_contours(
+            jong_entry, layout["jong"], jong_id,
+            layout_scale=get_layout_component_scale("jong", True, None),
+            layout_offset=get_layout_component_offset("jong", True, None),
+        )
 
     pen = TTGlyphPen(None)
     for pts, _is_hole in all_contours:
@@ -285,8 +206,6 @@ def compose_from_cache(cache, calibration=None):
     if calibration is None:
         calibration = build_calibration(cache)
 
-    _OVERFLOW_CLAMP_LOG.clear()
-
     glyphs = {}
     cmap = {}
     built = 0
@@ -304,21 +223,6 @@ def compose_from_cache(cache, calibration=None):
         glyphs[gname] = glyph
         cmap[code] = gname
         built += 1
-
-    if _OVERFLOW_CLAMP_LOG:
-        warn_list = ", ".join(
-            f"({k},{j}: 필요폭의 {ratio*100:.0f}%)"
-            for (k, j), ratio in get_overflow_clamp_warnings()
-        )
-        print(f"참고: COMPONENT_SCALE을 지정한 자모 중 일부가 안전장치"
-              f"(config.py의 HANGUL_MAX_OVERFLOW_RATIO)에 걸려 원하는 만큼 "
-              f"커지지 못했습니다: {warn_list}")
-        print("  -> 이 자모들을 더 키우고 싶다면 config.py의 "
-              "HANGUL_MAX_OVERFLOW_RATIO 값을 올려보세요 (예: 1.35 -> 1.6).")
-        print("  -> 위 비율이 150%를 크게 넘는다면(예: 250%), COMPONENT_SCALE "
-              "때문이 아니라 그 자모가 원래도 zone 폭에 비해 훨씬 넓게 쓰여진 "
-              "것입니다 (쌍자음 ㄲ,ㄸ,ㅃ,ㅆ,ㅉ에서 흔함). 비율을 크게 올리면 "
-              "옆 자모(중성)와 겹칠 수 있으니 조금씩 올려가며 확인하세요.")
 
     return glyphs, cmap, built, skipped
 
@@ -367,16 +271,13 @@ def build_standalone_glyphs(cache, calibration=None):
         if comp_id.startswith("cho_"):
             kind = "cho"
             real_zone = ZONE_LAYOUTS[(False, "V1")]["cho"]
-            cal = calibration.get(("cho", False, "V"))
         elif comp_id.startswith("jung_"):
             kind = "jung"
             fine_group = VOWEL_GROUP.get(jamo_char, "V1")
             real_zone = ZONE_LAYOUTS[(False, fine_group)]["jung"]
-            cal = calibration.get(("jung", False, None))
         else:
             kind = "jong"
             real_zone = ZONE_LAYOUTS[(True, "V1")]["jong"]
-            cal = calibration.get(("jong", True, None))
 
         _, rz_y0, _, rz_y1 = real_zone
         real_h = rz_y1 - rz_y0
@@ -391,7 +292,11 @@ def build_standalone_glyphs(cache, calibration=None):
         vy0 = (1000 - target_h) / 2
         virtual_zone = (0, vy0, 1000, vy0 + target_h)
 
-        contours = _fit_contours(entry, virtual_zone, kind, jamo_char, cal)
+        contours = _fit_contours(
+            entry, virtual_zone, comp_id,
+            scale_adjust=STANDALONE_JAMO_SCALE.get(jamo_char, 1.0),
+            offset_adjust=STANDALONE_JAMO_OFFSET.get(jamo_char, (0, 0)),
+        )
 
         pen = TTGlyphPen(None)
         for pts, _is_hole in contours:

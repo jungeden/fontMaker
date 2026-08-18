@@ -58,7 +58,7 @@ def assemble_fontbuilder(
     hangul_glyphs, hangul_cmap,
     standalone_glyphs, standalone_cmap,
     latin_glyphs, latin_cmap, latin_metrics,
-    family_name="MyHandwriting", style_name="Regular",
+    family_name="donggeuldonggeul", style_name="Regular",
 ):
     """
     글리프/cmap/지표를 모아 FontBuilder를 조립하는 공용 로직.
@@ -124,8 +124,8 @@ def assemble_fontbuilder(
 def build_font(
     glyph_dir="data/glyphs",
     manifest_path="data/manifest.json",
-    output_path="output/MyHandwriting.ttf",
-    family_name="MyHandwriting",
+    output_path="output/donggeuldonggeul.ttf",
+    family_name="donggeuldonggeul",
     style_name="Regular",
     apply_kerning=True,
     apply_hinting=True,

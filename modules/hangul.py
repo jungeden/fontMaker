@@ -98,39 +98,41 @@ GROUP_LABEL = {
 _BASE_ZONE_LAYOUTS = {
     # 받침 없음 + 세로모음 (가, 나, 비...) : 좌우 배치
     (False, "V"): {
-        "cho":  (100, 100, 450, 900), # 350
-        "jung": (400, 100, 900, 900), # 500
+        "cho":  (0, 0, 1000, 1000), 
+        "jung": (0, 0, 1000, 1000), 
+ 
         "jong": None,
     },
     # 받침 없음 + 가로모음 (고, 누, 드...) : 상하 배치
     (False, "H"): {
-        "cho":  (200, 550, 800, 900), # 350
-        "jung": (100, 20, 900, 520), # 500
+     
+        "cho":  (0, 0, 1000, 1000), 
+        "jung": (0, 0, 1000, 1000), 
         "jong": None,
     },
     # 받침 없음 + 복합모음 (과, 궈, 희...) : 초성은 좌상단, 모음이 아래+오른쪽 감쌈
     (False, "C"): {
-        "cho":  (100, 550, 750, 900),
-        "jung": (0,  0, 1000, 600),
+        "cho":  (0, 0, 1000, 1000), 
+        "jung": (0, 0, 1000, 1000), 
         "jong": None,
     },
     # 받침 있음 + 세로모음 (각, 닫, 빛...)
     (True, "V"): {
-        "cho":  (100, 550, 450, 1000), # 350
-        "jung": (400, 500, 1000, 1000), # 500
-        "jong": (100,  50, 900, 400), # 350
+        "cho":  (0, 0, 1000, 1000), 
+        "jung": (0, 0, 1000, 1000), 
+        "jong": (0,   0, 1000, 1000),
     },
     # 받침 있음 + 가로모음 (곡, 녹, 숙...)
     (True, "H"): {
-        "cho":  (0,   650, 1000, 1000), # 350
-        "jung": (100, 370, 900, 670), # 300
-        "jong": (150,   0, 1000, 350), # 350
+        "cho":  (0, 0, 1000, 1000), 
+        "jung": (0, 0, 1000, 1000), 
+        "jong": (0,   0, 1000, 1000),
     },
     # 받침 있음 + 복합모음 (곽, 궐, 휙...)
     (True, "C"): {
-        "cho":  (200, 700, 560, 1000), # 300
-        "jung": (200, 360, 800, 850), # 490
-        "jong": (200,   0, 900, 360), # 360
+        "cho":  (0, 0, 1000, 1000), 
+        "jung": (0, 0, 1000, 1000), 
+        "jong": (0,   0, 1000, 1000),
     },
 }
 
@@ -141,119 +143,164 @@ for (_batchim, _macro), _layout in _BASE_ZONE_LAYOUTS.items():
     for _sub in SUBGROUPS[_macro]:
         ZONE_LAYOUTS[(_batchim, _sub)] = dict(_layout)
 
-ZONE_LAYOUTS[(False, "H1")] = {
-    "cho":  (200, 550, 800, 900), # 350
-    "jung": (100, 50, 900, 550), # 500
-    "jong": None,
-}
-ZONE_LAYOUTS[(False, "C1")] = {
-    "cho":  (50, 300, 700, 650), # 350
-    "jung": (0,  0, 1000, 600), # 600
-    "jong": None,
-}
-ZONE_LAYOUTS[(False, "C2")] = {
-    "cho":  (100, 400, 750, 750), # 350
-    "jung": (0,  0, 1000, 600), # 600
-    "jong": None,
-}
-ZONE_LAYOUTS[(False, "C3")] = {
-    "cho":  (100, 300, 750, 650), # 350
-    "jung": (0,  50, 1000, 650), # 600
-    "jong": None,
-}
-ZONE_LAYOUTS[(True, "V2")] = {
-    "cho":  (100, 550, 450, 1000), # 350
-    "jung": (420, 500, 1000, 1000), # 570
-    "jong": (100,  50, 900, 400), # 350
-}
-ZONE_LAYOUTS[(True, "H1")] = {
-    "cho":  (0,   650, 1000, 1000), # 350
-    "jung": (100, 350, 900, 750), # 400
-    "jong": (0,   0, 1000, 350), # 350
-}
-ZONE_LAYOUTS[(True, "H2")] = {
-    "cho":  (0,   650, 1000, 1000), # 350
-    "jung": (100, 250, 900, 670), # 420
-    "jong": (0,   0, 1000, 350), # 350
-}
-ZONE_LAYOUTS[(True, "H3")] = {
-    "cho":  (0,   650, 1000, 1000), # 350
-    "jung": (100, 300, 900, 700), # 400
-    "jong": (0,   0, 1000, 350), # 350
-}
-ZONE_LAYOUTS[(True, "C1")] = {
-    "cho":  (220, 650, 580, 1000), # 350
-    "jung": (200, 300, 800, 850), # 550
-    "jong": (200,   0, 900, 350), # 350
-}
-ZONE_LAYOUTS[(True, "C2")] = {
-    "cho":  (200, 650, 560, 1000), # 350
-    "jung": (200, 300, 800, 850), # 550
-    "jong": (200,   0, 900, 350), # 350
-}
-ZONE_LAYOUTS[(True, "C3")] = {
-    "cho":  (250, 650, 600, 1000), # 350
-    "jung": (100, 300, 800, 850), # 550
-    "jong": (100,   0, 900, 350), # 350
-}
+
+# ZONE_LAYOUTS[(False, "V1")] = {
+#     "cho":  (200, 0, 550, 1000), # 350
+#     "jung": (500, 200, 1000, 800), # 500
+#     "jong": None,
+# }
+# ZONE_LAYOUTS[(False, "H1")] = {
+#     "cho":  (200, 400, 800, 750), # 350
+#     "jung": (200, 200, 800, 600), # 500
+#     "jong": None,
+# }
+# ZONE_LAYOUTS[(False, "H2")] = {
+#     "cho":  (200, 450, 800, 800), # 350
+#     "jung": (200, 100, 800, 500), # 500
+#     "jong": None,
+# }
+
+# ZONE_LAYOUTS[(False, "C1")] = {
+#     "cho":  (50, 300, 700, 650), # 350
+#     "jung": (0,  100, 1000, 800), # 700
+#     "jong": None,
+# }
+# ZONE_LAYOUTS[(False, "C2")] = {
+#     "cho":  (100, 400, 600, 750), # 350
+#     "jung": (0,  100, 1000, 800), # 700
+#     "jong": None,
+# }
+# ZONE_LAYOUTS[(False, "C3")] = {
+#     "cho":  (100, 300, 750, 650), # 350
+#     "jung": (0,  100, 1000, 800), # 700
+#     "jong": None,
+# }
+# ZONE_LAYOUTS[(True, "V2")] = {
+#     "cho":  (100, 550, 450, 1000), # 350
+#     "jung": (350, 500, 900, 1000), # 550
+#     "jong": (100,  100, 900, 400), # 300
+# }
+# ZONE_LAYOUTS[(True, "V3")] = {
+#     "cho":  (150, 550, 500, 1000), # 350
+#     "jung": (400, 500, 950, 1000), # 550
+#     "jong": (100,  100, 900, 400), # 300
+# }
+# ZONE_LAYOUTS[(True, "H1")] = {
+#     "cho":  (0,   650, 1000, 950), # 350
+#     "jung": (200, 400, 800, 800), # 500
+#     "jong": (0,   50, 1000, 350), # 300
+# }
+# ZONE_LAYOUTS[(True, "H2")] = {
+#     "cho":  (0,   650, 1000, 950), # 350
+#     "jung": (200, 350, 800, 750), # 500
+#     "jong": (0,   50, 1000, 350), # 300
+# }
+# ZONE_LAYOUTS[(True, "H3")] = {
+#     "cho":  (0,   650, 1000, 950), # 350
+#     "jung": (200, 320, 800, 720), # 500
+#     "jong": (0,   50, 1000, 350), # 300
+# }
+# ZONE_LAYOUTS[(True, "C1")] = {
+#     "cho":  (220, 650, 580, 1000), # 350
+#     "jung": (200, 300, 800, 1000), # 700
+#     "jong": (200,   50, 900, 350), # 300
+# }
+# ZONE_LAYOUTS[(True, "C2")] = {
+#     "cho":  (200, 650, 560, 1000), # 350
+#     "jung": (200, 350, 800, 1000), # 650
+#     "jong": (200,   50, 900, 350), # 300
+# }
+# ZONE_LAYOUTS[(True, "C3")] = {
+#     "cho":  (250, 650, 600, 1000), # 350
+#     "jung": (100, 450, 900, 1000), # 500
+#     "jong": (100,   50, 900, 350), # 300
+# }
 # ────────────────────────────────────────────────────────────
-# 자모별 미세 보정 테이블 (선택 사항, 기본값은 "보정 없음")
+# 컴포넌트별 수동 크기/위치 조정 (선택 사항, 기본값은 "조정 없음")
 #
-# compose.py는 기본적으로 각 자모의 실제 손글씨 크기(bounding box)를
-# 원본 비율 그대로 유지한 채(찌그러지지 않게) zone 안에 맞추고 중앙
-# 정렬한다. 이것만으로도 대부분 자연스럽지만, 손글씨 특성상 어떤 자모는
-# 상대적으로 작아 보이거나(예: ㄱ, ㅣ) 커 보일 수 있다(예: ㅁ, ㅇ). 그럴
-# 때 아래 표의 숫자만 조정하면 해당 자모만 살짝 키우거나/줄이거나
-# 위치를 옮길 수 있다 (다른 코드는 안 건드려도 됨).
-#
-# COMPONENT_SCALE/COMPONENT_OFFSET의 키는 (kind, jamo) 튜플이다.
-# 예: ("cho","ㅇ")과 ("jong","ㅇ")은 서로 다른 손글씨 조각(초성 ㅇ vs
-# 받침 ㅇ)이므로 따로따로 보정할 수 있다.
+# 분할 단계는 잉크만 잘라내지 않고 모든 자모를 같은 원고지 칸 캔버스로 저장한다.
+# 따라서 COMPONENT_SCALE은 잉크 bbox가 아니라 그 공통 캔버스 전체를 기준으로
+# 독립 적용되고, COMPONENT_OFFSET은 그 결과를 이동만 한다. 둘은 서로 연동되지
+# 않는다. 키는 반드시 component_id 문자열을 쓴다. 같은 ㄷ이라도 cho_ㄷ_N_V와
+# cho_ㄷ_B_H는 서로 다른 손글씨이므로 각각 따로 조절할 수 있다.
 # ────────────────────────────────────────────────────────────
 
-# 초성/중성/종성 유형별 기본 배율 (전체적인 균형 조절용)
-KIND_SCALE = {
-    "cho": 1.0,
-    "jung": 1.0,
-    "jong": 0.95,
-}
-
-# 특정 (종류, 자모)별 배율 보정. 실제로 폰트를 뽑아보고 특정 자모가
-# 너무 작거나 커 보이면 여기에 추가하면 된다. 예:
-#   COMPONENT_SCALE = {("cho", "ㅇ"): 1.08, ("jong", "ㄹ"): 0.95}
+# 컴포넌트별 크기 배율. 예: COMPONENT_SCALE = {"cho_ㄷ_N_V": 0.94}
 COMPONENT_SCALE = {
-    ("cho", "ㄱ"): 1.2,
-    ("cho", "ㄲ"): 1.8,
-    ("cho", "ㄸ"): 1.8,
-    ("cho", "ㅃ"): 2,
-    ("cho", "ㅆ"): 2,
-    ("cho", "ㅉ"): 2,
-    ("cho", "ㅍ"): 1.8,
-    ("jong", "ㄳ"): 1.3,
-    ("jong", "ㄵ"): 1.3,
-    ("jong", "ㄶ"): 1.3,
-    ("jong", "ㄺ"): 1.3,
-    ("jong", "ㄻ"): 1.3,
-    ("jong", "ㄼ"): 1.3,
-    ("jong", "ㄽ"): 1.3,
-    ("jong", "ㄾ"): 1.3,
-    ("jong", "ㄿ"): 1.3,
-    ("jong", "ㅀ"): 1.3,
-    
+    "jong_ㅎ": 0.9,
+    "jong_ㅊ": 0.9,
+    "jong_ㅌ": 0.9
 
 }
 
-# 특정 (종류, 자모)별 위치 보정 (dx, dy), 폰트 유닛(UPM=1000) 기준. 예:
-#   COMPONENT_OFFSET = {("cho", "ㅊ"): (0, -15)}
-COMPONENT_OFFSET = {}
+# 컴포넌트별 위치 이동 (dx, dy), 폰트 유닛(UPM=1000) 기준.
+# 예: COMPONENT_OFFSET = {"cho_ㄷ_N_V": (-12, 8)}
+COMPONENT_OFFSET = {
+    "jung_ㅏ_N": (100, -100),
+    "jung_ㅓ_N": (100, -100),
+    "jung_ㅡ_N": (0, -100),
+
+    "jong_ㄴ": (-30, 80),
+    "jong_ㅇ": (-30, 0),
+    "jong_ㅎ": (0, 30),
+    "jong_ㅌ": (0, 30),
+    "jong_ㅍ": (0, 30),
+}
+
+# 한 조합 위치에 들어가는 자모 전체의 크기/위치 조정.
+# 키: (종류, 받침유무, 모음 세부그룹). 초성 H2 전체의 예:
+#   LAYOUT_COMPONENT_SCALE = {("cho", False, "H2"): 0.96}
+#   LAYOUT_COMPONENT_OFFSET = {("cho", False, "H2"): (0, 12)}
+# 받침 유무와 무관하게 H2 초성 전체에 적용하려면 batchim 자리에 None을 쓴다:
+#   LAYOUT_COMPONENT_SCALE = {("cho", None, "H2"): 0.96}
+# 종성은 모음과 무관하므로 세부그룹 대신 None을 쓴다: ("jong", True, None)
+LAYOUT_COMPONENT_SCALE = {
+    ("jong", True, None): 0.95
+}
+LAYOUT_COMPONENT_OFFSET = {
+    ("cho", False, "H1"): (0, -150),
+    ("cho", False, "H2"): (0, -150),
+    ("cho", False, "H3"): (0, -150),
+    ("jung", False, "V3"): (0, -100),
+    ("jung", True, "H3"): (0, -100),
+
+    ("jung", False, "C1"): (40, 50),
+    ("jung", False, "C2"): (50, 0),
+    ("jung", False, "C3"): (0, 70),
+    ("jung", True, "C2"): (0, -50)
+
+  
+
+    
+}
 
 
-def get_component_scale(kind, jamo):
-    return COMPONENT_SCALE.get((kind, jamo), 1.0)
+def get_component_scale(component):
+    return COMPONENT_SCALE.get(component, 1.0)
 
 
-def get_component_offset(kind, jamo):
-    return COMPONENT_OFFSET.get((kind, jamo), (0, 0))
+def get_component_offset(component):
+    return COMPONENT_OFFSET.get(component, (0, 0))
+
+
+def get_layout_component_scale(kind, batchim, group):
+    return LAYOUT_COMPONENT_SCALE.get(
+        (kind, batchim, group),
+        LAYOUT_COMPONENT_SCALE.get((kind, None, group), 1.0),
+    )
+
+
+def get_layout_component_offset(kind, batchim, group):
+    return LAYOUT_COMPONENT_OFFSET.get(
+        (kind, batchim, group),
+        LAYOUT_COMPONENT_OFFSET.get((kind, None, group), (0, 0)),
+    )
+
+
+# 완성형 조합과 별개로, 단독 자모 글리프만 조절하고 싶을 때 쓴다.
+# 예: STANDALONE_JAMO_SCALE = {"ㄷ": 1.08}
+STANDALONE_JAMO_SCALE = {}
+STANDALONE_JAMO_OFFSET = {}
 
 
 # ────────────────────────────────────────────────────────────
@@ -270,7 +317,7 @@ def get_component_offset(kind, jamo):
 # 중성(모음)은 그대로 두고 싶으면 "jung"은 None으로 유지하면 된다.
 # ────────────────────────────────────────────────────────────
 STANDALONE_HEIGHT_OVERRIDE = {
-    "cho": 350,
+    "cho": None,
     "jung": None,
     "jong": None,
 }

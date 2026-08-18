@@ -1,7 +1,7 @@
 """
 빠른 미리보기 도구.
 
-ZONE_LAYOUTS, KIND_SCALE, COMPONENT_SCALE, COMPONENT_OFFSET,
+ZONE_LAYOUTS, COMPONENT_OFFSET,
 STANDALONE_HEIGHT_OVERRIDE (modules/hangul.py), TARGET_CAP_HEIGHT
 (modules/latin.py), TARGET_STROKE_PX (config.py) 등을 조정한 뒤, 전체
 11,172자를 다시 빌드하지 않고도 대표 글자 몇 개만 빠르게 만들어서 바로
@@ -80,12 +80,24 @@ def _make_hangul_preview_rows():
     row4 = "".join(
         compose_char("ㄱ", "ㅏ", j) for j in JONG_LIST if j not in CHO_LIST
     )  # 초성에는 없는(=겹받침 전용) 자모만
-
+    row5 = "".join(compose_char("ㄷ", rep_vowel[g]) for g in ALL_SUBGROUPS)
+    row6 = "".join(compose_char("ㄴ", rep_vowel[g], "ㄴ") for g in ALL_SUBGROUPS)
+    row7 = "".join(
+            compose_char(c, "ㅗ")
+            for c in ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ",
+                    "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"]
+        )
+    row8 = "".join(compose_char("ㄹ", "ㅜ", j) for j in JONG_LIST)
+    
     return [
         ("No batchim, cho=ㄱ, 9 vowel groups", row1),
         ("Batchim, cho=ㄱ, 9 vowel groups", row2),
         ("Consonant size compare (vowel=ㅏ)", row3),
         ("Complex batchim (cho=ㄱ, vowel=ㅏ)", row4),
+        ("row5", row5),
+        ("row6)", row6),
+        ("row7", row7),
+        ("row8", row8),
     ]
 
 

@@ -1,6 +1,7 @@
 # 손글씨 TTF 폰트 생성기
 
 내 손글씨로 완성형 한글 11,172자(가~힣) + 조합되지 않은 단독 자모(ㄱ, ㅏ 등) + 영문 대소문자
+
 + 숫자 + 특수문자/기호까지 담은 TTF 폰트를 만드는 도구. 커닝(kerning)과 힌팅(hinting)까지
 자동으로 적용된다.
 
@@ -11,15 +12,15 @@
 총 **183(한글 컴포넌트) + 129(영문/숫자/특수문자) = 312칸**만 손글씨로 채우면 된다.
 
 **전체 빌드 없이 빠르게 미리보기하려면 `preview.py`를 쓰면 된다** (아래 "빠른 미리보기"
-섹션 참고). ZONE_LAYOUTS나 KIND_SCALE 등을 조정할 때마다 11,172자 전체를 다시 빌드할
+섹션 참고). ZONE_LAYOUTS나 HANGUL_FILL_RATIO 등을 조정할 때마다 11,172자 전체를 다시 빌드할
 필요 없이 1~5초 안에 결과를 확인할 수 있다.
 
 ## 왜 183개인가 (한글)
 
-- **초성(19개) × 6가지 = 114개** — 받침 유무(2) × 뒤에 오는 모음의 방향(세로형/가로형/복합형,
++ **초성(19개) × 6가지 = 114개** — 받침 유무(2) × 뒤에 오는 모음의 방향(세로형/가로형/복합형,
   3)에 따라 초성의 폭과 위치가 달라진다. (예: "가"의 ㄱ과 "곡"의 ㄱ은 모양이 다르다)
-- **중성(21개) × 2가지 = 42개** — 받침 유무에 따라 모음의 세로 길이가 달라진다.
-- **종성/받침(27개) × 1가지 = 27개** — 받침은 항상 글자 하단의 같은 자리에만 오므로
++ **중성(21개) × 2가지 = 42개** — 받침 유무에 따라 모음의 세로 길이가 달라진다.
++ **종성/받침(27개) × 1가지 = 27개** — 받침은 항상 글자 하단의 같은 자리에만 오므로
   형태 변화가 없다.
 
 114 + 42 + 27 = **183개**만 쓰면, 유니코드 조합 공식
@@ -65,34 +66,23 @@ ZONE_LAYOUTS[(True, "V2")] = {
 | 증상 | 조정할 값 | 위치 | 기본값 |
 |---|---|---|---|
 | 한글 글자가 상자 안에서 너무 작다 | `HANGUL_FILL_RATIO`를 올린다 | config.py | 0.93 |
-| 특정 자모(예: 쌍자음 ㄸ)를 `COMPONENT_SCALE`로 키웠는데 반영이 안 된다 | `HANGUL_MAX_OVERFLOW_RATIO`를 올린다 | config.py | 1.35 |
+| 특정 조합에서 자모의 자리나 크기가 어색하다 | 해당 조합의 `ZONE_LAYOUTS`를 조정한다 | modules/hangul.py | - |
+| 특정 손글씨 컴포넌트만 크기를 바꾸고 싶다 | `COMPONENT_SCALE`에 component id별 배율을 넣는다 | modules/hangul.py | 1.0 |
+| 특정 손글씨 컴포넌트만 옮기고 싶다 | `COMPONENT_OFFSET`에 component id별 `(dx, dy)`를 넣는다 | modules/hangul.py | (0, 0) |
+| H2 같은 한 조합 위치의 초성 전체를 조절하고 싶다 | `LAYOUT_COMPONENT_SCALE` / `LAYOUT_COMPONENT_OFFSET`에 `(종류, 받침유무, 그룹)` 키를 넣는다 | modules/hangul.py | 1.0 / (0, 0) |
 | 한글 자간(글자 사이 간격)이 너무 넓다/좁다 | `ADVANCE_WIDTH`를 줄이거나/늘린다 | config.py | 950 |
 | 획이 너무 얇다/두껍다 (한글) | `TARGET_STROKE_PX`를 올리거나/내린다 | config.py | 34 |
 | 획이 너무 얇다/두껍다 (영문/숫자/기호) | `LATIN_TARGET_STROKE_PX`를 올리거나/내린다 | config.py | 34 |
 | 받침 등 일부가 잘려서 나온다 | `CELL_INSET_RATIO`를 낮춘다 (이미 0.05로 낮춰둔 상태) | config.py | 0.05 |
 | 영문 커닝(자간 보정)이 들쭉날쭉하다 | `KERNING_MAX_ABS`를 올린다 | config.py | 150 |
 
-### 왜 쌍자음(ㄲ,ㄸ,ㅃ,ㅆ,ㅉ)은 COMPONENT_SCALE이 잘 안 먹는 것처럼 보일 수 있는가
+### 자모별 배율 보정을 쓰지 않는 이유
 
-쌍자음은 자음 두 개가 옆으로 나란히 있는 모양이라, 홑자음보다 원래 훨씬 옆으로 넓다.
-같은 zone(홑자음 기준으로 잡힌 폭)에 맞추려다 보면 기본 배율(1.0)일 때부터 이미
-zone 폭을 크게 초과해서, 안전장치(`HANGUL_MAX_OVERFLOW_RATIO`)가 작동 중일 수 있다.
-이 상태에서 `COMPONENT_SCALE`로 더 키우면, 커진 만큼이 전부 안전장치에 흡수되어 겉보기엔
-"안 먹는" 것처럼 보인다.
-
-빌드/미리보기를 실행하면 이런 경우 아래처럼 **실제로 얼마나 초과했는지** 알려준다:
-
-```
-참고: COMPONENT_SCALE을 지정한 자모 중 일부가 안전장치(config.py의
-HANGUL_MAX_OVERFLOW_RATIO)에 걸려 원하는 만큼 커지지 못했습니다: (cho,ㄸ: 필요폭의 333%)
-  -> 이 자모들을 더 키우고 싶다면 config.py의 HANGUL_MAX_OVERFLOW_RATIO 값을 올려보세요.
-  -> 위 비율이 150%를 크게 넘는다면, COMPONENT_SCALE 때문이 아니라 그 자모가 원래도
-     zone 폭에 비해 훨씬 넓게 쓰여진 것입니다. 비율을 크게 올리면 옆 자모(중성)와
-     겹칠 수 있으니 조금씩 올려가며 확인하세요.
-```
-
-이 메시지가 뜨면 `HANGUL_MAX_OVERFLOW_RATIO`를 조금씩 올려가며 `preview.py hangul`로
-옆 자모(중성)와 겹치지 않는 선을 찾는 것을 권장한다.
+`다`와 `동`의 초성 ㄷ은 서로 다른 조합 자리(zone)를 쓴다. 하나의 전역 배율을
+둘에 함께 곱하면, 넓고 낮은 자리에서는 지나치게 작아지고 좁고 높은 자리에서는
+다른 결과가 난다. 그래서 조합기는 자모별 배율/문맥별 중앙값/넘침 재축소를 하지
+않고, 원본 자모의 비율을 유지해 각 zone 안에 한 번만 맞춘다. 특정 조합의 균형이
+문제라면 자모 전체가 아니라 그 조합군의 `ZONE_LAYOUTS`를 조정한다.
 
 ## 단독 자모 (ㄱ, ㅏ 등)
 
@@ -121,6 +111,10 @@ STANDALONE_HEIGHT_OVERRIDE = {
 숫자를 넣으면 그 종류(초성/중성/종성)의 단독 표시가 항상 그 높이로 고정되고, `None`으로
 두면 기존처럼 "실제 조합 시 크기"를 자동으로 재사용한다.
 
+단독 자모만 따로 미세 조정하려면 `STANDALONE_JAMO_SCALE`과
+`STANDALONE_JAMO_OFFSET`을 쓴다. 예를 들어 `{"ㄷ": 1.08}`은 단독 ㄷ만 8% 키우며,
+완성형 음절 속 ㄷ에는 영향을 주지 않는다.
+
 ## 영문/숫자/특수문자 (129개)
 
 출력 가능한 기본 ASCII 문자 전체(`!` ~ `~`, 94자)에 더해, 모바일 키보드 기호 화면 등에서
@@ -130,14 +124,14 @@ STANDALONE_HEIGHT_OVERRIDE = {
 
 ### 한글과 크기/굵기를 맞추는 자동 보정
 
-- **크기**: 한글 자모는 `segment.py`에서 자모마다 목표 높이로 강제 확대/축소되지만, 라틴
-  문자는 g/y/p 같은 내림선 글자의 baseline 정보를 지키기 위해 그런 보정을 하지 않는다.
++ **크기**: 한글 자모는 `segment.py`에서 잉크만 잘라내지 않고 동일한 칸 캔버스로 보존한다.
+  라틴 문자는 g/y/p 같은 내림선 글자의 baseline 정보를 지키기 위해 그런 보정을 하지 않는다.
   그대로 두면 사용자가 쓴 크기 그대로 들어가서 한글 옆에 있을 때 상대적으로 작아 보이는
   문제가 있었다. → 대문자 A~Z의 실제 손글씨 높이(중앙값)를 측정해서, 라틴 문자 전체에
   (개별 문자마다 다르게 적용하면 서로 비율이 깨지므로 반드시 전체에 동일하게) 배율 하나를
   곱해서 한글과 비슷한 시각적 무게감이 나도록 자동 보정한다 (`modules/latin.py`의
   `TARGET_CAP_HEIGHT`, 기본값 780 — 여전히 작아 보이면 이 값을 더 올리면 된다).
-- **굵기**: 벡터 도형을 확대/축소하면 획 굵기도 같이 확대/축소되기 때문에, 자모/문자마다
++ **굵기**: 벡터 도형을 확대/축소하면 획 굵기도 같이 확대/축소되기 때문에, 자모/문자마다
   확대 비율이 다르면 최종 굵기도 들쭉날쭉해진다. → 분할·정규화가 끝난 각 글자 이미지에서
   실제 획 굵기를 추정(잉크 면적 대비 둘레 길이 비율)한 뒤, 목표 굵기에 맞춰 팽창(dilate)/
   침식(erode) 처리로 보정한다 (`modules/segment.py`의 `normalize_stroke_width`,
@@ -193,7 +187,7 @@ python app.py build
 
 ## 빠른 미리보기 (전체 빌드 없이)
 
-`ZONE_LAYOUTS`, `KIND_SCALE`, `COMPONENT_SCALE`, `COMPONENT_OFFSET`,
+`ZONE_LAYOUTS`, `COMPONENT_OFFSET`,
 `STANDALONE_HEIGHT_OVERRIDE`, `TARGET_STROKE_PX`, `TARGET_CAP_HEIGHT` 같은 값을 조금씩
 바꿔가며 확인하고 싶을 때, 매번 `python app.py build`로 11,172자 전체를 다시 만들면 너무
 느리다 (수십 초). `preview.py`는 **지정한 대표 글자 몇 개만** 담은 작은 미리보기 폰트를
@@ -264,30 +258,30 @@ fontMaker
 한글 조합의 "설계도"에 해당하는 모든 상수/테이블이 모여 있는 파일. 실제 이미지 처리나
 폰트 생성 코드는 없고, 순수하게 데이터와 좌표 계산만 담당한다.
 
-- `CHO_LIST`, `JUNG_LIST`, `JONG_LIST`: 초성 19개/중성 21개/종성 27개의 유니코드 순서 목록.
-- `VOWEL_GROUP`: 중성 21개 각각이 어느 세부그룹(V1~C3, 9종류)에 속하는지 매핑.
-- `SUBGROUPS`, `GROUP_MACRO`: 세부그룹(V1 등)과 상위 그룹(V 등) 사이를 서로 변환하는 표.
++ `CHO_LIST`, `JUNG_LIST`, `JONG_LIST`: 초성 19개/중성 21개/종성 27개의 유니코드 순서 목록.
++ `VOWEL_GROUP`: 중성 21개 각각이 어느 세부그룹(V1~C3, 9종류)에 속하는지 매핑.
++ `SUBGROUPS`, `GROUP_MACRO`: 세부그룹(V1 등)과 상위 그룹(V 등) 사이를 서로 변환하는 표.
   (컴포넌트는 상위 그룹 기준 3종류만 있고, 배치 좌표는 세부그룹 9종류로 나뉘기 때문에
   이 둘을 서로 변환할 일이 자주 있다)
-- `ZONE_LAYOUTS`: (받침유무, 세부그룹) → 초성/중성/종성이 차지할 사각형 좌표. 이 프로젝트에서
++ `ZONE_LAYOUTS`: (받침유무, 세부그룹) → 초성/중성/종성이 차지할 사각형 좌표. 이 프로젝트에서
   가장 자주 조정하게 될 테이블.
-- `KIND_SCALE`, `COMPONENT_SCALE`, `COMPONENT_OFFSET`, `get_component_scale()`,
-  `get_component_offset()`: 자모별 미세 크기/위치 보정. "특정 자모만 더 세밀하게 보정하고
-  싶다면" 섹션 참고.
-- `STANDALONE_HEIGHT_OVERRIDE`: 단독 자모(ㄱ, ㅏ 등) 표시 크기를 직접 지정하고 싶을 때 쓰는 표.
-- `component_id(kind, jamo, batchim, group)`: 컴포넌트를 식별하는 문자열 id를 만든다
++ `COMPONENT_SCALE`, `COMPONENT_OFFSET`: component id별 크기/위치 보정 표. 둘은 독립적으로 적용된다.
++ `STANDALONE_JAMO_SCALE`, `STANDALONE_JAMO_OFFSET`: 단독 자모 글리프에만 적용되는 별도
+  크기/위치 조정 표.
++ `STANDALONE_HEIGHT_OVERRIDE`: 단독 자모(ㄱ, ㅏ 등) 표시 크기를 직접 지정하고 싶을 때 쓰는 표.
++ `component_id(kind, jamo, batchim, group)`: 컴포넌트를 식별하는 문자열 id를 만든다
   (예: `"cho_ㄱ_N_V"`). `data/glyphs/000.png` 같은 실제 파일과 이 id를 연결하는
   `data/manifest.json`이 `template.py`에 의해 만들어진다.
-- `compose_char(cho, jung, jong)`: 초/중/종성 자모로 실제 완성형 한글 한 글자를 조합한다
++ `compose_char(cho, jung, jong)`: 초/중/종성 자모로 실제 완성형 한글 한 글자를 조합한다
   (예: `compose_char("ㄱ","ㅏ")` → `"가"`). 원고지에 예시를 표시할 때, 미리보기 도구에서
   샘플을 만들 때 등 여러 곳에서 쓰인다.
-- `decompose_code(code)`: 완성형 한글 코드포인트를 (초성, 중성, 종성)으로 분해한다.
++ `decompose_code(code)`: 완성형 한글 코드포인트를 (초성, 중성, 종성)으로 분해한다.
   `compose_char`의 반대 방향. `compose.py`가 11,172자를 하나씩 돌면서 이 함수로 분해한 뒤
   조합한다.
-- `build_component_list()`: 손글씨로 받아야 할 183개 컴포넌트 전체 목록을 만든다. 이 목록의
++ `build_component_list()`: 손글씨로 받아야 할 183개 컴포넌트 전체 목록을 만든다. 이 목록의
   순서가 곧 원고지 칸 순서 = `data/glyphs` 안 PNG 파일 인덱스 순서가 된다.
   `template.py`가 원고지를 그릴 때, `segment.py`가 칸을 나눌 때 이 함수를 쓴다.
-- `build_standalone_jamo_list()`: 단독 자모 51개 각각에 대해 (유니코드 코드포인트, 대표
++ `build_standalone_jamo_list()`: 단독 자모 51개 각각에 대해 (유니코드 코드포인트, 대표
   컴포넌트 id)를 만든다. `compose.py`의 `build_standalone_glyphs()`가 이 목록을 써서
   실제 글리프를 만든다.
 
@@ -296,119 +290,112 @@ fontMaker
 한글과 달리 라틴 문자는 서로 조합되지 않으므로, 이 파일은 "PNG 한 장 = 글리프 하나"를
 직접 만드는 역할을 한다.
 
-- `ASCII_CHARS`, `EXTRA_CHARS`, `LATIN_CHARS`: 지원하는 문자 목록(94 + 35 = 129자).
-- `BASELINE_RATIO`: 라틴 문자 칸에서 baseline이 칸 높이의 몇 %에 위치하는지
++ `ASCII_CHARS`, `EXTRA_CHARS`, `LATIN_CHARS`: 지원하는 문자 목록(94 + 35 = 129자).
++ `BASELINE_RATIO`: 라틴 문자 칸에서 baseline이 칸 높이의 몇 %에 위치하는지
   (`config.py`의 ASCENDER/DESCENDER로부터 계산됨). `template.py`가 원고지에 baseline
   안내선을 그릴 때, 이 파일이 이미지→폰트좌표 변환을 할 때 똑같이 쓴다 — 두 곳이 어긋나면
   안 되므로 반드시 이 상수 하나를 공유한다.
-- `build_component_list()`: 129개 컴포넌트 목록 (한글의 `build_component_list`와 대응).
-- `image_to_contours_latin(path)`: PNG 한 장을 (다각형 점 목록, 구멍여부) 튜플 리스트로
++ `build_component_list()`: 129개 컴포넌트 목록 (한글의 `build_component_list`와 대응).
++ `image_to_contours_latin(path)`: PNG 한 장을 (다각형 점 목록, 구멍여부) 튜플 리스트로
   변환한다. 한글용 `glyph.py`의 `image_to_contours`와 비슷하지만, baseline 위치를 살리는
   좌표 변환(`_scale_flip_latin`)을 쓴다는 점이 다르다.
-- `_calc_global_scale(raw_glyphs)`: 대문자 A~Z의 실제 높이 중앙값을 측정해서, 그 값이
++ `_calc_global_scale(raw_glyphs)`: 대문자 A~Z의 실제 높이 중앙값을 측정해서, 그 값이
   `TARGET_CAP_HEIGHT`에 오도록 하는 배율 하나를 계산한다. "한글과 크기를 맞추는 자동 보정"
   섹션 참고.
-- `build_latin_glyphs(glyph_dir, manifest)`: 위 함수들을 이용해 129개 전체의 최종 TTGlyph +
++ `build_latin_glyphs(glyph_dir, manifest)`: 위 함수들을 이용해 129개 전체의 최종 TTGlyph +
   advance width를 만든다. `fontbuild.py`와 `preview.py`가 이 함수를 호출한다.
 
 ### `template.py` — 원고지 PDF 생성
 
-- `_zone_to_rect(x, y, cell, zone_shape)`: (칸의 위치, zone 좌표) → 실제 PDF 위의 사각형
++ `_zone_to_rect(x, y, cell, zone_shape)`: (칸의 위치, zone 좌표) → 실제 PDF 위의 사각형
   좌표로 변환하는 핵심 함수. 안내 상자(점선/실선)와 한글 워터마크가 **반드시 같은 함수**를
   써야 위치가 정확히 일치하므로, 이 함수 하나로 통일했다.
-- `_draw_hangul_watermark`, `_draw_guide_box`, `_draw_latin_guide`, `_draw_cell`: 칸 하나를
++ `_draw_hangul_watermark`, `_draw_guide_box`, `_draw_latin_guide`, `_draw_cell`: 칸 하나를
   그리는 세부 함수들.
-- `create_template(filename, manifest_path)`: 전체 원고지 PDF + 범례 페이지를 만들고,
++ `create_template(filename, manifest_path)`: 전체 원고지 PDF + 범례 페이지를 만들고,
   `data/manifest.json`을 저장한다. `app.py`의 `template` 명령이 이 함수를 호출한다.
-- `create_grid_overlay(n_pages, ...)`: 격자선만 있는 투명 배경 PNG를 페이지별로 만든다
++ `create_grid_overlay(n_pages, ...)`: 격자선만 있는 투명 배경 PNG를 페이지별로 만든다
   (가이드 자동 제거가 잘 안 될 때 수동으로 합성하기 위한 보조 파일).
 
 ### `preprocess.py` — 스캔 이미지 보정
 
-- `detect_page(image)`, `four_point_transform(image, pts)`: 사진 속에서 원고지 용지의
++ `detect_page(image)`, `four_point_transform(image, pts)`: 사진 속에서 원고지 용지의
   네 꼭짓점을 찾아 반듯하게 펴는(기울기 보정) 역할.
-- `preprocess(path)`: 위 보정 + 노이즈 제거 + 연한 회색 가이드 자동 제거
++ `preprocess(path)`: 위 보정 + 노이즈 제거 + 연한 회색 가이드 자동 제거
   (`GUIDE_STRIP_THRESHOLD`) + 흑백 이진화까지 한 번에 처리한다. `app.py`가 스캔 페이지마다
   이 함수를 호출한다.
 
 ### `segment.py` — 원고지 칸 → 컴포넌트 PNG 분할
 
-- `_inset(cell)`: 칸 테두리(격자선)가 잉크로 오인식되지 않도록 가장자리를 살짝 잘라낸다
++ `_inset(cell)`: 칸 테두리(격자선)가 잉크로 오인식되지 않도록 가장자리를 살짝 잘라낸다
   (`config.py`의 `CELL_INSET_RATIO`, 기본 0.05 — 너무 크면 받침처럼 가장자리에 붙여 쓰는
   컴포넌트가 잘릴 수 있어서 작게 잡았다).
-- `has_content(cell)`: 칸이 비어있는지 확인 (빈 칸 자동 스킵용).
-- `touches_edge(cell)`: 잉크가 칸 가장자리에 닿아 있는지 확인한다. 닿아 있으면 실제
++ `has_content(cell)`: 칸이 비어있는지 확인 (빈 칸 자동 스킵용).
++ `touches_edge(cell)`: 잉크가 칸 가장자리에 닿아 있는지 확인한다. 닿아 있으면 실제
   손글씨가 칸 밖으로 나가서 잘렸을 가능성이 있다는 뜻이며, `segment()`가 이런 컴포넌트
   목록을 빌드 마지막에 경고로 알려준다.
-- `crop_content(cell)`, `normalize_glyph(glyph)`: **한글용**. 실제 잉크만 잘라내고, 목표
-  높이로 맞춘 뒤 baseline에 정렬해서 정사각형 캔버스에 배치한다.
-- `normalize_latin_cell(cell)`: **라틴용**. `normalize_glyph`와 달리 baseline 위치 정보를
++ `normalize_hangul_cell(cell)`: **한글용**. 실제 잉크 bbox로 자르지 않고, 테두리만 뺀
+  동일한 원고지 칸 전체를 정사각형 캔버스로 저장한다. 손글씨의 실제 크기·여백·위치가
+  조합 단계까지 유지된다.
++ `normalize_latin_cell(cell)`: **라틴용**. `normalize_glyph`와 달리 baseline 위치 정보를
   지키기 위해 내용 기준으로 재정렬하지 않고, 칸을 있는 그대로 정사각형으로 리사이즈만 한다.
-- `_estimate_stroke_width(ink_mask)`, `normalize_stroke_width(img, target_width)`: 획 굵기
++ `_estimate_stroke_width(ink_mask)`, `normalize_stroke_width(img, target_width)`: 획 굵기
   자동 보정 (위 "한글과 크기/굵기를 맞추는 자동 보정" 섹션 참고). 한글은
   `config.TARGET_STROKE_PX`, 라틴은 `config.LATIN_TARGET_STROKE_PX`를 각각 목표로 쓴다.
-- `segment(images, output_dir, manifest_path)`: 페이지 이미지들을 받아서 칸을 나누고,
++ `segment(images, output_dir, manifest_path)`: 페이지 이미지들을 받아서 칸을 나누고,
   컴포넌트 종류(한글/라틴)에 따라 위 정규화 함수들을 적용한 뒤 `data/glyphs/{idx}.png`로
   저장한다. `app.py`의 `build` 명령이 이 함수를 호출한다.
 
 ### `vectorize.py` — PNG → 윤곽선 검출
 
-- `find_contours_with_holes(img)`: `cv2.RETR_TREE`로 바깥 윤곽선과 안쪽 구멍(ㅇ,ㅎ,ㅁ,ㅂ의
++ `find_contours_with_holes(img)`: `cv2.RETR_TREE`로 바깥 윤곽선과 안쪽 구멍(ㅇ,ㅎ,ㅁ,ㅂ의
   속 빈 부분)을 모두 찾는다. 일반적인 `RETR_EXTERNAL`을 쓰면 ㅇ이 속이 꽉 찬 원이 되어버린다.
-- `simplify(contour)`: 점 개수를 줄여 다각형을 단순화한다 (베지어 곡선화 전 전처리).
-- `signed_area(pts)`, `fix_winding(pts, is_hole)`: TrueType 규칙(바깥 윤곽선=시계방향,
++ `simplify(contour)`: 점 개수를 줄여 다각형을 단순화한다 (베지어 곡선화 전 전처리).
++ `signed_area(pts)`, `fix_winding(pts, is_hole)`: TrueType 규칙(바깥 윤곽선=시계방향,
   구멍=반시계방향)에 맞게 점의 순서를 보정한다. 이걸 안 하면 구멍이 안 뚫리거나 글자
   전체가 사라질 수 있다.
-- `convert_folder(...)`: (선택 기능) `data/glyphs`의 PNG들을 SVG로 변환하는 디버깅용 함수.
++ `convert_folder(...)`: (선택 기능) `data/glyphs`의 PNG들을 SVG로 변환하는 디버깅용 함수.
 
 ### `glyph.py` — 윤곽선 → 폰트 좌표계 변환 + 곡선화 (한글용)
 
-- `_scale_flip(pt)`: 이미지 픽셀 좌표(0~800, y 아래로 증가) → 폰트 유닛 좌표(0~1000, y
++ `_scale_flip(pt)`: 이미지 픽셀 좌표(0~800, y 아래로 증가) → 폰트 유닛 좌표(0~1000, y
   위로 증가) 변환.
-- `image_to_contours(path)`: PNG 한 장을 (font-space 점 목록, 구멍여부) 튜플 리스트로
++ `image_to_contours(path)`: PNG 한 장을 (font-space 점 목록, 구멍여부) 튜플 리스트로
   변환한다. `vectorize.py`의 함수들 + 위 좌표 변환을 합친 것. `compose.py`가 컴포넌트를
   로드할 때 이 함수를 쓴다.
-- `draw_contour(pen, pts)`: 점 목록을 2차 베지어 곡선으로 부드럽게 그린다 (각 변의 중점을
++ `draw_contour(pen, pts)`: 점 목록을 2차 베지어 곡선으로 부드럽게 그린다 (각 변의 중점을
   on-curve 점으로 써서 각진 다각형이 아니라 곡선처럼 보이게 한다).
-- `image_to_glyph(path)`: 위 두 함수를 합쳐 PNG → TTGlyph를 바로 만든다 (개별 컴포넌트
++ `image_to_glyph(path)`: 위 두 함수를 합쳐 PNG → TTGlyph를 바로 만든다 (개별 컴포넌트
   미리보기/디버깅용).
 
 ### `compose.py` — 183개 컴포넌트로 11,172자 + 단독 자모 조합
 
 이 프로젝트의 핵심 로직이 있는 파일. 자세한 설계 배경은 파일 맨 위 docstring 참고.
-`FILL_RATIO`/`MAX_OVERFLOW_RATIO`는 `config.py`의 `HANGUL_FILL_RATIO`/
-`HANGUL_MAX_OVERFLOW_RATIO`를 그대로 가져와 쓴다 (크기 관련 설정을 config.py 한 곳에
-모아두기 위함).
+`FILL_RATIO`는 `config.py`의 `HANGUL_FILL_RATIO`를 그대로 가져와 쓴다.
 
-- `load_component_contours(glyph_dir, manifest_path)`: `data/glyphs`의 PNG들을 읽어서
-  `{컴포넌트id: {"contours":[...], "bbox":(...)}}` 캐시를 만든다. bbox를 미리 계산해두는
-  이유는 11,172자를 조합할 때마다 다시 계산하면 느리기 때문.
-- `build_calibration(cache)`: 같은 문맥(예: "받침없음+세로모음" 초성 19개)에 속한
-  컴포넌트들의 실제 손글씨 높이 중앙값을 계산한다. 이 값이 그 문맥 전체가 공유하는 "기준
-  크기"가 된다 (크기가 안정적으로 나오는 핵심 메커니즘).
-- `_fit_contours(entry, zone, kind, jamo, calibration_height)`: 컴포넌트 하나를 zone
-  안에 비율 유지 + 중앙 정렬로 배치한다. 배율은 이 컴포넌트 자신의 크기가 아니라
-  `calibration_height`(문맥 공통 기준)로 계산하므로, 같은 문맥 안에서는 항상 같은 배율이
-  나와서 크기가 안정적이다. `KIND_SCALE`/`COMPONENT_SCALE`/`COMPONENT_OFFSET`도 여기서
-  곱해지고, 결과가 zone을 심하게 벗어나면 `MAX_OVERFLOW_RATIO`로 제한한다.
-- `get_overflow_clamp_warnings()`: `COMPONENT_SCALE`을 지정했는데 안전장치에 걸려 실제로는
-  반영이 덜 된 자모 목록과, 얼마나 초과했는지(%)를 반환한다. "한글 크기/굵기/자간 조정"
-  섹션 참고.
-- `compose_syllable_glyph(cache, calibration, cho, jung, jong)`: 초/중/종성 자모 하나로
++ `load_component_contours(glyph_dir, manifest_path)`: `data/glyphs`의 PNG들을 읽어서
+  `{컴포넌트id: {"contours":[...], "bbox":(...), "frame":(...)}}` 캐시를 만든다. bbox는
+  빈 컴포넌트 검증용이고, 모든 조합 배율/기준점은 공통 `frame`을 기준으로 계산한다.
++ `build_calibration(cache)`: 이전 호출부와의 호환을 위한 빈 설정값을 반환한다. 문맥별
+  중앙값 크기 보정은 사용하지 않는다.
++ `_fit_contours(entry, zone, component)`: 컴포넌트 하나를 원본 비율 유지 + 중앙 정렬로
+  배치한다. 모든 자모의 공통 `frame`을 기준으로 한 번만 스케일하므로 잉크 bbox에 따른
+  자동 크기 보정이 없다. `COMPONENT_SCALE`과 `COMPONENT_OFFSET`은 독립적으로 적용된다.
++ `compose_syllable_glyph(cache, calibration, cho, jung, jong)`: 초/중/종성 자모 하나로
   완성형 음절 하나의 TTGlyph를 만든다. `preview.py`가 샘플 글자 몇 개만 빠르게 만들 때도
   이 함수를 직접 호출한다.
-- `compose_from_cache(cache, calibration)`, `compose_all(...)`: 가(0xAC00)~힣(0xD7A3)
++ `compose_from_cache(cache, calibration)`, `compose_all(...)`: 가(0xAC00)~힣(0xD7A3)
   11,172자 전체를 조합한다. `compose_from_cache`는 캐시/calibration을 미리 계산해서
   넘길 때, `compose_all`은 파일 경로만 주고 한 번에 실행할 때 쓴다.
-- `build_standalone_glyphs(cache, calibration)`: 단독 자모 51개의 글리프를 만든다
++ `build_standalone_glyphs(cache, calibration)`: 단독 자모 51개의 글리프를 만든다
   ("단독 자모" 섹션 참고).
 
 ### `kerning.py` — 라틴 문자 쌍 자동 커닝
 
-- `_contours_of(glyph, glyf)`: 컴파일된 TTGlyph에서 윤곽선 점 목록을 다시 꺼낸다.
-- `_profile(contours, ascender, descender)`: 글자를 위아래로 잘게 나눠서, 각 높이에서
++ `_contours_of(glyph, glyf)`: 컴파일된 TTGlyph에서 윤곽선 점 목록을 다시 꺼낸다.
++ `_profile(contours, ascender, descender)`: 글자를 위아래로 잘게 나눠서, 각 높이에서
   잉크의 왼쪽 끝/오른쪽 끝 x좌표를 계산한다 (커닝 계산의 기초 자료).
-- `build_kern_feature(font, latin_cmap, target_gap)`: 라틴 129자의 모든 쌍에 대해 두
++ `build_kern_feature(font, latin_cmap, target_gap)`: 라틴 129자의 모든 쌍에 대해 두
   글자를 나란히 놓았을 때의 간격을 위 프로파일로 계산하고, 이상적인 간격(target_gap)과
   차이가 크면 GPOS `kern` 피처로 보정값을 추가한다. 보정량 한도는
   `max(advance × KERNING_MAX_RATIO, KERNING_MAX_ABS)`로 계산한다 — 마침표처럼 폭이 좁은
@@ -418,20 +405,20 @@ fontMaker
 
 ### `fontbuild.py` — 최종 .ttf 조립
 
-- `assemble_fontbuilder(hangul_glyphs, ..., latin_metrics, family_name, style_name)`:
++ `assemble_fontbuilder(hangul_glyphs, ..., latin_metrics, family_name, style_name)`:
   글리프/cmap/지표를 모아 `fontTools.fontBuilder.FontBuilder`를 조립하는 공용 로직.
   `build_font()`(전체 완성 빌드)와 `preview.py`(대표 글자만 넣는 빠른 미리보기)가 이
   함수를 공유한다 — 그래서 미리보기 결과와 최종 완성본이 항상 일치한다.
-- `_apply_hinting(unhinted_path, output_path)`: 시스템에 `ttfautohint`가 설치되어 있으면
++ `_apply_hinting(unhinted_path, output_path)`: 시스템에 `ttfautohint`가 설치되어 있으면
   자동으로 힌팅을 적용한다 (없으면 힌팅 없이 저장 + 설치 안내).
-- `build_font(...)`: 위 함수들을 전부 연결해서 `data/glyphs` → 최종 `output/MyHandwriting.ttf`
++ `build_font(...)`: 위 함수들을 전부 연결해서 `data/glyphs` → 최종 `output/MyHandwriting.ttf`
   까지 만드는 최상위 함수. `app.py`의 `build` 명령이 이 함수를 호출한다.
 
 ### `app.py` — 전체 파이프라인 실행 (CLI 진입점)
 
-- `step_template()`: `template.py`로 원고지 PDF + 격자 오버레이를 만든다 (`template` 명령).
-- `_find_scan_pages(scan_dir)`: `data/scans` 안의 `page1.jpg, page2.jpg ...`를 순서대로 찾는다.
-- `step_build()`: 스캔 페이지들을 `preprocess.py`로 보정 → `segment.py`로 분할 →
++ `step_template()`: `template.py`로 원고지 PDF + 격자 오버레이를 만든다 (`template` 명령).
++ `_find_scan_pages(scan_dir)`: `data/scans` 안의 `page1.jpg, page2.jpg ...`를 순서대로 찾는다.
++ `step_build()`: 스캔 페이지들을 `preprocess.py`로 보정 → `segment.py`로 분할 →
   `fontbuild.py`로 최종 폰트 생성까지 전체 파이프라인을 실행한다 (`build` 명령).
 
 ### `preview.py` — 빠른 미리보기 도구
@@ -463,23 +450,18 @@ sudo apt install ttfautohint      # Linux
 
 ## 한계
 
-- 초성 6종류 분류는 실제 정식 폰트 제작사가 쓰는 세밀한 분류(보통 더 많은 변형)보다는
++ 초성 6종류 분류는 실제 정식 폰트 제작사가 쓰는 세밀한 분류(보통 더 많은 변형)보다는
   단순화된 버전이다. 배치 좌표는 9개 세부그룹으로 조정 가능하지만, 손글씨 자체는 3종류만
   받으므로 예를 들어 "ㅏ" 뒤 초성과 "ㅓ" 뒤 초성이 형태 자체는 완전히 같다.
-- 컴포넌트는 문맥별 공유 배율을 쓰므로 같은 문맥 안에서는 크기가 안정적이지만, 자모 자체의
-  자연스러운 형태 차이(예: ㄱ은 작고 ㅁ은 큼)까지 완전히 균일하게 만들지는 않는다 (의도적 —
-  손글씨의 자연스러운 상대적 크기감을 존중한다). 그래도 유독 튀는 자모는 `COMPONENT_SCALE`로
-  수동 보정할 수 있다.
-- 쌍자음(ㄲ,ㄸ,ㅃ,ㅆ,ㅉ)은 홑자음보다 원래 훨씬 옆으로 넓어서, 홑자음 기준으로 잡힌 zone
-  폭에서는 기본 배율(1.0)일 때부터 이미 안전장치(`HANGUL_MAX_OVERFLOW_RATIO`)에 걸리기
-  쉽다. 이 상태에서 `COMPONENT_SCALE`로 더 키우면 반영이 잘 안 되는 것처럼 보일 수 있다 —
-  "한글 크기/굵기/자간 조정" 섹션의 관련 안내 참고.
-- 획 굵기 자동 보정은 잉크 면적/둘레 비율 기반의 근사치라 완벽하게 균일하지는 않다.
++ 완성형 자모의 크기는 각 조합군의 zone이 결정한다. 특정 조합군이 어색하면 전역 자모
+  배율 대신 해당 `ZONE_LAYOUTS`를 조정해야 한다. 이렇게 해야 다른 모음/받침 문맥을
+  함께 망가뜨리지 않는다.
++ 획 굵기 자동 보정은 잉크 면적/둘레 비율 기반의 근사치라 완벽하게 균일하지는 않다.
   안전장치(단계적 보정 + 면적 가드)로 받침 등이 통째로 사라지는 것은 방지하지만, 그래도
   이상하다면 `config.py`의 `TARGET_STROKE_PX`나 `STROKE_MAX_KERNEL_RADIUS`를 조정하면 된다.
-- 라틴 문자의 baseline 정렬은 스캔이 원고지 인쇄 비율과 잘 맞아떨어진다고 가정한다. 스캔이
++ 라틴 문자의 baseline 정렬은 스캔이 원고지 인쇄 비율과 잘 맞아떨어진다고 가정한다. 스캔이
   심하게 기울어지거나 왜곡되면 g/y/p 같은 글자의 baseline이 살짝 어긋날 수 있다.
-- 진짜 폰트 제작사 수준의 정교한 곡선 피팅(최소자승 베지어 피팅)은 구현하지 않았다
++ 진짜 폰트 제작사 수준의 정교한 곡선 피팅(최소자승 베지어 피팅)은 구현하지 않았다
   (2차 베지어 근사만 사용).
-- `preview.py`의 힌팅 비교는 화면 배율/이미지 뷰어에 따라 차이가 잘 안 보일 수 있다 —
++ `preview.py`의 힌팅 비교는 화면 배율/이미지 뷰어에 따라 차이가 잘 안 보일 수 있다 —
   이미지를 픽셀 100%로 확대해서 보는 것을 권장한다.
