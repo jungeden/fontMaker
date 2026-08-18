@@ -1,0 +1,7 @@
+fonttools
+opencv-python
+numpy
+Pillow
+reportlab
+svgpathtools
+scipy
