@@ -37,6 +37,7 @@ from modules.hangul import (
     GROUP_MACRO,
     ZONE_LAYOUTS,
     KIND_SCALE,
+    STANDALONE_HEIGHT_OVERRIDE,
     component_id,
     decompose_code,
     get_component_scale,
@@ -333,11 +334,15 @@ def build_standalone_glyphs(cache, calibration=None):
         _, rz_y0, _, rz_y1 = real_zone
         real_h = rz_y1 - rz_y0
 
-        # 실제 조합 시와 같은 세로 크기가 나오도록 zone "높이"는 그대로
-        # 쓰되, 1000 폭 전체에서 좌우 중앙 + 상하 중앙에 오도록 가상
-        # zone을 만든다 (조합 시의 한쪽으로 치우친 위치는 사용하지 않음).
-        vy0 = (1000 - real_h) / 2
-        virtual_zone = (0, vy0, 1000, vy0 + real_h)
+        # STANDALONE_HEIGHT_OVERRIDE에 값이 지정되어 있으면 그 값을 쓰고,
+        # 없으면(None) 실제 조합 시 이 자모가 차지하는 높이를 그대로 쓴다.
+        override_h = STANDALONE_HEIGHT_OVERRIDE.get(kind)
+        target_h = override_h if override_h else real_h
+
+        # 1000 폭 전체에서 좌우 중앙 + 상하 중앙에 오도록 가상 zone을 만든다
+        # (조합 시의 한쪽으로 치우친 위치는 사용하지 않음).
+        vy0 = (1000 - target_h) / 2
+        virtual_zone = (0, vy0, 1000, vy0 + target_h)
 
         contours = _fit_contours(entry, virtual_zone, kind, jamo_char, cal)
 

@@ -54,37 +54,19 @@ def _apply_hinting(unhinted_path, output_path):
         return False
 
 
-def build_font(
-    glyph_dir="data/glyphs",
-    manifest_path="data/manifest.json",
-    output_path="output/MyHandwriting.ttf",
-    family_name="MyHandwriting",
-    style_name="Regular",
-    apply_kerning=True,
-    apply_hinting=True,
+def assemble_fontbuilder(
+    hangul_glyphs, hangul_cmap,
+    standalone_glyphs, standalone_cmap,
+    latin_glyphs, latin_cmap, latin_metrics,
+    family_name="MyHandwriting", style_name="Regular",
 ):
-    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    """
+    글리프/cmap/지표를 모아 FontBuilder를 조립하는 공용 로직.
 
-    cache, missing = load_component_contours(glyph_dir, manifest_path)
-    if missing:
-        print(f"참고: {len(missing)}개 컴포넌트가 아직 없어서 관련 음절/자모는 제외됩니다.")
-
-    # 같은 문맥(예: 받침없음+세로모음 초성 19개)에 속한 컴포넌트들이 공통
-    # 배율을 공유하도록, 문맥별 기준 높이를 한 번만 계산해서 재사용한다.
-    calibration = build_calibration(cache)
-
-    hangul_glyphs, hangul_cmap, hangul_built, hangul_skipped = compose_from_cache(cache, calibration)
-    standalone_glyphs, standalone_cmap, standalone_built = build_standalone_glyphs(cache, calibration)
-    latin_glyphs, latin_cmap, latin_metrics, latin_built = build_latin_glyphs(
-        glyph_dir, manifest
-    )
-
-    if hangul_built == 0 and latin_built == 0 and standalone_built == 0:
-        raise RuntimeError(
-            "조합/생성된 글자가 하나도 없습니다. data/glyphs 에 컴포넌트 PNG가 "
-            "있는지, data/manifest.json이 있는지 확인하세요."
-        )
-
+    build_font()(전체 11,172자 완성 빌드)와 preview.py(대표 글자 몇 개만
+    넣는 빠른 미리보기 빌드)가 이 함수를 공유한다 - 그래서 미리보기에서
+    본 결과가 최종 완성본과 항상 일치한다.
+    """
     glyph_order = [".notdef"]
     glyphs = {".notdef": TTGlyphPen(None).glyph()}
     metrics = {".notdef": (UNITS_PER_EM, 0)}
@@ -135,6 +117,47 @@ def build_font(
 
     fb.setupPost()
     fb.setupMaxp()
+
+    return fb
+
+
+def build_font(
+    glyph_dir="data/glyphs",
+    manifest_path="data/manifest.json",
+    output_path="output/MyHandwriting.ttf",
+    family_name="MyHandwriting", #폰트 이름
+    style_name="Regular",
+    apply_kerning=True,
+    apply_hinting=True,
+):
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+
+    cache, missing = load_component_contours(glyph_dir, manifest_path)
+    if missing:
+        print(f"참고: {len(missing)}개 컴포넌트가 아직 없어서 관련 음절/자모는 제외됩니다.")
+
+    # 같은 문맥(예: 받침없음+세로모음 초성 19개)에 속한 컴포넌트들이 공통
+    # 배율을 공유하도록, 문맥별 기준 높이를 한 번만 계산해서 재사용한다.
+    calibration = build_calibration(cache)
+
+    hangul_glyphs, hangul_cmap, hangul_built, hangul_skipped = compose_from_cache(cache, calibration)
+    standalone_glyphs, standalone_cmap, standalone_built = build_standalone_glyphs(cache, calibration)
+    latin_glyphs, latin_cmap, latin_metrics, latin_built = build_latin_glyphs(
+        glyph_dir, manifest
+    )
+
+    if hangul_built == 0 and latin_built == 0 and standalone_built == 0:
+        raise RuntimeError(
+            "조합/생성된 글자가 하나도 없습니다. data/glyphs 에 컴포넌트 PNG가 "
+            "있는지, data/manifest.json이 있는지 확인하세요."
+        )
+
+    fb = assemble_fontbuilder(
+        hangul_glyphs, hangul_cmap,
+        standalone_glyphs, standalone_cmap,
+        latin_glyphs, latin_cmap, latin_metrics,
+        family_name, style_name,
+    )
 
     kern_pairs = 0
     if apply_kerning:

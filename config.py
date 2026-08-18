@@ -25,12 +25,13 @@ FONT_SIZE = 16
 # ────────────────────────────────
 GLYPH_SIZE = 800        # 정규화된 글자 이미지 캔버스 크기 (px, 정사각형)
 TARGET_HEIGHT = 700     # 글자 높이를 이 값(px)에 맞춰 확대/축소
+TARGET_JONG_HEIGHT = 350 # ★ 추가: 종성(받침) 글자 높이 목표치 (과도한 확대 방지)
 BASELINE_MARGIN = 40    # 캔버스 하단 ~ baseline 사이 여백 (px)
 
 # ────────────────────────────────
 # 윤곽선 단순화 / 곡선화 설정
 # ────────────────────────────────
-APPROX_EPSILON = 2      # cv2.approxPolyDP 근사 정밀도 (작을수록 원본에 가까움)
+APPROX_EPSILON = 2    # cv2.approxPolyDP 근사 정밀도 (작을수록 원본에 가까움)
 CURVE_SMOOTHING = True  # True: 2차 베지어로 부드럽게, False: 직선(폴리곤) 그대로
 
 # ────────────────────────────────
@@ -79,6 +80,6 @@ GUIDE_STRIP_THRESHOLD = 195    # 전처리용 (이보다 밝으면 흰색 처리
 # 잉크가 일정 비율 이상 사라지면 즉시 멈춘다."
 STROKE_NORMALIZE = True
 TARGET_STROKE_PX = 34           # 목표 굵기
-STROKE_MAX_KERNEL_RADIUS = 4    # 한 번의 보정에서 깎거나 붙일 수 있는 최대 반지름(px) 8
-STROKE_MIN_AREA_RATIO = 0.8     # 침식 후 최소 유지되어야 하는 잉크 면적 비율 (이하로 떨어지면 그 단계는 취소) 0.6
-STROKE_MAX_ITERATIONS = 10      # 목표 굵기에 다가가기 위해 반복 보정하는 최대 횟수 6
+STROKE_MAX_KERNEL_RADIUS = 4   # 한 번의 보정에서 깎거나 붙일 수 있는 최대 반지름(px)
+STROKE_MIN_AREA_RATIO = 0.8     # 침식 후 최소 유지되어야 하는 잉크 면적 비율 (이하로 떨어지면 그 단계는 취소)
+STROKE_MAX_ITERATIONS = 10      # 목표 굵기에 다가가기 위해 반복 보정하는 최대 횟수
