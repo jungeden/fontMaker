@@ -7,7 +7,7 @@ from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
 from config import UNITS_PER_EM, ASCENDER, DESCENDER, ADVANCE_WIDTH
-from modules.compose import compose_all
+from modules.compose import load_component_contours, compose_from_cache, build_standalone_glyphs
 from modules.latin import build_latin_glyphs
 from modules.kerning import build_kern_feature
 
@@ -60,14 +60,17 @@ def build_font(
 ):
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
 
-    hangul_glyphs, hangul_cmap, hangul_built, hangul_skipped = compose_all(
-        glyph_dir, manifest_path
-    )
+    cache, missing = load_component_contours(glyph_dir, manifest_path)
+    if missing:
+        print(f"참고: {len(missing)}개 컴포넌트가 아직 없어서 관련 음절/자모는 제외됩니다.")
+
+    hangul_glyphs, hangul_cmap, hangul_built, hangul_skipped = compose_from_cache(cache)
+    standalone_glyphs, standalone_cmap, standalone_built = build_standalone_glyphs(cache)
     latin_glyphs, latin_cmap, latin_metrics, latin_built = build_latin_glyphs(
         glyph_dir, manifest
     )
 
-    if hangul_built == 0 and latin_built == 0:
+    if hangul_built == 0 and latin_built == 0 and standalone_built == 0:
         raise RuntimeError(
             "조합/생성된 글자가 하나도 없습니다. data/glyphs 에 컴포넌트 PNG가 "
             "있는지, data/manifest.json이 있는지 확인하세요."
@@ -78,12 +81,19 @@ def build_font(
     metrics = {".notdef": (UNITS_PER_EM, 0)}
     cmap = {}
 
-    # 한글 음절은 전부 정사각형(전각) 글자이므로 advance width를 고정값으로 준다.
+    # 한글 음절 + 단독 자모는 전부 정사각형(전각) 글자이므로 advance width를
+    # 고정값으로 준다.
     for gname, glyph in hangul_glyphs.items():
         glyph_order.append(gname)
         glyphs[gname] = glyph
         metrics[gname] = (ADVANCE_WIDTH, 0)
     cmap.update(hangul_cmap)
+
+    for gname, glyph in standalone_glyphs.items():
+        glyph_order.append(gname)
+        glyphs[gname] = glyph
+        metrics[gname] = (ADVANCE_WIDTH, 0)
+    cmap.update(standalone_cmap)
 
     # 라틴/숫자/특수문자는 글자마다 실제 폭에 맞는 advance width를 쓴다.
     for gname, glyph in latin_glyphs.items():
@@ -131,6 +141,7 @@ def build_font(
         fb.save(output_path)
 
     print(f"한글 {hangul_built}자 (미완성 컴포넌트로 {hangul_skipped}자 제외) + "
-          f"영문/숫자/특수문자 {latin_built}자, 총 {hangul_built + latin_built}자, "
+          f"단독 자모 {standalone_built}개 + "
+          f"영문/숫자/특수문자 {latin_built}자, 총 {hangul_built + standalone_built + latin_built}자, "
           f"커닝 {kern_pairs}쌍 적용, '{output_path}' 생성 완료")
     return output_path

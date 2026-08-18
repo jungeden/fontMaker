@@ -28,14 +28,19 @@ from modules.hangul import (
     decompose_code,
     get_component_scale,
     get_component_offset,
+    build_standalone_jamo_list,
 )
 
 HANGUL_START = 0xAC00
 HANGUL_END = 0xD7A3  # inclusive
 
-# zone 안쪽으로 살짝 여백을 둬서, 비율을 유지한 채 맞춰도 옆 자모와
-# 딱 붙지 않게 한다 (zone 각 변 기준 비율).
-ZONE_INNER_PADDING = 0.05
+# zone 좌표(modules/hangul.py의 ZONE_LAYOUTS) 자체에 이미 적당한 여백이
+# 포함되어 있으므로, 여기서는 아주 작은 안전 여백만 추가로 둔다.
+ZONE_INNER_PADDING = 0.0
+
+# 단독 자모("ㄱ", "ㅏ" 등 조합되지 않은 낱자)를 표시할 사각형 영역
+# (1000x1000 기준). 합성 음절과 비슷한 시각적 무게감을 갖도록 여백을 둔다.
+STANDALONE_BOX = (80, 20, 920, 920)
 
 
 def _contours_bbox(contours):
@@ -155,8 +160,9 @@ def compose_syllable_glyph(cache, cho, jung, jong=None):
     return pen.glyph()
 
 
-def compose_all(glyph_dir="data/glyphs", manifest_path="data/manifest.json"):
+def compose_from_cache(cache):
     """
+    이미 로드된 컴포넌트 캐시(load_component_contours의 결과)로부터
     가(0xAC00) ~ 힣(0xD7A3) 완성형 한글 11,172자를 전부 조합한다.
     아직 손글씨가 채워지지 않은 컴포넌트가 필요한 음절은 건너뛴다
     (부분적으로만 손글씨를 채워도 그 범위 내에서 폰트를 만들어볼 수 있다).
@@ -164,11 +170,6 @@ def compose_all(glyph_dir="data/glyphs", manifest_path="data/manifest.json"):
     반환값: (glyphs: {glyph_name: TTGlyph}, cmap: {codepoint: glyph_name},
              built_count, skipped_count)
     """
-    cache, missing = load_component_contours(glyph_dir, manifest_path)
-
-    if missing:
-        print(f"참고: {len(missing)}개 컴포넌트가 아직 없어서 관련 음절은 제외됩니다.")
-
     glyphs = {}
     cmap = {}
     built = 0
@@ -188,3 +189,47 @@ def compose_all(glyph_dir="data/glyphs", manifest_path="data/manifest.json"):
         built += 1
 
     return glyphs, cmap, built, skipped
+
+
+def compose_all(glyph_dir="data/glyphs", manifest_path="data/manifest.json"):
+    """
+    load_component_contours() + compose_from_cache()를 한 번에 실행하는
+    편의 함수 (단독으로 한글 조합 결과만 필요할 때 사용).
+    """
+    cache, missing = load_component_contours(glyph_dir, manifest_path)
+
+    if missing:
+        print(f"참고: {len(missing)}개 컴포넌트가 아직 없어서 관련 음절은 제외됩니다.")
+
+    return compose_from_cache(cache)
+
+
+def build_standalone_glyphs(cache):
+    """
+    조합되지 않은 단독 자모("ㄱ", "ㅏ" 등)를 그 자체로 입력했을 때도 폰트가
+    적용되도록, 51개 자모 각각에 대해 대표 컴포넌트를 STANDALONE_BOX
+    안에 비율 유지 + 중앙 정렬로 배치한 글리프를 만든다.
+
+    반환값: (glyphs: {glyph_name: TTGlyph}, cmap: {codepoint: glyph_name}, built_count)
+    """
+    glyphs = {}
+    cmap = {}
+    built = 0
+
+    for codepoint, comp_id in build_standalone_jamo_list():
+        entry = cache.get(comp_id)
+        if entry is None:
+            continue
+
+        contours = _fit_contours(entry, STANDALONE_BOX, "standalone", comp_id)
+
+        pen = TTGlyphPen(None)
+        for pts, _is_hole in contours:
+            draw_contour(pen, pts)
+
+        gname = f"jamo{codepoint:04X}"
+        glyphs[gname] = pen.glyph()
+        cmap[codepoint] = gname
+        built += 1
+
+    return glyphs, cmap, built
