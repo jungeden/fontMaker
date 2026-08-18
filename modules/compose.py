@@ -28,6 +28,7 @@ from pathlib import Path
 
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
+from config import HANGUL_FILL_RATIO, HANGUL_MAX_OVERFLOW_RATIO
 from modules.glyph import image_to_contours, draw_contour
 from modules.hangul import (
     CHO_LIST,
@@ -48,14 +49,30 @@ from modules.hangul import (
 HANGUL_START = 0xAC00
 HANGUL_END = 0xD7A3  # inclusive
 
-# 목표 높이 = zone 높이의 이 비율. 너무 꽉 채우면(1.0) 여백이 없어 보이고,
-# 너무 작으면(<0.8) 헐거워 보인다.
-FILL_RATIO = 0.90
+# 목표 높이 = zone 높이의 이 비율, 자모 하나가 zone 폭/높이를 얼마나 넘어갈
+# 때까지 허용할지 - 둘 다 config.py에서 관리한다 (크기/자간 관련 설정을
+# 한 곳에 모아두기 위함). "한글 글자가 작다"/"COMPONENT_SCALE을 올렸는데
+# 반영이 안 된다" 싶으면 config.py의 HANGUL_FILL_RATIO / HANGUL_MAX_OVERFLOW_RATIO
+# 를 조정하면 된다.
+FILL_RATIO = HANGUL_FILL_RATIO
+MAX_OVERFLOW_RATIO = HANGUL_MAX_OVERFLOW_RATIO
 
-# 특정 컴포넌트가 유독 커서(예: ㅁ처럼 넓은 자모) zone을 심하게 벗어나면
-# 이 비율까지만 추가로 줄이는 안전장치. 공통 배율 자체는 건드리지 않고,
-# 정말 넘칠 때만 그 컴포넌트 하나에 한해 최소한으로 개입한다.
-MAX_OVERFLOW_RATIO = 1.0
+# COMPONENT_SCALE로 키운(1.0이 아닌) 자모인데 안전장치(MAX_OVERFLOW_RATIO)에
+# 걸려서 실제로는 원하는 만큼 커지지 못한 (kind, jamo) -> 초과 비율 기록.
+# get_overflow_clamp_warnings()로 조회해서 사용자에게 알려준다.
+_OVERFLOW_CLAMP_LOG = {}
+
+
+def get_overflow_clamp_warnings():
+    """
+    COMPONENT_SCALE 설정이 안전장치에 의해 무력화된 (kind, jamo, 초과배율)
+    목록. 초과배율이 1.5보다 훨씬 크다면(예: 2~3배), 이건 COMPONENT_SCALE
+    문제가 아니라 그 자모가 원래도 zone 폭에 비해 훨씬 넓게 쓰여진 것이다
+    (쌍자음 ㄲ,ㄸ,ㅃ,ㅆ,ㅉ처럼 옆으로 넓은 모양에서 흔하다). 이런 경우
+    HANGUL_MAX_OVERFLOW_RATIO를 크게 올려도 되지만, 너무 올리면 옆 자모
+    (중성)와 겹칠 수 있으니 조금씩 올려가며 확인하는 것을 권장한다.
+    """
+    return sorted(_OVERFLOW_CLAMP_LOG.items())
 
 
 def _contours_bbox(contours):
@@ -181,16 +198,29 @@ def _fit_contours(entry, zone, kind, jamo, calibration_height):
 
     # 안전장치: 이 특정 컴포넌트가 유독 커서 zone을 심하게 벗어나면 그
     # 컴포넌트에 한해서만 최소한으로 더 줄인다 (공통 배율 자체는 안 건드림).
+    # COMPONENT_SCALE로 일부러 키운 자모가 이 안전장치에 걸리면 사용자
+    # 설정이 무력화된 것처럼 보일 수 있으므로, 그런 경우를 기록해뒀다가
+    # 나중에 경고로 알려준다 (get_overflow_clamp_warnings 참고).
+    clamped = False
+    overflow_ratio = 1.0
     if draw_w > zone_w * MAX_OVERFLOW_RATIO:
+        overflow_ratio = max(overflow_ratio, draw_w / zone_w)
         shrink = (zone_w * MAX_OVERFLOW_RATIO) / draw_w
         scale *= shrink
         draw_w *= shrink
         draw_h *= shrink
+        clamped = True
     if draw_h > zone_h * MAX_OVERFLOW_RATIO:
+        overflow_ratio = max(overflow_ratio, draw_h / zone_h)
         shrink = (zone_h * MAX_OVERFLOW_RATIO) / draw_h
         scale *= shrink
         draw_w *= shrink
         draw_h *= shrink
+        clamped = True
+
+    if clamped and get_component_scale(kind, jamo) != 1.0:
+        prev = _OVERFLOW_CLAMP_LOG.get((kind, jamo), 0)
+        _OVERFLOW_CLAMP_LOG[(kind, jamo)] = max(prev, overflow_ratio)
 
     # zone 중앙 정렬
     center_x = zx0 + (zone_w - draw_w) / 2
@@ -255,6 +285,8 @@ def compose_from_cache(cache, calibration=None):
     if calibration is None:
         calibration = build_calibration(cache)
 
+    _OVERFLOW_CLAMP_LOG.clear()
+
     glyphs = {}
     cmap = {}
     built = 0
@@ -272,6 +304,21 @@ def compose_from_cache(cache, calibration=None):
         glyphs[gname] = glyph
         cmap[code] = gname
         built += 1
+
+    if _OVERFLOW_CLAMP_LOG:
+        warn_list = ", ".join(
+            f"({k},{j}: 필요폭의 {ratio*100:.0f}%)"
+            for (k, j), ratio in get_overflow_clamp_warnings()
+        )
+        print(f"참고: COMPONENT_SCALE을 지정한 자모 중 일부가 안전장치"
+              f"(config.py의 HANGUL_MAX_OVERFLOW_RATIO)에 걸려 원하는 만큼 "
+              f"커지지 못했습니다: {warn_list}")
+        print("  -> 이 자모들을 더 키우고 싶다면 config.py의 "
+              "HANGUL_MAX_OVERFLOW_RATIO 값을 올려보세요 (예: 1.35 -> 1.6).")
+        print("  -> 위 비율이 150%를 크게 넘는다면(예: 250%), COMPONENT_SCALE "
+              "때문이 아니라 그 자모가 원래도 zone 폭에 비해 훨씬 넓게 쓰여진 "
+              "것입니다 (쌍자음 ㄲ,ㄸ,ㅃ,ㅆ,ㅉ에서 흔함). 비율을 크게 올리면 "
+              "옆 자모(중성)와 겹칠 수 있으니 조금씩 올려가며 확인하세요.")
 
     return glyphs, cmap, built, skipped
 

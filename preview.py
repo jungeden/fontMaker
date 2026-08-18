@@ -307,8 +307,8 @@ def preview_stroke(sample_ids=None, glyph_dir="data/glyphs", manifest_path="data
         img_out.paste(a, (i * tile_size, 20 + tile_size))
         draw.text((i * tile_size + 4, 2), labels[i], font=label_font, fill=0)
 
-    draw.text((2, 20 + 2), "before", font=label_font, fill=0)
-    draw.text((2, 20 + tile_size + 2), "after", font=label_font, fill=0)
+    draw.text((2, 20 + 2), "보정 전", font=label_font, fill=0)
+    draw.text((2, 20 + tile_size + 2), "보정 후", font=label_font, fill=0)
 
     out = f"{OUTPUT_DIR}/preview_stroke.png"
     img_out.convert("RGB").save(out)
@@ -337,7 +337,7 @@ def preview_hinting():
     label_font = ImageFont.load_default()
 
     y = 10
-    for label, ttf in [("hinting on", ttf_hinted), ("hintinh off", ttf_unhinted)]:
+    for label, ttf in [("힌팅 적용", ttf_hinted), ("힌팅 없음", ttf_unhinted)]:
         draw.text((pad, y), f"--- {label} ---", font=label_font, fill=(150, 0, 0))
         y += 16
         for size in sizes:
@@ -350,6 +350,62 @@ def preview_hinting():
     print(f"저장됨: {out}")
     print("참고: 화면 배율/뷰어에 따라 차이가 잘 안 보일 수 있습니다. "
           "이미지 파일을 실제 픽셀 100%로 확대해서 보는 것을 권장합니다.")
+
+
+WATCHED_FILES = [
+    "config.py",
+    "modules/hangul.py",
+    "modules/compose.py",
+    "modules/latin.py",
+    "modules/kerning.py",
+    "modules/segment.py",
+    "modules/fontbuild.py",
+]
+
+
+def watch(modes=("hangul",), interval=1.0):
+    """
+    위 WATCHED_FILES를 감시하다가, 파일을 저장할 때마다 지정한 미리보기
+    모드를 자동으로 다시 실행한다. 완전한 실시간 GUI는 아니지만, 파일을
+    저장하는 것만으로 output/preview_*.png 가 자동으로 갱신되므로, 이미지
+    뷰어(자동 새로고침을 지원하는 뷰어나 VSCode의 이미지 미리보기 등)를
+    옆에 띄워두면 "고치고 -> 저장하고 -> 바로 확인"을 거의 실시간처럼 반복할
+    수 있다.
+
+    매번 완전히 새 파이썬 프로세스로 다시 실행한다 (importlib.reload는
+    모듈 간 참조가 얽혀 있으면 일부만 갱신되는 문제가 있어서, 아예 새
+    프로세스로 실행하는 쪽이 항상 최신 코드를 정확히 반영해서 더 안전하다).
+    """
+    import subprocess
+    import time
+
+    paths = [Path(p) for p in WATCHED_FILES]
+    script = sys.argv[0]
+
+    def snapshot():
+        return {p: p.stat().st_mtime for p in paths if p.exists()}
+
+    def run_all():
+        for mode in modes:
+            subprocess.run([sys.executable, script, mode])
+
+    print(f"watch 모드 시작 - {', '.join(modes)} 미리보기를 자동 갱신합니다.")
+    print(f"감시 중: {', '.join(WATCHED_FILES)}")
+    print("Ctrl+C로 종료.")
+
+    last = snapshot()
+    run_all()
+
+    try:
+        while True:
+            time.sleep(interval)
+            cur = snapshot()
+            if cur != last:
+                print("변경 감지 -> 다시 그리는 중...")
+                last = cur
+                run_all()
+    except KeyboardInterrupt:
+        print("\nwatch 모드 종료.")
 
 
 MODES = {
@@ -366,11 +422,19 @@ if __name__ == "__main__":
 
     mode = sys.argv[1] if len(sys.argv) > 1 else "all"
 
-    if mode == "all":
+    if mode == "watch":
+        watch_modes = sys.argv[2:] if len(sys.argv) > 2 else ["hangul"]
+        unknown = [m for m in watch_modes if m not in MODES]
+        if unknown:
+            print(f"알 수 없는 모드: {', '.join(unknown)}")
+            print(f"사용 가능: {', '.join(MODES)}")
+        else:
+            watch(watch_modes)
+    elif mode == "all":
         for fn in MODES.values():
             fn()
     elif mode in MODES:
         MODES[mode]()
     else:
         print(f"알 수 없는 모드: {mode}")
-        print(f"사용 가능: {', '.join(MODES)}, all")
+        print(f"사용 가능: {', '.join(MODES)}, all, watch")

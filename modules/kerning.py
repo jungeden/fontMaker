@@ -17,9 +17,10 @@
 from fontTools.pens.recordingPen import RecordingPen
 from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
 
+from config import KERNING_MAX_RATIO, KERNING_MAX_ABS
+
 RASTER_ROWS = 40          # 프로파일 샘플링 해상도 (세로 방향)
 MIN_KERN_UNITS = 15       # 이보다 작은 보정은 무시 (피처 용량 절약, 육안으로도 티 안 남)
-MAX_KERN_RATIO = 0.35     # advance width 대비 최대 보정 비율 (너무 큰 보정 방지)
 DEFAULT_TARGET_GAP = 100  # 글자 사이에 이상적으로 남기고 싶은 여백 (폰트 유닛)
 
 
@@ -122,7 +123,7 @@ def build_kern_feature(font, latin_cmap, target_gap=DEFAULT_TARGET_GAP):
                 continue
 
             kern = target_gap - min(gaps)
-            limit = advanceL * MAX_KERN_RATIO
+            limit = max(advanceL * KERNING_MAX_RATIO, KERNING_MAX_ABS)
             kern = max(-limit, min(limit, kern))
             kern = round(kern)
 

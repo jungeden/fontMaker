@@ -141,11 +141,6 @@ for (_batchim, _macro), _layout in _BASE_ZONE_LAYOUTS.items():
     for _sub in SUBGROUPS[_macro]:
         ZONE_LAYOUTS[(_batchim, _sub)] = dict(_layout)
 
-# ZONE_LAYOUTS[(True, "V2")] = {
-#     "cho":  (100, 560, 400, 1000),
-#     "jung": (400, 510, 1000, 1000),
-#     "jong": (100,  40, 900, 390),
-# }
 ZONE_LAYOUTS[(False, "H1")] = {
     "cho":  (200, 550, 800, 900), # 350
     "jung": (100, 50, 900, 550), # 500

@@ -6,15 +6,16 @@ import cv2
 import numpy as np
 
 from config import (
-    ROWS, COLS, GLYPH_SIZE, TARGET_HEIGHT, BASELINE_MARGIN, TARGET_JONG_HEIGHT,
-    STROKE_NORMALIZE, TARGET_STROKE_PX,
+    ROWS, COLS, GLYPH_SIZE, TARGET_HEIGHT, BASELINE_MARGIN,
+    STROKE_NORMALIZE, TARGET_STROKE_PX, LATIN_TARGET_STROKE_PX,
     STROKE_MAX_KERNEL_RADIUS, STROKE_MIN_AREA_RATIO, STROKE_MAX_ITERATIONS,
+    CELL_INSET_RATIO,
 )
 
 CELLS_PER_PAGE = ROWS * COLS
 
 
-def _inset(cell, margin_ratio=0.12):
+def _inset(cell, margin_ratio=CELL_INSET_RATIO):
     """
     칸의 테두리 선(원고지 격자선) 자체가 글자로 오인식되는 것을 막기 위해
     칸 가장자리를 안쪽으로 살짝 잘라낸다.
@@ -45,6 +46,24 @@ def crop_content(cell):
 
     x, y, w, h = cv2.boundingRect(pts)
     return inner[y:y + h, x:x + w]
+
+
+def touches_edge(cell, edge_margin=2):
+    """
+    칸 안의 잉크가 (테두리 여백을 제외한) 가장자리에 닿아 있는지 확인한다.
+    닿아 있다면 실제 손글씨가 칸 밖으로 나가서 잘렸을 가능성이 있다는
+    신호다 (특히 받침처럼 칸 아래쪽에 붙여 쓰는 컴포넌트에서 흔함).
+    """
+    inner = _inset(cell)
+    inv = 255 - inner
+    h, w = inv.shape
+
+    top = inv[:edge_margin, :]
+    bottom = inv[-edge_margin:, :]
+    left = inv[:, :edge_margin]
+    right = inv[:, -edge_margin:]
+
+    return any(cv2.countNonZero(edge) > 0 for edge in (top, bottom, left, right))
 
 
 def _estimate_stroke_width(ink_mask):
@@ -170,7 +189,7 @@ def _extract_cell(image, r, col):
     return image[y:y + cell_h, x:x + cell_w]
 
 
-def normalize_latin_cell(cell, canvas_size=GLYPH_SIZE, margin_ratio=0.12):
+def normalize_latin_cell(cell, canvas_size=GLYPH_SIZE, margin_ratio=CELL_INSET_RATIO):
     """
     라틴 문자(영문/숫자/특수문자)용 정규화.
 
@@ -189,7 +208,7 @@ def normalize_latin_cell(cell, canvas_size=GLYPH_SIZE, margin_ratio=0.12):
     if inner.shape[0] == 0 or inner.shape[1] == 0:
         return None
     resized = cv2.resize(inner, (canvas_size, canvas_size), interpolation=cv2.INTER_AREA)
-    return normalize_stroke_width(resized)
+    return normalize_stroke_width(resized, target_width=LATIN_TARGET_STROKE_PX)
 
 
 def segment(images, output_dir="data/glyphs", manifest_path="data/manifest.json"):
@@ -208,6 +227,7 @@ def segment(images, output_dir="data/glyphs", manifest_path="data/manifest.json"
 
     idx = 0
     saved = 0
+    clipped_ids = []
 
     for page_no, image in enumerate(images):
         for r in range(ROWS):
@@ -220,6 +240,9 @@ def segment(images, output_dir="data/glyphs", manifest_path="data/manifest.json"
                 if not has_content(cell):
                     idx += 1
                     continue
+
+                if touches_edge(cell):
+                    clipped_ids.append((idx, manifest[idx]["id"]))
 
                 kind = manifest[idx]["kind"]
 
@@ -249,3 +272,9 @@ def segment(images, output_dir="data/glyphs", manifest_path="data/manifest.json"
         missing = total - saved
         print(f"주의: {missing}개 칸이 비어 있거나 인식되지 않았습니다. "
               f"해당 칸은 합성 시 자동으로 제외됩니다 (범례로 어떤 칸인지 확인하세요).")
+    if clipped_ids:
+        print(f"주의: {len(clipped_ids)}개 컴포넌트의 잉크가 칸 가장자리에 닿아 있어 "
+              f"일부가 잘렸을 수 있습니다 (특히 받침류에서 흔함). 결과 폰트에서 이상해 "
+              f"보이면 아래 칸들을 조금 더 작게/안쪽으로 다시 써보세요:")
+        preview_list = ", ".join(f"{idx:03}({cid})" for idx, cid in clipped_ids[:15])
+        print(f"  {preview_list}" + (" ..." if len(clipped_ids) > 15 else ""))

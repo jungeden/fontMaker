@@ -125,7 +125,7 @@ def build_font(
     glyph_dir="data/glyphs",
     manifest_path="data/manifest.json",
     output_path="output/MyHandwriting.ttf",
-    family_name="MyHandwriting", #폰트 이름
+    family_name="MyHandwriting",
     style_name="Regular",
     apply_kerning=True,
     apply_hinting=True,

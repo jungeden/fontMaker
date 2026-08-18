@@ -57,6 +57,43 @@ ZONE_LAYOUTS[(True, "V2")] = {
 `_BASE_ZONE_LAYOUTS`를, "이 방향 중에서도 특정 모음 하나만 이상하다"면 위처럼
 `ZONE_LAYOUTS[(batchim, "V1")]` 개별 항목을 고치면 된다.
 
+## 한글 크기 / 굵기 / 자간 조정 (ZONE_LAYOUTS처럼 수치로 조정하기)
+
+`ZONE_LAYOUTS`가 "위치"를 정하는 것과 별개로, "크기"·"굵기"·"자간(글자 사이 간격)"은
+전부 `config.py` 한 곳에 모아뒀다. 아래 표를 보고 증상에 맞는 값을 조정하면 된다.
+
+| 증상 | 조정할 값 | 위치 | 기본값 |
+|---|---|---|---|
+| 한글 글자가 상자 안에서 너무 작다 | `HANGUL_FILL_RATIO`를 올린다 | config.py | 0.93 |
+| 특정 자모(예: 쌍자음 ㄸ)를 `COMPONENT_SCALE`로 키웠는데 반영이 안 된다 | `HANGUL_MAX_OVERFLOW_RATIO`를 올린다 | config.py | 1.35 |
+| 한글 자간(글자 사이 간격)이 너무 넓다/좁다 | `ADVANCE_WIDTH`를 줄이거나/늘린다 | config.py | 950 |
+| 획이 너무 얇다/두껍다 (한글) | `TARGET_STROKE_PX`를 올리거나/내린다 | config.py | 34 |
+| 획이 너무 얇다/두껍다 (영문/숫자/기호) | `LATIN_TARGET_STROKE_PX`를 올리거나/내린다 | config.py | 34 |
+| 받침 등 일부가 잘려서 나온다 | `CELL_INSET_RATIO`를 낮춘다 (이미 0.05로 낮춰둔 상태) | config.py | 0.05 |
+| 영문 커닝(자간 보정)이 들쭉날쭉하다 | `KERNING_MAX_ABS`를 올린다 | config.py | 150 |
+
+### 왜 쌍자음(ㄲ,ㄸ,ㅃ,ㅆ,ㅉ)은 COMPONENT_SCALE이 잘 안 먹는 것처럼 보일 수 있는가
+
+쌍자음은 자음 두 개가 옆으로 나란히 있는 모양이라, 홑자음보다 원래 훨씬 옆으로 넓다.
+같은 zone(홑자음 기준으로 잡힌 폭)에 맞추려다 보면 기본 배율(1.0)일 때부터 이미
+zone 폭을 크게 초과해서, 안전장치(`HANGUL_MAX_OVERFLOW_RATIO`)가 작동 중일 수 있다.
+이 상태에서 `COMPONENT_SCALE`로 더 키우면, 커진 만큼이 전부 안전장치에 흡수되어 겉보기엔
+"안 먹는" 것처럼 보인다.
+
+빌드/미리보기를 실행하면 이런 경우 아래처럼 **실제로 얼마나 초과했는지** 알려준다:
+
+```
+참고: COMPONENT_SCALE을 지정한 자모 중 일부가 안전장치(config.py의
+HANGUL_MAX_OVERFLOW_RATIO)에 걸려 원하는 만큼 커지지 못했습니다: (cho,ㄸ: 필요폭의 333%)
+  -> 이 자모들을 더 키우고 싶다면 config.py의 HANGUL_MAX_OVERFLOW_RATIO 값을 올려보세요.
+  -> 위 비율이 150%를 크게 넘는다면, COMPONENT_SCALE 때문이 아니라 그 자모가 원래도
+     zone 폭에 비해 훨씬 넓게 쓰여진 것입니다. 비율을 크게 올리면 옆 자모(중성)와
+     겹칠 수 있으니 조금씩 올려가며 확인하세요.
+```
+
+이 메시지가 뜨면 `HANGUL_MAX_OVERFLOW_RATIO`를 조금씩 올려가며 `preview.py hangul`로
+옆 자모(중성)와 겹치지 않는 선을 찾는 것을 권장한다.
+
 ## 단독 자모 (ㄱ, ㅏ 등)
 
 183개 컴포넌트 중 51개(초성 19 + 종성전용 겹받침 11 + 중성 21)는, 완성형 음절이 아니라
@@ -185,6 +222,23 @@ python preview.py all        # 위 다섯 가지를 전부 실행
 `preview.py`만으로 빠르게 튜닝을 반복하고, 만족스러우면 마지막에 한 번만
 `python app.py build`로 전체 폰트를 완성하면 된다.
 
+### 저장할 때마다 자동으로 다시 그리기 (watch 모드)
+
+```bash
+python preview.py watch            # hangul 미리보기를 감시 (기본값)
+python preview.py watch hangul latin  # 여러 모드를 한꺼번에 감시
+```
+
+`config.py`, `modules/hangul.py`, `modules/compose.py`, `modules/latin.py`,
+`modules/kerning.py`, `modules/segment.py`, `modules/fontbuild.py` 중 아무 파일이나
+저장할 때마다 지정한 미리보기를 자동으로 다시 만든다. VSCode 같은 에디터에서
+`output/preview_hangul.png`를 열어두면(이미지 탭은 파일이 바뀌면 자동으로 다시
+읽어온다), 코드를 고치고 저장하기만 하면 바로 갱신된 결과를 볼 수 있다 — 마크다운
+미리보기 창과 비슷한 경험이다. `Ctrl+C`로 종료한다.
+
+(완전한 실시간 GUI는 아니고 "저장 -> 자동 재생성"이다. 매번 새 파이썬 프로세스로
+다시 실행하는 방식이라 코드를 고친 내용이 항상 정확히 반영된다.)
+
 ## 구조 (모듈별 상세 설명)
 
 ```
@@ -279,15 +333,20 @@ fontMaker
 
 ### `segment.py` — 원고지 칸 → 컴포넌트 PNG 분할
 
-- `_inset(cell)`: 칸 테두리(격자선)가 잉크로 오인식되지 않도록 가장자리를 살짝 잘라낸다.
+- `_inset(cell)`: 칸 테두리(격자선)가 잉크로 오인식되지 않도록 가장자리를 살짝 잘라낸다
+  (`config.py`의 `CELL_INSET_RATIO`, 기본 0.05 — 너무 크면 받침처럼 가장자리에 붙여 쓰는
+  컴포넌트가 잘릴 수 있어서 작게 잡았다).
 - `has_content(cell)`: 칸이 비어있는지 확인 (빈 칸 자동 스킵용).
+- `touches_edge(cell)`: 잉크가 칸 가장자리에 닿아 있는지 확인한다. 닿아 있으면 실제
+  손글씨가 칸 밖으로 나가서 잘렸을 가능성이 있다는 뜻이며, `segment()`가 이런 컴포넌트
+  목록을 빌드 마지막에 경고로 알려준다.
 - `crop_content(cell)`, `normalize_glyph(glyph)`: **한글용**. 실제 잉크만 잘라내고, 목표
   높이로 맞춘 뒤 baseline에 정렬해서 정사각형 캔버스에 배치한다.
 - `normalize_latin_cell(cell)`: **라틴용**. `normalize_glyph`와 달리 baseline 위치 정보를
   지키기 위해 내용 기준으로 재정렬하지 않고, 칸을 있는 그대로 정사각형으로 리사이즈만 한다.
-- `_estimate_stroke_width(ink_mask)`, `normalize_stroke_width(img)`: 획 굵기 자동 보정
-  (위 "한글과 크기/굵기를 맞추는 자동 보정" 섹션 참고). 두 정규화 함수 모두 마지막에 이
-  보정을 거친다.
+- `_estimate_stroke_width(ink_mask)`, `normalize_stroke_width(img, target_width)`: 획 굵기
+  자동 보정 (위 "한글과 크기/굵기를 맞추는 자동 보정" 섹션 참고). 한글은
+  `config.TARGET_STROKE_PX`, 라틴은 `config.LATIN_TARGET_STROKE_PX`를 각각 목표로 쓴다.
 - `segment(images, output_dir, manifest_path)`: 페이지 이미지들을 받아서 칸을 나누고,
   컴포넌트 종류(한글/라틴)에 따라 위 정규화 함수들을 적용한 뒤 `data/glyphs/{idx}.png`로
   저장한다. `app.py`의 `build` 명령이 이 함수를 호출한다.
@@ -317,6 +376,9 @@ fontMaker
 ### `compose.py` — 183개 컴포넌트로 11,172자 + 단독 자모 조합
 
 이 프로젝트의 핵심 로직이 있는 파일. 자세한 설계 배경은 파일 맨 위 docstring 참고.
+`FILL_RATIO`/`MAX_OVERFLOW_RATIO`는 `config.py`의 `HANGUL_FILL_RATIO`/
+`HANGUL_MAX_OVERFLOW_RATIO`를 그대로 가져와 쓴다 (크기 관련 설정을 config.py 한 곳에
+모아두기 위함).
 
 - `load_component_contours(glyph_dir, manifest_path)`: `data/glyphs`의 PNG들을 읽어서
   `{컴포넌트id: {"contours":[...], "bbox":(...)}}` 캐시를 만든다. bbox를 미리 계산해두는
@@ -328,7 +390,10 @@ fontMaker
   안에 비율 유지 + 중앙 정렬로 배치한다. 배율은 이 컴포넌트 자신의 크기가 아니라
   `calibration_height`(문맥 공통 기준)로 계산하므로, 같은 문맥 안에서는 항상 같은 배율이
   나와서 크기가 안정적이다. `KIND_SCALE`/`COMPONENT_SCALE`/`COMPONENT_OFFSET`도 여기서
-  곱해진다.
+  곱해지고, 결과가 zone을 심하게 벗어나면 `MAX_OVERFLOW_RATIO`로 제한한다.
+- `get_overflow_clamp_warnings()`: `COMPONENT_SCALE`을 지정했는데 안전장치에 걸려 실제로는
+  반영이 덜 된 자모 목록과, 얼마나 초과했는지(%)를 반환한다. "한글 크기/굵기/자간 조정"
+  섹션 참고.
 - `compose_syllable_glyph(cache, calibration, cho, jung, jong)`: 초/중/종성 자모 하나로
   완성형 음절 하나의 TTGlyph를 만든다. `preview.py`가 샘플 글자 몇 개만 빠르게 만들 때도
   이 함수를 직접 호출한다.
@@ -345,7 +410,10 @@ fontMaker
   잉크의 왼쪽 끝/오른쪽 끝 x좌표를 계산한다 (커닝 계산의 기초 자료).
 - `build_kern_feature(font, latin_cmap, target_gap)`: 라틴 129자의 모든 쌍에 대해 두
   글자를 나란히 놓았을 때의 간격을 위 프로파일로 계산하고, 이상적인 간격(target_gap)과
-  차이가 크면 GPOS `kern` 피처로 보정값을 추가한다. `fontbuild.py`와 `preview.py`(kerning
+  차이가 크면 GPOS `kern` 피처로 보정값을 추가한다. 보정량 한도는
+  `max(advance × KERNING_MAX_RATIO, KERNING_MAX_ABS)`로 계산한다 — 마침표처럼 폭이 좁은
+  글자도 `KERNING_MAX_ABS`만큼은 최소 보정 여유를 보장받는다 (그렇지 않으면 좁은 글자의
+  자간만 유독 덜 보정되어 들쭉날쭉해 보인다). `fontbuild.py`와 `preview.py`(kerning
   모드)가 이 함수를 호출한다.
 
 ### `fontbuild.py` — 최종 .ttf 조립
@@ -402,6 +470,10 @@ sudo apt install ttfautohint      # Linux
   자연스러운 형태 차이(예: ㄱ은 작고 ㅁ은 큼)까지 완전히 균일하게 만들지는 않는다 (의도적 —
   손글씨의 자연스러운 상대적 크기감을 존중한다). 그래도 유독 튀는 자모는 `COMPONENT_SCALE`로
   수동 보정할 수 있다.
+- 쌍자음(ㄲ,ㄸ,ㅃ,ㅆ,ㅉ)은 홑자음보다 원래 훨씬 옆으로 넓어서, 홑자음 기준으로 잡힌 zone
+  폭에서는 기본 배율(1.0)일 때부터 이미 안전장치(`HANGUL_MAX_OVERFLOW_RATIO`)에 걸리기
+  쉽다. 이 상태에서 `COMPONENT_SCALE`로 더 키우면 반영이 잘 안 되는 것처럼 보일 수 있다 —
+  "한글 크기/굵기/자간 조정" 섹션의 관련 안내 참고.
 - 획 굵기 자동 보정은 잉크 면적/둘레 비율 기반의 근사치라 완벽하게 균일하지는 않다.
   안전장치(단계적 보정 + 면적 가드)로 받침 등이 통째로 사라지는 것은 방지하지만, 그래도
   이상하다면 `config.py`의 `TARGET_STROKE_PX`나 `STROKE_MAX_KERNEL_RADIUS`를 조정하면 된다.
