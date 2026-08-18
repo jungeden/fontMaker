@@ -8,6 +8,7 @@ import numpy as np
 from config import (
     ROWS, COLS, GLYPH_SIZE, TARGET_HEIGHT, BASELINE_MARGIN,
     STROKE_NORMALIZE, TARGET_STROKE_PX,
+    STROKE_MAX_KERNEL_RADIUS, STROKE_MIN_AREA_RATIO, STROKE_MAX_ITERATIONS,
 )
 
 CELLS_PER_PAGE = ROWS * COLS
@@ -62,7 +63,13 @@ def _estimate_stroke_width(ink_mask):
     return 2 * area / perimeter
 
 
-def normalize_stroke_width(img, target_width=TARGET_STROKE_PX):
+def normalize_stroke_width(
+    img,
+    target_width=TARGET_STROKE_PX,
+    max_kernel_radius=STROKE_MAX_KERNEL_RADIUS,
+    min_area_ratio=STROKE_MIN_AREA_RATIO,
+    max_iterations=STROKE_MAX_ITERATIONS,
+):
     """
     모든 글자의 획 굵기가 서로 비슷해지도록 팽창(dilate)/침식(erode)으로
     보정한다.
@@ -70,29 +77,49 @@ def normalize_stroke_width(img, target_width=TARGET_STROKE_PX):
     왜 필요한가: 벡터 도형을 확대/축소하면 획 굵기도 같이 확대/축소된다.
     한글은 자모마다 목표 높이(TARGET_HEIGHT)에 맞춰 강제로 확대/축소되고,
     라틴 문자는 사용자가 쓴 크기 그대로 들어가기 때문에, 아무 보정 없이는
-    자모/문자마다 최종 획 굵기가 들쭉날쭉해진다. 이 함수가 그 차이를
-    최종 굵기 기준으로 다시 맞춰준다.
+    자모/문자마다 최종 획 굵기가 들쭉날쭉해진다.
+
+    안전하게 보정하는 이유: 굵기 추정치(면적/둘레 비율)는 완벽하지 않다.
+    특히 ㄲ,ㄸ처럼 여러 획이 겹치거나 꺾이는 부분이 많은 복잡한 모양은
+    실제보다 두껍게 추정되기 쉬운데, 이 추정치를 과신해서 한 번에 크게
+    깎아버리면 받침처럼 얇은 부분이 통째로 사라질 수 있다. 그래서
+    - 한 번에 깎거나 붙이는 양을 max_kernel_radius로 제한하고,
+    - 여러 번에 걸쳐 조금씩(다시 측정하면서) 목표에 다가가고,
+    - 침식으로 잉크 면적이 min_area_ratio 밑으로 떨어지면 그 단계는
+      즉시 취소한다(그 이전 상태를 그대로 유지).
     """
     if not STROKE_NORMALIZE:
         return img
 
-    inv = 255 - img
-    current = _estimate_stroke_width(inv)
-    if current <= 1:
+    original_area = cv2.countNonZero(255 - img)
+    if original_area == 0:
         return img
 
-    delta = (target_width - current) / 2  # 반지름 기준 보정량
-    k = int(round(abs(delta)))
-    if k < 1:
-        return img
+    current = img
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k * 2 + 1, k * 2 + 1))
-    if delta > 0:
-        inv = cv2.dilate(inv, kernel)
-    else:
-        inv = cv2.erode(inv, kernel)
+    for _ in range(max_iterations):
+        inv = 255 - current
+        current_width = _estimate_stroke_width(inv)
+        if current_width <= 1:
+            break
 
-    return 255 - inv
+        delta = (target_width - current_width) / 2  # 반지름 기준 보정량
+        k = min(int(round(abs(delta))), max_kernel_radius)
+        if k < 1:
+            break
+
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k * 2 + 1, k * 2 + 1))
+
+        if delta > 0:
+            candidate = cv2.dilate(inv, kernel)
+        else:
+            candidate = cv2.erode(inv, kernel)
+            if cv2.countNonZero(candidate) / original_area < min_area_ratio:
+                break  # 더 깎으면 위험하니 여기서 멈추고 직전 상태를 유지
+
+        current = 255 - candidate
+
+    return current
 
 
 def normalize_glyph(

@@ -7,7 +7,12 @@ from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
 from config import UNITS_PER_EM, ASCENDER, DESCENDER, ADVANCE_WIDTH
-from modules.compose import load_component_contours, compose_from_cache, build_standalone_glyphs
+from modules.compose import (
+    load_component_contours,
+    build_calibration,
+    compose_from_cache,
+    build_standalone_glyphs,
+)
 from modules.latin import build_latin_glyphs
 from modules.kerning import build_kern_feature
 
@@ -64,8 +69,12 @@ def build_font(
     if missing:
         print(f"참고: {len(missing)}개 컴포넌트가 아직 없어서 관련 음절/자모는 제외됩니다.")
 
-    hangul_glyphs, hangul_cmap, hangul_built, hangul_skipped = compose_from_cache(cache)
-    standalone_glyphs, standalone_cmap, standalone_built = build_standalone_glyphs(cache)
+    # 같은 문맥(예: 받침없음+세로모음 초성 19개)에 속한 컴포넌트들이 공통
+    # 배율을 공유하도록, 문맥별 기준 높이를 한 번만 계산해서 재사용한다.
+    calibration = build_calibration(cache)
+
+    hangul_glyphs, hangul_cmap, hangul_built, hangul_skipped = compose_from_cache(cache, calibration)
+    standalone_glyphs, standalone_cmap, standalone_built = build_standalone_glyphs(cache, calibration)
     latin_glyphs, latin_cmap, latin_metrics, latin_built = build_latin_glyphs(
         glyph_dir, manifest
     )
