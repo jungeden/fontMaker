@@ -1,0 +1,4682 @@
+[
+  {
+    "id": "cho_ㄱ_N_V",
+    "kind": "cho",
+    "jamo": "ㄱ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㄱ · 받침없음 · 세로모음",
+    "example": "가",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄱ_N_H",
+    "kind": "cho",
+    "jamo": "ㄱ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㄱ · 받침없음 · 가로모음",
+    "example": "고",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄱ_N_C",
+    "kind": "cho",
+    "jamo": "ㄱ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㄱ · 받침없음 · 복합모음",
+    "example": "과",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄱ_B_V",
+    "kind": "cho",
+    "jamo": "ㄱ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㄱ · 받침있음 · 세로모음",
+    "example": "각",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄱ_B_H",
+    "kind": "cho",
+    "jamo": "ㄱ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㄱ · 받침있음 · 가로모음",
+    "example": "곡",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄱ_B_C",
+    "kind": "cho",
+    "jamo": "ㄱ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㄱ · 받침있음 · 복합모음",
+    "example": "곽",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄲ_N_V",
+    "kind": "cho",
+    "jamo": "ㄲ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㄲ · 받침없음 · 세로모음",
+    "example": "까",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄲ_N_H",
+    "kind": "cho",
+    "jamo": "ㄲ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㄲ · 받침없음 · 가로모음",
+    "example": "꼬",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄲ_N_C",
+    "kind": "cho",
+    "jamo": "ㄲ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㄲ · 받침없음 · 복합모음",
+    "example": "꽈",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄲ_B_V",
+    "kind": "cho",
+    "jamo": "ㄲ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㄲ · 받침있음 · 세로모음",
+    "example": "깍",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄲ_B_H",
+    "kind": "cho",
+    "jamo": "ㄲ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㄲ · 받침있음 · 가로모음",
+    "example": "꼭",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄲ_B_C",
+    "kind": "cho",
+    "jamo": "ㄲ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㄲ · 받침있음 · 복합모음",
+    "example": "꽉",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄴ_N_V",
+    "kind": "cho",
+    "jamo": "ㄴ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㄴ · 받침없음 · 세로모음",
+    "example": "나",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄴ_N_H",
+    "kind": "cho",
+    "jamo": "ㄴ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㄴ · 받침없음 · 가로모음",
+    "example": "노",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄴ_N_C",
+    "kind": "cho",
+    "jamo": "ㄴ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㄴ · 받침없음 · 복합모음",
+    "example": "놔",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄴ_B_V",
+    "kind": "cho",
+    "jamo": "ㄴ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㄴ · 받침있음 · 세로모음",
+    "example": "낙",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄴ_B_H",
+    "kind": "cho",
+    "jamo": "ㄴ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㄴ · 받침있음 · 가로모음",
+    "example": "녹",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄴ_B_C",
+    "kind": "cho",
+    "jamo": "ㄴ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㄴ · 받침있음 · 복합모음",
+    "example": "놕",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄷ_N_V",
+    "kind": "cho",
+    "jamo": "ㄷ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㄷ · 받침없음 · 세로모음",
+    "example": "다",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄷ_N_H",
+    "kind": "cho",
+    "jamo": "ㄷ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㄷ · 받침없음 · 가로모음",
+    "example": "도",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄷ_N_C",
+    "kind": "cho",
+    "jamo": "ㄷ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㄷ · 받침없음 · 복합모음",
+    "example": "돠",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄷ_B_V",
+    "kind": "cho",
+    "jamo": "ㄷ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㄷ · 받침있음 · 세로모음",
+    "example": "닥",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄷ_B_H",
+    "kind": "cho",
+    "jamo": "ㄷ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㄷ · 받침있음 · 가로모음",
+    "example": "독",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄷ_B_C",
+    "kind": "cho",
+    "jamo": "ㄷ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㄷ · 받침있음 · 복합모음",
+    "example": "돡",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄸ_N_V",
+    "kind": "cho",
+    "jamo": "ㄸ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㄸ · 받침없음 · 세로모음",
+    "example": "따",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄸ_N_H",
+    "kind": "cho",
+    "jamo": "ㄸ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㄸ · 받침없음 · 가로모음",
+    "example": "또",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄸ_N_C",
+    "kind": "cho",
+    "jamo": "ㄸ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㄸ · 받침없음 · 복합모음",
+    "example": "똬",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄸ_B_V",
+    "kind": "cho",
+    "jamo": "ㄸ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㄸ · 받침있음 · 세로모음",
+    "example": "딱",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄸ_B_H",
+    "kind": "cho",
+    "jamo": "ㄸ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㄸ · 받침있음 · 가로모음",
+    "example": "똑",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄸ_B_C",
+    "kind": "cho",
+    "jamo": "ㄸ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㄸ · 받침있음 · 복합모음",
+    "example": "똭",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄹ_N_V",
+    "kind": "cho",
+    "jamo": "ㄹ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㄹ · 받침없음 · 세로모음",
+    "example": "라",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄹ_N_H",
+    "kind": "cho",
+    "jamo": "ㄹ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㄹ · 받침없음 · 가로모음",
+    "example": "로",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄹ_N_C",
+    "kind": "cho",
+    "jamo": "ㄹ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㄹ · 받침없음 · 복합모음",
+    "example": "롸",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄹ_B_V",
+    "kind": "cho",
+    "jamo": "ㄹ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㄹ · 받침있음 · 세로모음",
+    "example": "락",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄹ_B_H",
+    "kind": "cho",
+    "jamo": "ㄹ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㄹ · 받침있음 · 가로모음",
+    "example": "록",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㄹ_B_C",
+    "kind": "cho",
+    "jamo": "ㄹ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㄹ · 받침있음 · 복합모음",
+    "example": "롹",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅁ_N_V",
+    "kind": "cho",
+    "jamo": "ㅁ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅁ · 받침없음 · 세로모음",
+    "example": "마",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅁ_N_H",
+    "kind": "cho",
+    "jamo": "ㅁ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅁ · 받침없음 · 가로모음",
+    "example": "모",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅁ_N_C",
+    "kind": "cho",
+    "jamo": "ㅁ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅁ · 받침없음 · 복합모음",
+    "example": "뫄",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅁ_B_V",
+    "kind": "cho",
+    "jamo": "ㅁ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅁ · 받침있음 · 세로모음",
+    "example": "막",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅁ_B_H",
+    "kind": "cho",
+    "jamo": "ㅁ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅁ · 받침있음 · 가로모음",
+    "example": "목",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅁ_B_C",
+    "kind": "cho",
+    "jamo": "ㅁ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅁ · 받침있음 · 복합모음",
+    "example": "뫅",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅂ_N_V",
+    "kind": "cho",
+    "jamo": "ㅂ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅂ · 받침없음 · 세로모음",
+    "example": "바",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅂ_N_H",
+    "kind": "cho",
+    "jamo": "ㅂ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅂ · 받침없음 · 가로모음",
+    "example": "보",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅂ_N_C",
+    "kind": "cho",
+    "jamo": "ㅂ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅂ · 받침없음 · 복합모음",
+    "example": "봐",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅂ_B_V",
+    "kind": "cho",
+    "jamo": "ㅂ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅂ · 받침있음 · 세로모음",
+    "example": "박",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅂ_B_H",
+    "kind": "cho",
+    "jamo": "ㅂ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅂ · 받침있음 · 가로모음",
+    "example": "복",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅂ_B_C",
+    "kind": "cho",
+    "jamo": "ㅂ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅂ · 받침있음 · 복합모음",
+    "example": "봑",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅃ_N_V",
+    "kind": "cho",
+    "jamo": "ㅃ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅃ · 받침없음 · 세로모음",
+    "example": "빠",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅃ_N_H",
+    "kind": "cho",
+    "jamo": "ㅃ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅃ · 받침없음 · 가로모음",
+    "example": "뽀",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅃ_N_C",
+    "kind": "cho",
+    "jamo": "ㅃ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅃ · 받침없음 · 복합모음",
+    "example": "뽜",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅃ_B_V",
+    "kind": "cho",
+    "jamo": "ㅃ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅃ · 받침있음 · 세로모음",
+    "example": "빡",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅃ_B_H",
+    "kind": "cho",
+    "jamo": "ㅃ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅃ · 받침있음 · 가로모음",
+    "example": "뽁",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅃ_B_C",
+    "kind": "cho",
+    "jamo": "ㅃ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅃ · 받침있음 · 복합모음",
+    "example": "뽝",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅅ_N_V",
+    "kind": "cho",
+    "jamo": "ㅅ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅅ · 받침없음 · 세로모음",
+    "example": "사",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅅ_N_H",
+    "kind": "cho",
+    "jamo": "ㅅ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅅ · 받침없음 · 가로모음",
+    "example": "소",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅅ_N_C",
+    "kind": "cho",
+    "jamo": "ㅅ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅅ · 받침없음 · 복합모음",
+    "example": "솨",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅅ_B_V",
+    "kind": "cho",
+    "jamo": "ㅅ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅅ · 받침있음 · 세로모음",
+    "example": "삭",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅅ_B_H",
+    "kind": "cho",
+    "jamo": "ㅅ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅅ · 받침있음 · 가로모음",
+    "example": "속",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅅ_B_C",
+    "kind": "cho",
+    "jamo": "ㅅ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅅ · 받침있음 · 복합모음",
+    "example": "솩",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅆ_N_V",
+    "kind": "cho",
+    "jamo": "ㅆ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅆ · 받침없음 · 세로모음",
+    "example": "싸",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅆ_N_H",
+    "kind": "cho",
+    "jamo": "ㅆ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅆ · 받침없음 · 가로모음",
+    "example": "쏘",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅆ_N_C",
+    "kind": "cho",
+    "jamo": "ㅆ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅆ · 받침없음 · 복합모음",
+    "example": "쏴",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅆ_B_V",
+    "kind": "cho",
+    "jamo": "ㅆ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅆ · 받침있음 · 세로모음",
+    "example": "싹",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅆ_B_H",
+    "kind": "cho",
+    "jamo": "ㅆ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅆ · 받침있음 · 가로모음",
+    "example": "쏙",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅆ_B_C",
+    "kind": "cho",
+    "jamo": "ㅆ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅆ · 받침있음 · 복합모음",
+    "example": "쏵",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅇ_N_V",
+    "kind": "cho",
+    "jamo": "ㅇ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅇ · 받침없음 · 세로모음",
+    "example": "아",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅇ_N_H",
+    "kind": "cho",
+    "jamo": "ㅇ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅇ · 받침없음 · 가로모음",
+    "example": "오",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅇ_N_C",
+    "kind": "cho",
+    "jamo": "ㅇ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅇ · 받침없음 · 복합모음",
+    "example": "와",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅇ_B_V",
+    "kind": "cho",
+    "jamo": "ㅇ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅇ · 받침있음 · 세로모음",
+    "example": "악",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅇ_B_H",
+    "kind": "cho",
+    "jamo": "ㅇ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅇ · 받침있음 · 가로모음",
+    "example": "옥",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅇ_B_C",
+    "kind": "cho",
+    "jamo": "ㅇ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅇ · 받침있음 · 복합모음",
+    "example": "왁",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅈ_N_V",
+    "kind": "cho",
+    "jamo": "ㅈ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅈ · 받침없음 · 세로모음",
+    "example": "자",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅈ_N_H",
+    "kind": "cho",
+    "jamo": "ㅈ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅈ · 받침없음 · 가로모음",
+    "example": "조",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅈ_N_C",
+    "kind": "cho",
+    "jamo": "ㅈ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅈ · 받침없음 · 복합모음",
+    "example": "좌",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅈ_B_V",
+    "kind": "cho",
+    "jamo": "ㅈ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅈ · 받침있음 · 세로모음",
+    "example": "작",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅈ_B_H",
+    "kind": "cho",
+    "jamo": "ㅈ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅈ · 받침있음 · 가로모음",
+    "example": "족",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅈ_B_C",
+    "kind": "cho",
+    "jamo": "ㅈ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅈ · 받침있음 · 복합모음",
+    "example": "좍",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅉ_N_V",
+    "kind": "cho",
+    "jamo": "ㅉ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅉ · 받침없음 · 세로모음",
+    "example": "짜",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅉ_N_H",
+    "kind": "cho",
+    "jamo": "ㅉ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅉ · 받침없음 · 가로모음",
+    "example": "쪼",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅉ_N_C",
+    "kind": "cho",
+    "jamo": "ㅉ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅉ · 받침없음 · 복합모음",
+    "example": "쫘",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅉ_B_V",
+    "kind": "cho",
+    "jamo": "ㅉ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅉ · 받침있음 · 세로모음",
+    "example": "짝",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅉ_B_H",
+    "kind": "cho",
+    "jamo": "ㅉ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅉ · 받침있음 · 가로모음",
+    "example": "쪽",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅉ_B_C",
+    "kind": "cho",
+    "jamo": "ㅉ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅉ · 받침있음 · 복합모음",
+    "example": "쫙",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅊ_N_V",
+    "kind": "cho",
+    "jamo": "ㅊ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅊ · 받침없음 · 세로모음",
+    "example": "차",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅊ_N_H",
+    "kind": "cho",
+    "jamo": "ㅊ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅊ · 받침없음 · 가로모음",
+    "example": "초",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅊ_N_C",
+    "kind": "cho",
+    "jamo": "ㅊ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅊ · 받침없음 · 복합모음",
+    "example": "촤",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅊ_B_V",
+    "kind": "cho",
+    "jamo": "ㅊ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅊ · 받침있음 · 세로모음",
+    "example": "착",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅊ_B_H",
+    "kind": "cho",
+    "jamo": "ㅊ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅊ · 받침있음 · 가로모음",
+    "example": "촉",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅊ_B_C",
+    "kind": "cho",
+    "jamo": "ㅊ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅊ · 받침있음 · 복합모음",
+    "example": "촥",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅋ_N_V",
+    "kind": "cho",
+    "jamo": "ㅋ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅋ · 받침없음 · 세로모음",
+    "example": "카",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅋ_N_H",
+    "kind": "cho",
+    "jamo": "ㅋ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅋ · 받침없음 · 가로모음",
+    "example": "코",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅋ_N_C",
+    "kind": "cho",
+    "jamo": "ㅋ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅋ · 받침없음 · 복합모음",
+    "example": "콰",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅋ_B_V",
+    "kind": "cho",
+    "jamo": "ㅋ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅋ · 받침있음 · 세로모음",
+    "example": "칵",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅋ_B_H",
+    "kind": "cho",
+    "jamo": "ㅋ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅋ · 받침있음 · 가로모음",
+    "example": "콕",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅋ_B_C",
+    "kind": "cho",
+    "jamo": "ㅋ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅋ · 받침있음 · 복합모음",
+    "example": "콱",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅌ_N_V",
+    "kind": "cho",
+    "jamo": "ㅌ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅌ · 받침없음 · 세로모음",
+    "example": "타",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅌ_N_H",
+    "kind": "cho",
+    "jamo": "ㅌ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅌ · 받침없음 · 가로모음",
+    "example": "토",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅌ_N_C",
+    "kind": "cho",
+    "jamo": "ㅌ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅌ · 받침없음 · 복합모음",
+    "example": "톼",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅌ_B_V",
+    "kind": "cho",
+    "jamo": "ㅌ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅌ · 받침있음 · 세로모음",
+    "example": "탁",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅌ_B_H",
+    "kind": "cho",
+    "jamo": "ㅌ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅌ · 받침있음 · 가로모음",
+    "example": "톡",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅌ_B_C",
+    "kind": "cho",
+    "jamo": "ㅌ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅌ · 받침있음 · 복합모음",
+    "example": "톽",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅍ_N_V",
+    "kind": "cho",
+    "jamo": "ㅍ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅍ · 받침없음 · 세로모음",
+    "example": "파",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅍ_N_H",
+    "kind": "cho",
+    "jamo": "ㅍ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅍ · 받침없음 · 가로모음",
+    "example": "포",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅍ_N_C",
+    "kind": "cho",
+    "jamo": "ㅍ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅍ · 받침없음 · 복합모음",
+    "example": "퐈",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅍ_B_V",
+    "kind": "cho",
+    "jamo": "ㅍ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅍ · 받침있음 · 세로모음",
+    "example": "팍",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅍ_B_H",
+    "kind": "cho",
+    "jamo": "ㅍ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅍ · 받침있음 · 가로모음",
+    "example": "폭",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅍ_B_C",
+    "kind": "cho",
+    "jamo": "ㅍ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅍ · 받침있음 · 복합모음",
+    "example": "퐉",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅎ_N_V",
+    "kind": "cho",
+    "jamo": "ㅎ",
+    "batchim": false,
+    "group": "V",
+    "label": "초성 ㅎ · 받침없음 · 세로모음",
+    "example": "하",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅎ_N_H",
+    "kind": "cho",
+    "jamo": "ㅎ",
+    "batchim": false,
+    "group": "H",
+    "label": "초성 ㅎ · 받침없음 · 가로모음",
+    "example": "호",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅎ_N_C",
+    "kind": "cho",
+    "jamo": "ㅎ",
+    "batchim": false,
+    "group": "C",
+    "label": "초성 ㅎ · 받침없음 · 복합모음",
+    "example": "화",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅎ_B_V",
+    "kind": "cho",
+    "jamo": "ㅎ",
+    "batchim": true,
+    "group": "V",
+    "label": "초성 ㅎ · 받침있음 · 세로모음",
+    "example": "학",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅎ_B_H",
+    "kind": "cho",
+    "jamo": "ㅎ",
+    "batchim": true,
+    "group": "H",
+    "label": "초성 ㅎ · 받침있음 · 가로모음",
+    "example": "혹",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "cho_ㅎ_B_C",
+    "kind": "cho",
+    "jamo": "ㅎ",
+    "batchim": true,
+    "group": "C",
+    "label": "초성 ㅎ · 받침있음 · 복합모음",
+    "example": "확",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅏ_N",
+    "kind": "jung",
+    "jamo": "ㅏ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅏ · 받침없음",
+    "example": "가",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅏ_B",
+    "kind": "jung",
+    "jamo": "ㅏ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅏ · 받침있음",
+    "example": "각",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅐ_N",
+    "kind": "jung",
+    "jamo": "ㅐ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅐ · 받침없음",
+    "example": "개",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅐ_B",
+    "kind": "jung",
+    "jamo": "ㅐ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅐ · 받침있음",
+    "example": "객",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅑ_N",
+    "kind": "jung",
+    "jamo": "ㅑ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅑ · 받침없음",
+    "example": "갸",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅑ_B",
+    "kind": "jung",
+    "jamo": "ㅑ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅑ · 받침있음",
+    "example": "갹",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅒ_N",
+    "kind": "jung",
+    "jamo": "ㅒ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅒ · 받침없음",
+    "example": "걔",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅒ_B",
+    "kind": "jung",
+    "jamo": "ㅒ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅒ · 받침있음",
+    "example": "걕",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅓ_N",
+    "kind": "jung",
+    "jamo": "ㅓ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅓ · 받침없음",
+    "example": "거",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅓ_B",
+    "kind": "jung",
+    "jamo": "ㅓ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅓ · 받침있음",
+    "example": "걱",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅔ_N",
+    "kind": "jung",
+    "jamo": "ㅔ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅔ · 받침없음",
+    "example": "게",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅔ_B",
+    "kind": "jung",
+    "jamo": "ㅔ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅔ · 받침있음",
+    "example": "겍",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅕ_N",
+    "kind": "jung",
+    "jamo": "ㅕ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅕ · 받침없음",
+    "example": "겨",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅕ_B",
+    "kind": "jung",
+    "jamo": "ㅕ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅕ · 받침있음",
+    "example": "격",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅖ_N",
+    "kind": "jung",
+    "jamo": "ㅖ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅖ · 받침없음",
+    "example": "계",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅖ_B",
+    "kind": "jung",
+    "jamo": "ㅖ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅖ · 받침있음",
+    "example": "곅",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅗ_N",
+    "kind": "jung",
+    "jamo": "ㅗ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅗ · 받침없음",
+    "example": "고",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅗ_B",
+    "kind": "jung",
+    "jamo": "ㅗ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅗ · 받침있음",
+    "example": "곡",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅘ_N",
+    "kind": "jung",
+    "jamo": "ㅘ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅘ · 받침없음",
+    "example": "과",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅘ_B",
+    "kind": "jung",
+    "jamo": "ㅘ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅘ · 받침있음",
+    "example": "곽",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅙ_N",
+    "kind": "jung",
+    "jamo": "ㅙ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅙ · 받침없음",
+    "example": "괘",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅙ_B",
+    "kind": "jung",
+    "jamo": "ㅙ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅙ · 받침있음",
+    "example": "괙",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅚ_N",
+    "kind": "jung",
+    "jamo": "ㅚ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅚ · 받침없음",
+    "example": "괴",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅚ_B",
+    "kind": "jung",
+    "jamo": "ㅚ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅚ · 받침있음",
+    "example": "괵",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅛ_N",
+    "kind": "jung",
+    "jamo": "ㅛ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅛ · 받침없음",
+    "example": "교",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅛ_B",
+    "kind": "jung",
+    "jamo": "ㅛ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅛ · 받침있음",
+    "example": "굑",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅜ_N",
+    "kind": "jung",
+    "jamo": "ㅜ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅜ · 받침없음",
+    "example": "구",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅜ_B",
+    "kind": "jung",
+    "jamo": "ㅜ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅜ · 받침있음",
+    "example": "국",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅝ_N",
+    "kind": "jung",
+    "jamo": "ㅝ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅝ · 받침없음",
+    "example": "궈",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅝ_B",
+    "kind": "jung",
+    "jamo": "ㅝ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅝ · 받침있음",
+    "example": "궉",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅞ_N",
+    "kind": "jung",
+    "jamo": "ㅞ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅞ · 받침없음",
+    "example": "궤",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅞ_B",
+    "kind": "jung",
+    "jamo": "ㅞ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅞ · 받침있음",
+    "example": "궥",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅟ_N",
+    "kind": "jung",
+    "jamo": "ㅟ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅟ · 받침없음",
+    "example": "귀",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅟ_B",
+    "kind": "jung",
+    "jamo": "ㅟ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅟ · 받침있음",
+    "example": "귁",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅠ_N",
+    "kind": "jung",
+    "jamo": "ㅠ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅠ · 받침없음",
+    "example": "규",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅠ_B",
+    "kind": "jung",
+    "jamo": "ㅠ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅠ · 받침있음",
+    "example": "귝",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅡ_N",
+    "kind": "jung",
+    "jamo": "ㅡ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅡ · 받침없음",
+    "example": "그",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅡ_B",
+    "kind": "jung",
+    "jamo": "ㅡ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅡ · 받침있음",
+    "example": "극",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅢ_N",
+    "kind": "jung",
+    "jamo": "ㅢ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅢ · 받침없음",
+    "example": "긔",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅢ_B",
+    "kind": "jung",
+    "jamo": "ㅢ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅢ · 받침있음",
+    "example": "긕",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅣ_N",
+    "kind": "jung",
+    "jamo": "ㅣ",
+    "batchim": false,
+    "group": null,
+    "label": "중성 ㅣ · 받침없음",
+    "example": "기",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jung_ㅣ_B",
+    "kind": "jung",
+    "jamo": "ㅣ",
+    "batchim": true,
+    "group": null,
+    "label": "중성 ㅣ · 받침있음",
+    "example": "긱",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "jong_ㄱ",
+    "kind": "jong",
+    "jamo": "ㄱ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄱ",
+    "example": "각",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄲ",
+    "kind": "jong",
+    "jamo": "ㄲ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄲ",
+    "example": "갂",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄳ",
+    "kind": "jong",
+    "jamo": "ㄳ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄳ",
+    "example": "갃",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄴ",
+    "kind": "jong",
+    "jamo": "ㄴ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄴ",
+    "example": "간",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄵ",
+    "kind": "jong",
+    "jamo": "ㄵ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄵ",
+    "example": "갅",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄶ",
+    "kind": "jong",
+    "jamo": "ㄶ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄶ",
+    "example": "갆",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄷ",
+    "kind": "jong",
+    "jamo": "ㄷ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄷ",
+    "example": "갇",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄹ",
+    "kind": "jong",
+    "jamo": "ㄹ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄹ",
+    "example": "갈",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄺ",
+    "kind": "jong",
+    "jamo": "ㄺ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄺ",
+    "example": "갉",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄻ",
+    "kind": "jong",
+    "jamo": "ㄻ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄻ",
+    "example": "갊",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄼ",
+    "kind": "jong",
+    "jamo": "ㄼ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄼ",
+    "example": "갋",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄽ",
+    "kind": "jong",
+    "jamo": "ㄽ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄽ",
+    "example": "갌",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄾ",
+    "kind": "jong",
+    "jamo": "ㄾ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄾ",
+    "example": "갍",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㄿ",
+    "kind": "jong",
+    "jamo": "ㄿ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㄿ",
+    "example": "갎",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅀ",
+    "kind": "jong",
+    "jamo": "ㅀ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅀ",
+    "example": "갏",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅁ",
+    "kind": "jong",
+    "jamo": "ㅁ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅁ",
+    "example": "감",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅂ",
+    "kind": "jong",
+    "jamo": "ㅂ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅂ",
+    "example": "갑",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅄ",
+    "kind": "jong",
+    "jamo": "ㅄ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅄ",
+    "example": "값",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅅ",
+    "kind": "jong",
+    "jamo": "ㅅ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅅ",
+    "example": "갓",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅆ",
+    "kind": "jong",
+    "jamo": "ㅆ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅆ",
+    "example": "갔",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅇ",
+    "kind": "jong",
+    "jamo": "ㅇ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅇ",
+    "example": "강",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅈ",
+    "kind": "jong",
+    "jamo": "ㅈ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅈ",
+    "example": "갖",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅊ",
+    "kind": "jong",
+    "jamo": "ㅊ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅊ",
+    "example": "갗",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅋ",
+    "kind": "jong",
+    "jamo": "ㅋ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅋ",
+    "example": "갘",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅌ",
+    "kind": "jong",
+    "jamo": "ㅌ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅌ",
+    "example": "같",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅍ",
+    "kind": "jong",
+    "jamo": "ㅍ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅍ",
+    "example": "갚",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "jong_ㅎ",
+    "kind": "jong",
+    "jamo": "ㅎ",
+    "batchim": true,
+    "group": null,
+    "label": "종성(받침) ㅎ",
+    "example": "갛",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      280
+    ]
+  },
+  {
+    "id": "latin_0021",
+    "kind": "latin",
+    "jamo": "!",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '!' (U+0021)",
+    "example": "!",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0022",
+    "kind": "latin",
+    "jamo": "\"",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '\"' (U+0022)",
+    "example": "\"",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0023",
+    "kind": "latin",
+    "jamo": "#",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '#' (U+0023)",
+    "example": "#",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0024",
+    "kind": "latin",
+    "jamo": "$",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '$' (U+0024)",
+    "example": "$",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0025",
+    "kind": "latin",
+    "jamo": "%",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '%' (U+0025)",
+    "example": "%",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0026",
+    "kind": "latin",
+    "jamo": "&",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '&' (U+0026)",
+    "example": "&",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0027",
+    "kind": "latin",
+    "jamo": "'",
+    "batchim": null,
+    "group": null,
+    "label": "문자 ''' (U+0027)",
+    "example": "'",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0028",
+    "kind": "latin",
+    "jamo": "(",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '(' (U+0028)",
+    "example": "(",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0029",
+    "kind": "latin",
+    "jamo": ")",
+    "batchim": null,
+    "group": null,
+    "label": "문자 ')' (U+0029)",
+    "example": ")",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_002A",
+    "kind": "latin",
+    "jamo": "*",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '*' (U+002A)",
+    "example": "*",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_002B",
+    "kind": "latin",
+    "jamo": "+",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '+' (U+002B)",
+    "example": "+",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_002C",
+    "kind": "latin",
+    "jamo": ",",
+    "batchim": null,
+    "group": null,
+    "label": "문자 ',' (U+002C)",
+    "example": ",",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_002D",
+    "kind": "latin",
+    "jamo": "-",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '-' (U+002D)",
+    "example": "-",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_002E",
+    "kind": "latin",
+    "jamo": ".",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '.' (U+002E)",
+    "example": ".",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_002F",
+    "kind": "latin",
+    "jamo": "/",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '/' (U+002F)",
+    "example": "/",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0030",
+    "kind": "latin",
+    "jamo": "0",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '0' (U+0030)",
+    "example": "0",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0031",
+    "kind": "latin",
+    "jamo": "1",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '1' (U+0031)",
+    "example": "1",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0032",
+    "kind": "latin",
+    "jamo": "2",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '2' (U+0032)",
+    "example": "2",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0033",
+    "kind": "latin",
+    "jamo": "3",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '3' (U+0033)",
+    "example": "3",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0034",
+    "kind": "latin",
+    "jamo": "4",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '4' (U+0034)",
+    "example": "4",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0035",
+    "kind": "latin",
+    "jamo": "5",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '5' (U+0035)",
+    "example": "5",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0036",
+    "kind": "latin",
+    "jamo": "6",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '6' (U+0036)",
+    "example": "6",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0037",
+    "kind": "latin",
+    "jamo": "7",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '7' (U+0037)",
+    "example": "7",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0038",
+    "kind": "latin",
+    "jamo": "8",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '8' (U+0038)",
+    "example": "8",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0039",
+    "kind": "latin",
+    "jamo": "9",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '9' (U+0039)",
+    "example": "9",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_003A",
+    "kind": "latin",
+    "jamo": ":",
+    "batchim": null,
+    "group": null,
+    "label": "문자 ':' (U+003A)",
+    "example": ":",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_003B",
+    "kind": "latin",
+    "jamo": ";",
+    "batchim": null,
+    "group": null,
+    "label": "문자 ';' (U+003B)",
+    "example": ";",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_003C",
+    "kind": "latin",
+    "jamo": "<",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '<' (U+003C)",
+    "example": "<",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_003D",
+    "kind": "latin",
+    "jamo": "=",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '=' (U+003D)",
+    "example": "=",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_003E",
+    "kind": "latin",
+    "jamo": ">",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '>' (U+003E)",
+    "example": ">",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_003F",
+    "kind": "latin",
+    "jamo": "?",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '?' (U+003F)",
+    "example": "?",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0040",
+    "kind": "latin",
+    "jamo": "@",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '@' (U+0040)",
+    "example": "@",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0041",
+    "kind": "latin",
+    "jamo": "A",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'A' (U+0041)",
+    "example": "A",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0042",
+    "kind": "latin",
+    "jamo": "B",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'B' (U+0042)",
+    "example": "B",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0043",
+    "kind": "latin",
+    "jamo": "C",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'C' (U+0043)",
+    "example": "C",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0044",
+    "kind": "latin",
+    "jamo": "D",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'D' (U+0044)",
+    "example": "D",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0045",
+    "kind": "latin",
+    "jamo": "E",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'E' (U+0045)",
+    "example": "E",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0046",
+    "kind": "latin",
+    "jamo": "F",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'F' (U+0046)",
+    "example": "F",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0047",
+    "kind": "latin",
+    "jamo": "G",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'G' (U+0047)",
+    "example": "G",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0048",
+    "kind": "latin",
+    "jamo": "H",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'H' (U+0048)",
+    "example": "H",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0049",
+    "kind": "latin",
+    "jamo": "I",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'I' (U+0049)",
+    "example": "I",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_004A",
+    "kind": "latin",
+    "jamo": "J",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'J' (U+004A)",
+    "example": "J",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_004B",
+    "kind": "latin",
+    "jamo": "K",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'K' (U+004B)",
+    "example": "K",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_004C",
+    "kind": "latin",
+    "jamo": "L",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'L' (U+004C)",
+    "example": "L",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_004D",
+    "kind": "latin",
+    "jamo": "M",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'M' (U+004D)",
+    "example": "M",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_004E",
+    "kind": "latin",
+    "jamo": "N",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'N' (U+004E)",
+    "example": "N",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_004F",
+    "kind": "latin",
+    "jamo": "O",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'O' (U+004F)",
+    "example": "O",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0050",
+    "kind": "latin",
+    "jamo": "P",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'P' (U+0050)",
+    "example": "P",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0051",
+    "kind": "latin",
+    "jamo": "Q",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'Q' (U+0051)",
+    "example": "Q",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0052",
+    "kind": "latin",
+    "jamo": "R",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'R' (U+0052)",
+    "example": "R",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0053",
+    "kind": "latin",
+    "jamo": "S",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'S' (U+0053)",
+    "example": "S",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0054",
+    "kind": "latin",
+    "jamo": "T",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'T' (U+0054)",
+    "example": "T",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0055",
+    "kind": "latin",
+    "jamo": "U",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'U' (U+0055)",
+    "example": "U",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0056",
+    "kind": "latin",
+    "jamo": "V",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'V' (U+0056)",
+    "example": "V",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0057",
+    "kind": "latin",
+    "jamo": "W",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'W' (U+0057)",
+    "example": "W",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0058",
+    "kind": "latin",
+    "jamo": "X",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'X' (U+0058)",
+    "example": "X",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0059",
+    "kind": "latin",
+    "jamo": "Y",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'Y' (U+0059)",
+    "example": "Y",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_005A",
+    "kind": "latin",
+    "jamo": "Z",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'Z' (U+005A)",
+    "example": "Z",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_005B",
+    "kind": "latin",
+    "jamo": "[",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '[' (U+005B)",
+    "example": "[",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_005C",
+    "kind": "latin",
+    "jamo": "\\",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '\\' (U+005C)",
+    "example": "\\",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_005D",
+    "kind": "latin",
+    "jamo": "]",
+    "batchim": null,
+    "group": null,
+    "label": "문자 ']' (U+005D)",
+    "example": "]",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_005E",
+    "kind": "latin",
+    "jamo": "^",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '^' (U+005E)",
+    "example": "^",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_005F",
+    "kind": "latin",
+    "jamo": "_",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '_' (U+005F)",
+    "example": "_",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0060",
+    "kind": "latin",
+    "jamo": "`",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '`' (U+0060)",
+    "example": "`",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0061",
+    "kind": "latin",
+    "jamo": "a",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'a' (U+0061)",
+    "example": "a",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0062",
+    "kind": "latin",
+    "jamo": "b",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'b' (U+0062)",
+    "example": "b",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0063",
+    "kind": "latin",
+    "jamo": "c",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'c' (U+0063)",
+    "example": "c",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0064",
+    "kind": "latin",
+    "jamo": "d",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'd' (U+0064)",
+    "example": "d",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0065",
+    "kind": "latin",
+    "jamo": "e",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'e' (U+0065)",
+    "example": "e",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0066",
+    "kind": "latin",
+    "jamo": "f",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'f' (U+0066)",
+    "example": "f",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0067",
+    "kind": "latin",
+    "jamo": "g",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'g' (U+0067)",
+    "example": "g",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0068",
+    "kind": "latin",
+    "jamo": "h",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'h' (U+0068)",
+    "example": "h",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0069",
+    "kind": "latin",
+    "jamo": "i",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'i' (U+0069)",
+    "example": "i",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_006A",
+    "kind": "latin",
+    "jamo": "j",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'j' (U+006A)",
+    "example": "j",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_006B",
+    "kind": "latin",
+    "jamo": "k",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'k' (U+006B)",
+    "example": "k",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_006C",
+    "kind": "latin",
+    "jamo": "l",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'l' (U+006C)",
+    "example": "l",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_006D",
+    "kind": "latin",
+    "jamo": "m",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'm' (U+006D)",
+    "example": "m",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_006E",
+    "kind": "latin",
+    "jamo": "n",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'n' (U+006E)",
+    "example": "n",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_006F",
+    "kind": "latin",
+    "jamo": "o",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'o' (U+006F)",
+    "example": "o",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0070",
+    "kind": "latin",
+    "jamo": "p",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'p' (U+0070)",
+    "example": "p",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0071",
+    "kind": "latin",
+    "jamo": "q",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'q' (U+0071)",
+    "example": "q",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0072",
+    "kind": "latin",
+    "jamo": "r",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'r' (U+0072)",
+    "example": "r",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0073",
+    "kind": "latin",
+    "jamo": "s",
+    "batchim": null,
+    "group": null,
+    "label": "문자 's' (U+0073)",
+    "example": "s",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0074",
+    "kind": "latin",
+    "jamo": "t",
+    "batchim": null,
+    "group": null,
+    "label": "문자 't' (U+0074)",
+    "example": "t",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0075",
+    "kind": "latin",
+    "jamo": "u",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'u' (U+0075)",
+    "example": "u",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0076",
+    "kind": "latin",
+    "jamo": "v",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'v' (U+0076)",
+    "example": "v",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0077",
+    "kind": "latin",
+    "jamo": "w",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'w' (U+0077)",
+    "example": "w",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0078",
+    "kind": "latin",
+    "jamo": "x",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'x' (U+0078)",
+    "example": "x",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_0079",
+    "kind": "latin",
+    "jamo": "y",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'y' (U+0079)",
+    "example": "y",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_007A",
+    "kind": "latin",
+    "jamo": "z",
+    "batchim": null,
+    "group": null,
+    "label": "문자 'z' (U+007A)",
+    "example": "z",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_007B",
+    "kind": "latin",
+    "jamo": "{",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '{' (U+007B)",
+    "example": "{",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_007C",
+    "kind": "latin",
+    "jamo": "|",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '|' (U+007C)",
+    "example": "|",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_007D",
+    "kind": "latin",
+    "jamo": "}",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '}' (U+007D)",
+    "example": "}",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_007E",
+    "kind": "latin",
+    "jamo": "~",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '~' (U+007E)",
+    "example": "~",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2026",
+    "kind": "latin",
+    "jamo": "…",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '…' (U+2026)",
+    "example": "…",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2014",
+    "kind": "latin",
+    "jamo": "—",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '—' (U+2014)",
+    "example": "—",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2013",
+    "kind": "latin",
+    "jamo": "–",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '–' (U+2013)",
+    "example": "–",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_00B7",
+    "kind": "latin",
+    "jamo": "·",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '·' (U+00B7)",
+    "example": "·",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_201C",
+    "kind": "latin",
+    "jamo": "“",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '“' (U+201C)",
+    "example": "“",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_201D",
+    "kind": "latin",
+    "jamo": "”",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '”' (U+201D)",
+    "example": "”",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2018",
+    "kind": "latin",
+    "jamo": "‘",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '‘' (U+2018)",
+    "example": "‘",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2019",
+    "kind": "latin",
+    "jamo": "’",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '’' (U+2019)",
+    "example": "’",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_300C",
+    "kind": "latin",
+    "jamo": "「",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '「' (U+300C)",
+    "example": "「",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_300D",
+    "kind": "latin",
+    "jamo": "」",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '」' (U+300D)",
+    "example": "」",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_300E",
+    "kind": "latin",
+    "jamo": "『",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '『' (U+300E)",
+    "example": "『",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_300F",
+    "kind": "latin",
+    "jamo": "』",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '』' (U+300F)",
+    "example": "』",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_3010",
+    "kind": "latin",
+    "jamo": "【",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '【' (U+3010)",
+    "example": "【",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_3011",
+    "kind": "latin",
+    "jamo": "】",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '】' (U+3011)",
+    "example": "】",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2605",
+    "kind": "latin",
+    "jamo": "★",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '★' (U+2605)",
+    "example": "★",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2606",
+    "kind": "latin",
+    "jamo": "☆",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '☆' (U+2606)",
+    "example": "☆",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2665",
+    "kind": "latin",
+    "jamo": "♥",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '♥' (U+2665)",
+    "example": "♥",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2661",
+    "kind": "latin",
+    "jamo": "♡",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '♡' (U+2661)",
+    "example": "♡",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_25CB",
+    "kind": "latin",
+    "jamo": "○",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '○' (U+25CB)",
+    "example": "○",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_25CF",
+    "kind": "latin",
+    "jamo": "●",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '●' (U+25CF)",
+    "example": "●",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_25A1",
+    "kind": "latin",
+    "jamo": "□",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '□' (U+25A1)",
+    "example": "□",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_25A0",
+    "kind": "latin",
+    "jamo": "■",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '■' (U+25A0)",
+    "example": "■",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_25C7",
+    "kind": "latin",
+    "jamo": "◇",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '◇' (U+25C7)",
+    "example": "◇",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_25C6",
+    "kind": "latin",
+    "jamo": "◆",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '◆' (U+25C6)",
+    "example": "◆",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_25B3",
+    "kind": "latin",
+    "jamo": "△",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '△' (U+25B3)",
+    "example": "△",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_25B2",
+    "kind": "latin",
+    "jamo": "▲",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '▲' (U+25B2)",
+    "example": "▲",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_203B",
+    "kind": "latin",
+    "jamo": "※",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '※' (U+203B)",
+    "example": "※",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2192",
+    "kind": "latin",
+    "jamo": "→",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '→' (U+2192)",
+    "example": "→",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2190",
+    "kind": "latin",
+    "jamo": "←",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '←' (U+2190)",
+    "example": "←",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2191",
+    "kind": "latin",
+    "jamo": "↑",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '↑' (U+2191)",
+    "example": "↑",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2193",
+    "kind": "latin",
+    "jamo": "↓",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '↓' (U+2193)",
+    "example": "↓",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_20A9",
+    "kind": "latin",
+    "jamo": "₩",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '₩' (U+20A9)",
+    "example": "₩",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_00A9",
+    "kind": "latin",
+    "jamo": "©",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '©' (U+00A9)",
+    "example": "©",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_00AE",
+    "kind": "latin",
+    "jamo": "®",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '®' (U+00AE)",
+    "example": "®",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  },
+  {
+    "id": "latin_2122",
+    "kind": "latin",
+    "jamo": "™",
+    "batchim": null,
+    "group": null,
+    "label": "문자 '™' (U+2122)",
+    "example": "™",
+    "zone_shape": [
+      0,
+      0,
+      1000,
+      1000
+    ]
+  }
+]
