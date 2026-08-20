@@ -2,7 +2,8 @@
 # 프로젝트 전역 설정값. 모든 모듈이 여기서 값을 가져다 쓴다.
 # (Readme.md의 template.py CHARS 50자 목록과 guide.md의 config.py CHARS 14자 목록이
 #  서로 달랐던 문제를 여기서 하나로 통일한다.)
-
+FONT_FAMILY_NAME = "삐뚤삐뚤"
+FONT_STYLE_NAME = "regular"
 # ────────────────────────────────
 # 템플릿(스캔용 원고지) 설정
 # ────────────────────────────────

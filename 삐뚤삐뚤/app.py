@@ -15,13 +15,15 @@
         -> data/scans 안의 모든 page*.jpg 를 순서대로 전처리 -> 컴포넌트 분할
            -> 한글 11,172자(가능한 만큼) 자동 조합 + 영문/숫자/특수문자
            -> 폰트(.ttf) 생성까지 한 번에 실행
-           결과물: output/donggeuldonggeul.ttf
+           결과물: output/{FONT_FAMILY_NAME}.ttf
            (컴포넌트를 일부만 채워도, 그 컴포넌트로 만들 수 있는 글자만 생성된다)
 """
 
 import re
 import sys
 from pathlib import Path
+
+from config import FONT_FAMILY_NAME
 
 import cv2
 
@@ -81,7 +83,7 @@ def step_build():
     print("[3/3] 11,172자 자동 조합 + 폰트 생성 중...")
     build_font()
 
-    print("완료! output/donggeuldonggeul.ttf 를 설치해서 확인해보세요.")
+    print(f"완료! output/{FONT_FAMILY_NAME}.ttf 를 설치해서 확인해보세요.")
 
 
 if __name__ == "__main__":

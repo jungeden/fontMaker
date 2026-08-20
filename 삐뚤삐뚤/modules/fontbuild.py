@@ -6,7 +6,7 @@ from pathlib import Path
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-from config import UNITS_PER_EM, ASCENDER, DESCENDER, ADVANCE_WIDTH
+from config import UNITS_PER_EM, ASCENDER, DESCENDER, ADVANCE_WIDTH, FONT_FAMILY_NAME, FONT_STYLE_NAME
 from modules.compose import (
     load_component_contours,
     build_calibration,
@@ -17,48 +17,119 @@ from modules.latin import build_latin_glyphs
 from modules.kerning import build_kern_feature
 
 
+# def _apply_hinting(unhinted_path, output_path):
+#     """
+#     ttfautohint(https://freetype.org/ttfautohint/)가 시스템에 설치되어 있으면
+#     자동으로 힌팅을 적용한다. 없으면 힌팅 없이 그대로 저장하고 설치 방법을
+#     안내한다.
+
+#     힌팅이 뭔지: 작은 크기(특히 저해상도 화면)에서 글자 획이 흐릿하거나
+#     삐뚤어지지 않게, 폰트 안에 "이 크기에서는 이 획을 픽셀 격자에 맞춰
+#     그려라"라는 지시(명령어)를 추가하는 작업이다. 직접 이 명령어를 손으로
+#     작성하는 건 매우 복잡하므로(폰트 전용 바이트코드 언어), 널리 쓰이는
+#     오픈소스 자동 힌팅 도구인 ttfautohint를 그대로 활용한다.
+#     """
+#     ttfautohint = shutil.which("ttfautohint")
+
+#     if not ttfautohint:
+#         shutil.move(unhinted_path, output_path)
+#         print("참고: ttfautohint가 설치되어 있지 않아 힌팅 없이 저장했습니다. "
+#               "힌팅을 적용하려면 ttfautohint를 설치한 뒤 다시 빌드하세요 "
+#               "(Mac: brew install ttfautohint / "
+#               "Linux: sudo apt install ttfautohint / "
+#               "Windows: https://freetype.org/ttfautohint/#download 에서 설치).")
+#         return False
+
+#     try:
+#         subprocess.run(
+#             [ttfautohint, unhinted_path, output_path],
+#             check=True, capture_output=True, text=True,
+#         )
+#         Path(unhinted_path).unlink(missing_ok=True)
+#         print("ttfautohint로 자동 힌팅을 적용했습니다.")
+#         return True
+#     except subprocess.CalledProcessError as e:
+#         print(f"참고: ttfautohint 실행에 실패해서 힌팅 없이 저장합니다. ({e.stderr[:200]})")
+#         shutil.move(unhinted_path, output_path)
+#         return False
 def _apply_hinting(unhinted_path, output_path):
     """
-    ttfautohint(https://freetype.org/ttfautohint/)가 시스템에 설치되어 있으면
-    자동으로 힌팅을 적용한다. 없으면 힌팅 없이 그대로 저장하고 설치 방법을
-    안내한다.
-
-    힌팅이 뭔지: 작은 크기(특히 저해상도 화면)에서 글자 획이 흐릿하거나
-    삐뚤어지지 않게, 폰트 안에 "이 크기에서는 이 획을 픽셀 격자에 맞춰
-    그려라"라는 지시(명령어)를 추가하는 작업이다. 직접 이 명령어를 손으로
-    작성하는 건 매우 복잡하므로(폰트 전용 바이트코드 언어), 널리 쓰이는
-    오픈소스 자동 힌팅 도구인 ttfautohint를 그대로 활용한다.
+    ttfautohint가 설치되어 있으면 자동 힌팅을 적용한다.
+    실행 실패 시 원본 unhinted TTF를 그대로 최종 파일로 사용한다.
     """
+
     ttfautohint = shutil.which("ttfautohint")
 
+    print(f"[힌팅] ttfautohint 경로: {ttfautohint}")
+    print(f"[힌팅] 입력 파일: {unhinted_path}")
+    print(f"[힌팅] 출력 파일: {output_path}")
+
     if not ttfautohint:
+        print(
+            "참고: ttfautohint를 찾을 수 없습니다. "
+            "힌팅 없이 저장합니다."
+        )
+
         shutil.move(unhinted_path, output_path)
-        print("참고: ttfautohint가 설치되어 있지 않아 힌팅 없이 저장했습니다. "
-              "힌팅을 적용하려면 ttfautohint를 설치한 뒤 다시 빌드하세요 "
-              "(Mac: brew install ttfautohint / "
-              "Linux: sudo apt install ttfautohint / "
-              "Windows: https://freetype.org/ttfautohint/#download 에서 설치).")
         return False
 
     try:
-        subprocess.run(
-            [ttfautohint, unhinted_path, output_path],
-            check=True, capture_output=True, text=True,
+        result = subprocess.run(
+            [
+                ttfautohint,
+                unhinted_path,
+                output_path,
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
         )
+
+        print("[힌팅] ttfautohint 실행 성공.")
+
+        if result.stdout:
+            print("[힌팅 stdout]")
+            print(result.stdout)
+
+        if result.stderr:
+            print("[힌팅 stderr]")
+            print(result.stderr)
+
         Path(unhinted_path).unlink(missing_ok=True)
-        print("ttfautohint로 자동 힌팅을 적용했습니다.")
+
         return True
+
     except subprocess.CalledProcessError as e:
-        print(f"참고: ttfautohint 실행에 실패해서 힌팅 없이 저장합니다. ({e.stderr[:200]})")
+        print("[힌팅] ttfautohint 실행 실패")
+        print(f"return code: {e.returncode}")
+
+        if e.stdout:
+            print("[힌팅 stdout]")
+            print(e.stdout)
+
+        if e.stderr:
+            print("[힌팅 stderr]")
+            print(e.stderr)
+
+        print("힌팅 없이 원본 TTF를 최종 파일로 사용합니다.")
+
         shutil.move(unhinted_path, output_path)
         return False
 
+    except OSError as e:
+        print("[힌팅] ttfautohint 실행 자체에 실패했습니다.")
+        print(f"오류: {e}")
+
+        print("힌팅 없이 원본 TTF를 최종 파일로 사용합니다.")
+
+        shutil.move(unhinted_path, output_path)
+        return False
 
 def assemble_fontbuilder(
     hangul_glyphs, hangul_cmap,
     standalone_glyphs, standalone_cmap,
     latin_glyphs, latin_cmap, latin_metrics,
-    family_name="donggeuldonggeul", style_name="bold",
+    family_name=FONT_FAMILY_NAME, style_name=FONT_STYLE_NAME,
 ):
     """
     글리프/cmap/지표를 모아 FontBuilder를 조립하는 공용 로직.
@@ -124,9 +195,9 @@ def assemble_fontbuilder(
 def build_font(
     glyph_dir="data/glyphs",
     manifest_path="data/manifest.json",
-    output_path="output/bold.ttf",
-    family_name="donggeuldonggeul",
-    style_name="bold",
+    output_path=f"output/{FONT_STYLE_NAME}.ttf",
+    family_name=FONT_FAMILY_NAME,
+    style_name=FONT_STYLE_NAME,
     apply_kerning=True,
     apply_hinting=True,
 ):
