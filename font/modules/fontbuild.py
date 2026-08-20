@@ -6,7 +6,7 @@ from pathlib import Path
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-from config import UNITS_PER_EM, ASCENDER, DESCENDER, ADVANCE_WIDTH
+from config import UNITS_PER_EM, ASCENDER, DESCENDER, ADVANCE_WIDTH, FONT_FAMILY_NAME, FONT_STYLE_NAME
 from modules.compose import (
     load_component_contours,
     build_calibration,
@@ -58,7 +58,7 @@ def assemble_fontbuilder(
     hangul_glyphs, hangul_cmap,
     standalone_glyphs, standalone_cmap,
     latin_glyphs, latin_cmap, latin_metrics,
-    family_name="donggeuldonggeul", style_name="bold",
+    family_name=FONT_FAMILY_NAME, style_name=FONT_STYLE_NAME,
 ):
     """
     글리프/cmap/지표를 모아 FontBuilder를 조립하는 공용 로직.
@@ -125,8 +125,8 @@ def build_font(
     glyph_dir="data/glyphs",
     manifest_path="data/manifest.json",
     output_path="output/bold.ttf",
-    family_name="donggeuldonggeul",
-    style_name="bold",
+    family_name=FONT_FAMILY_NAME,
+    style_name=FONT_STYLE_NAME,
     apply_kerning=True,
     apply_hinting=True,
 ):
