@@ -53,7 +53,7 @@ BASELINE_RATIO = ASCENDER / (ASCENDER - DESCENDER)  # 기본값: 0.8
 # 대문자 기준 목표 높이 (폰트 유닛, UPM=1000 기준). 한글 음절이 보통
 # 800~900 유닛 정도 높이로 그려지므로, 라틴 대문자도 비슷한 시각적
 # 무게감을 갖도록 이 값을 목표로 전체 배율을 자동으로 맞춘다.
-TARGET_CAP_HEIGHT = 500
+TARGET_CAP_HEIGHT = 550
 
 # 배율 보정이 너무 과하게 걸리지 않도록 하는 안전 범위.
 MIN_AUTO_SCALE = 0.5

@@ -124,7 +124,7 @@ def assemble_fontbuilder(
 def build_font(
     glyph_dir="data/glyphs",
     manifest_path="data/manifest.json",
-    output_path="output/bold.ttf",
+    output_path=f"output/{FONT_FAMILY_NAME}-{FONT_STYLE_NAME}.ttf",
     family_name=FONT_FAMILY_NAME,
     style_name=FONT_STYLE_NAME,
     apply_kerning=True,

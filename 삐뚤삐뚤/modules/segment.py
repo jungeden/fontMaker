@@ -15,17 +15,66 @@ from config import (
 CELLS_PER_PAGE = ROWS * COLS
 
 
+def _strip_grid_lines(cell, min_line_ratio=0.6, max_line_thickness=6):
+    """
+    칸 가장자리에 남아있는 원고지 격자선을 픽셀 단위로 찾아서 지운다.
+
+    격자선은 손글씨 획과 달리 셀 폭/높이의 상당 부분(min_line_ratio 이상)을
+    가로/세로로 관통하는 "거의 완벽한 직선"이라는 특징이 있다. 이 특징으로
+    실제 잉크와 구별한다 — 손글씨 획이 우연히 가장자리 근처를 지나가더라도
+    칸 전체를 가로지르는 직선일 가능성은 낮다.
+
+    고정 비율로 자르는 기존 _inset()과 달리, 격자선이 실제로 얼마나 침범했는지
+    찾아서 그 두께만큼만 지우므로, 스캔 정렬이 칸마다 다르게 어긋나 있어도
+    (일부 칸만 문제 되는 상황) 강건하게 대응할 수 있다.
+    """
+    inv = 255 - cell  # 잉크=255, 배경=0
+    h, w = inv.shape
+
+    row_ink_ratio = (inv > 0).sum(axis=1) / w
+    col_ink_ratio = (inv > 0).sum(axis=0) / h
+
+    def _run_from_edge(ratios, limit):
+        n = 0
+        for i in range(min(limit, len(ratios))):
+            if ratios[i] >= min_line_ratio:
+                n = i + 1
+            else:
+                break
+        return n
+
+    top = _run_from_edge(row_ink_ratio, max_line_thickness)
+    bottom = _run_from_edge(row_ink_ratio[::-1], max_line_thickness)
+    left = _run_from_edge(col_ink_ratio, max_line_thickness)
+    right = _run_from_edge(col_ink_ratio[::-1], max_line_thickness)
+
+    result = cell.copy()
+    if top: result[:top, :] = 255
+    if bottom: result[h - bottom:, :] = 255
+    if left: result[:, :left] = 255
+    if right: result[:, w - right:] = 255
+    return result
+
 def _inset(cell, margin_ratio=CELL_INSET_RATIO):
-    """
-    칸의 테두리 선(원고지 격자선) 자체가 글자로 오인식되는 것을 막기 위해
-    칸 가장자리를 안쪽으로 살짝 잘라낸다.
-    """
+    cell = _strip_grid_lines(cell)
     h, w = cell.shape
     my = int(h * margin_ratio)
     mx = int(w * margin_ratio)
     if h - 2 * my <= 0 or w - 2 * mx <= 0:
         return cell
     return cell[my:h - my, mx:w - mx]
+
+# def _inset(cell, margin_ratio=CELL_INSET_RATIO):
+#     """
+#     칸의 테두리 선(원고지 격자선) 자체가 글자로 오인식되는 것을 막기 위해
+#     칸 가장자리를 안쪽으로 살짝 잘라낸다.
+#     """
+#     h, w = cell.shape
+#     my = int(h * margin_ratio)
+#     mx = int(w * margin_ratio)
+#     if h - 2 * my <= 0 or w - 2 * mx <= 0:
+#         return cell
+#     return cell[my:h - my, mx:w - mx]
 
 
 def has_content(cell, min_pixels=15):
