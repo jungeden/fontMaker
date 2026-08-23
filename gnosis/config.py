@@ -5,6 +5,25 @@
 FONT_FAMILY_NAME = "gnosis"
 FONT_STYLE_NAME = "regular"
 # ────────────────────────────────
+# 폰드 설정
+# ────────────────────────────────
+FONT_SETUP_VERSION = "2.0"  # 버전 정보
+# 저작권
+FONT_SETUP_COPYRIGHT_YEAR = "2026"
+FONT_SETUP_COPYRIGHT_NAME = "Yeom Mina"
+# 디자이너 이름
+FONT_SETUP_DESIGNER = "Yeom Mina"
+# 디자이너 웹사이트
+FONT_SETUP_DESIGNER_URL = ""
+# 제작/배포사
+FONT_SETUP_MANUFACTURER = ""
+ # 제작사 웹사이트
+FONT_SETUP_VENDOR_URL = ""
+# 라이선스 설명
+FONT_SETUP_LICENSE_DESCRIPTION = "This font is not free for personal use."
+# 라이선스 안내 주소
+FONT_SETUP_LICENSE_URL = ""
+# ────────────────────────────────
 # 템플릿(스캔용 원고지) 설정
 # ────────────────────────────────
 PAGE_MARGIN = 20   # mm, 페이지 좌/상단 여백
@@ -32,7 +51,7 @@ CELL_SIZE = 18     # mm, 칸 한 변의 길이
 #   줄이면 글자 크기는 그대로 두고 글자 사이 간격만 좁아진다("한글 자간이
 #   너무 넓다" -> 이 값을 줄인다, 예: 1000 -> 900).
 HANGUL_FILL_RATIO = 0.93
-ADVANCE_WIDTH = 600
+ADVANCE_WIDTH = 570
 
 # ────────────────────────────────
 # 칸 분할 시 테두리 여백

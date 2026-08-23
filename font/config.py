@@ -4,6 +4,37 @@
 #  서로 달랐던 문제를 여기서 하나로 통일한다.)
 FONT_FAMILY_NAME = "font"
 FONT_STYLE_NAME = "regular"
+
+# ────────────────────────────────
+# 폰드 설정
+# ────────────────────────────────
+FONT_SETUP_VERSION = "1.0"  # 버전 정보
+# 저작권
+FONT_SETUP_COPYRIGHT_YEAR = "2026"
+FONT_SETUP_COPYRIGHT_NAME = "Jeong Sejin"
+# 디자이너 이름
+FONT_SETUP_DESIGNER = "Jeong Sejin"
+# 디자이너 웹사이트
+FONT_SETUP_DESIGNER_URL = ""
+# 제작/배포사
+FONT_SETUP_MANUFACTURER = ""
+ # 제작사 웹사이트
+FONT_SETUP_VENDOR_URL = ""
+# 라이선스 설명
+FONT_SETUP_LICENSE_DESCRIPTION = "This font is not free for personal use."
+# 라이선스 안내 주소
+FONT_SETUP_LICENSE_URL = ""
+
+
+# 대문자 기준 목표 높이 (폰트 유닛, UPM=1000 기준). 한글 음절이 보통
+# 800~900 유닛 정도 높이로 그려지므로, 라틴 대문자도 비슷한 시각적
+# 무게감을 갖도록 이 값을 목표로 전체 배율을 자동으로 맞춘다.
+# ------------------------------------ -- ------------------------------------ #
+# 알파벳, 특수문자 크기(비율)
+# ------------------------------------ -- ------------------------------------ #
+LATIN_TARGET_CAP_HEIGHT = 500
+
+
 # ────────────────────────────────
 # 템플릿(스캔용 원고지) 설정
 # ────────────────────────────────

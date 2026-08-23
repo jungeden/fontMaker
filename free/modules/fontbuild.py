@@ -7,6 +7,7 @@ from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
 from config import UNITS_PER_EM, ASCENDER, DESCENDER, ADVANCE_WIDTH, FONT_FAMILY_NAME, FONT_STYLE_NAME
+from config import FONT_SETUP_VERSION, FONT_SETUP_COPYRIGHT_YEAR, FONT_SETUP_COPYRIGHT_NAME, FONT_SETUP_DESIGNER, FONT_SETUP_DESIGNER_URL,FONT_SETUP_MANUFACTURER, FONT_SETUP_VENDOR_URL, FONT_SETUP_LICENSE_DESCRIPTION, FONT_SETUP_LICENSE_URL  
 from modules.compose import (
     load_component_contours,
     build_calibration,
@@ -109,10 +110,19 @@ def assemble_fontbuilder(
     )
 
     fb.setupNameTable({
-        "familyName": family_name,
-        "styleName": style_name,
-        "fullName": f"{family_name} {style_name}",
-        "psName": f"{family_name}-{style_name}".replace(" ", ""),
+        "familyName": FONT_FAMILY_NAME,
+        "styleName": FONT_STYLE_NAME,
+        "fullName": f"{FONT_FAMILY_NAME} {FONT_STYLE_NAME}",
+        "psName": f"{FONT_FAMILY_NAME}-{FONT_STYLE_NAME}".replace(" ", ""),
+
+        "version": f"Version {FONT_SETUP_VERSION}",        # 버전 정보
+        "copyright": f"Copyright © {FONT_SETUP_COPYRIGHT_YEAR} {FONT_SETUP_COPYRIGHT_NAME}. All rights reserved.", # 저작권
+        "designer": FONT_SETUP_DESIGNER,       # 디자이너 이름
+        "designerURL": FONT_SETUP_DESIGNER_URL, # 디자이너 웹사이트
+        "manufacturer": FONT_SETUP_MANUFACTURER,             # 제작/배포사
+        "vendorURL": FONT_SETUP_VENDOR_URL, # 제작사 웹사이트
+        "licenseDescription": FONT_SETUP_LICENSE_DESCRIPTION, # 라이선스 설명
+        "licenseInfoURL": FONT_SETUP_LICENSE_URL , # 라이선스 안내 주소
     })
 
     fb.setupPost()
@@ -172,8 +182,10 @@ def build_font(
     else:
         fb.save(output_path)
 
-    print(f"한글 {hangul_built}자 (미완성 컴포넌트로 {hangul_skipped}자 제외) + "
-          f"단독 자모 {standalone_built}개 + "
-          f"영문/숫자/특수문자 {latin_built}자, 총 {hangul_built + standalone_built + latin_built}자, "
-          f"커닝 {kern_pairs}쌍 적용, '{output_path}' 생성 완료")
+    print(f"\n\n한글 {hangul_built}자 (미완성 컴포넌트로 {hangul_skipped}자 제외) + "
+          f"\n단독 자모 {standalone_built}개 + "
+          f"\n영문/숫자/특수문자 {latin_built}자, 총 {hangul_built + standalone_built + latin_built}자, "
+          f"\n커닝 {kern_pairs}쌍 적용, '{output_path}' 생성 완료"
+          f"\n\n버전 {FONT_SETUP_VERSION}"
+          f"\n이름 {FONT_FAMILY_NAME}-{FONT_STYLE_NAME}")
     return output_path

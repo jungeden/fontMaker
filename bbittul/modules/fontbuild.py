@@ -7,6 +7,7 @@ from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
 from config import UNITS_PER_EM, ASCENDER, DESCENDER, ADVANCE_WIDTH, FONT_FAMILY_NAME, FONT_STYLE_NAME
+from config import FONT_SETUP_VERSION, FONT_SETUP_COPYRIGHT_YEAR, FONT_SETUP_COPYRIGHT_NAME, FONT_SETUP_DESIGNER, FONT_SETUP_DESIGNER_URL,FONT_SETUP_MANUFACTURER, FONT_SETUP_VENDOR_URL, FONT_SETUP_LICENSE_DESCRIPTION, FONT_SETUP_LICENSE_URL  
 from modules.compose import (
     load_component_contours,
     build_calibration,
@@ -17,113 +18,42 @@ from modules.latin import build_latin_glyphs
 from modules.kerning import build_kern_feature
 
 
-# def _apply_hinting(unhinted_path, output_path):
-#     """
-#     ttfautohint(https://freetype.org/ttfautohint/)가 시스템에 설치되어 있으면
-#     자동으로 힌팅을 적용한다. 없으면 힌팅 없이 그대로 저장하고 설치 방법을
-#     안내한다.
-
-#     힌팅이 뭔지: 작은 크기(특히 저해상도 화면)에서 글자 획이 흐릿하거나
-#     삐뚤어지지 않게, 폰트 안에 "이 크기에서는 이 획을 픽셀 격자에 맞춰
-#     그려라"라는 지시(명령어)를 추가하는 작업이다. 직접 이 명령어를 손으로
-#     작성하는 건 매우 복잡하므로(폰트 전용 바이트코드 언어), 널리 쓰이는
-#     오픈소스 자동 힌팅 도구인 ttfautohint를 그대로 활용한다.
-#     """
-#     ttfautohint = shutil.which("ttfautohint")
-
-#     if not ttfautohint:
-#         shutil.move(unhinted_path, output_path)
-#         print("참고: ttfautohint가 설치되어 있지 않아 힌팅 없이 저장했습니다. "
-#               "힌팅을 적용하려면 ttfautohint를 설치한 뒤 다시 빌드하세요 "
-#               "(Mac: brew install ttfautohint / "
-#               "Linux: sudo apt install ttfautohint / "
-#               "Windows: https://freetype.org/ttfautohint/#download 에서 설치).")
-#         return False
-
-#     try:
-#         subprocess.run(
-#             [ttfautohint, unhinted_path, output_path],
-#             check=True, capture_output=True, text=True,
-#         )
-#         Path(unhinted_path).unlink(missing_ok=True)
-#         print("ttfautohint로 자동 힌팅을 적용했습니다.")
-#         return True
-#     except subprocess.CalledProcessError as e:
-#         print(f"참고: ttfautohint 실행에 실패해서 힌팅 없이 저장합니다. ({e.stderr[:200]})")
-#         shutil.move(unhinted_path, output_path)
-#         return False
 def _apply_hinting(unhinted_path, output_path):
     """
-    ttfautohint가 설치되어 있으면 자동 힌팅을 적용한다.
-    실행 실패 시 원본 unhinted TTF를 그대로 최종 파일로 사용한다.
-    """
+    ttfautohint(https://freetype.org/ttfautohint/)가 시스템에 설치되어 있으면
+    자동으로 힌팅을 적용한다. 없으면 힌팅 없이 그대로 저장하고 설치 방법을
+    안내한다.
 
+    힌팅이 뭔지: 작은 크기(특히 저해상도 화면)에서 글자 획이 흐릿하거나
+    삐뚤어지지 않게, 폰트 안에 "이 크기에서는 이 획을 픽셀 격자에 맞춰
+    그려라"라는 지시(명령어)를 추가하는 작업이다. 직접 이 명령어를 손으로
+    작성하는 건 매우 복잡하므로(폰트 전용 바이트코드 언어), 널리 쓰이는
+    오픈소스 자동 힌팅 도구인 ttfautohint를 그대로 활용한다.
+    """
     ttfautohint = shutil.which("ttfautohint")
 
-    print(f"[힌팅] ttfautohint 경로: {ttfautohint}")
-    print(f"[힌팅] 입력 파일: {unhinted_path}")
-    print(f"[힌팅] 출력 파일: {output_path}")
-
     if not ttfautohint:
-        print(
-            "참고: ttfautohint를 찾을 수 없습니다. "
-            "힌팅 없이 저장합니다."
-        )
-
         shutil.move(unhinted_path, output_path)
+        print("참고: ttfautohint가 설치되어 있지 않아 힌팅 없이 저장했습니다. "
+              "힌팅을 적용하려면 ttfautohint를 설치한 뒤 다시 빌드하세요 "
+              "(Mac: brew install ttfautohint / "
+              "Linux: sudo apt install ttfautohint / "
+              "Windows: https://freetype.org/ttfautohint/#download 에서 설치).")
         return False
 
     try:
-        result = subprocess.run(
-            [
-                ttfautohint,
-                unhinted_path,
-                output_path,
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
+        subprocess.run(
+            [ttfautohint, unhinted_path, output_path],
+            check=True, capture_output=True, text=True,
         )
-
-        print("[힌팅] ttfautohint 실행 성공.")
-
-        if result.stdout:
-            print("[힌팅 stdout]")
-            print(result.stdout)
-
-        if result.stderr:
-            print("[힌팅 stderr]")
-            print(result.stderr)
-
         Path(unhinted_path).unlink(missing_ok=True)
-
+        print("ttfautohint로 자동 힌팅을 적용했습니다.")
         return True
-
     except subprocess.CalledProcessError as e:
-        print("[힌팅] ttfautohint 실행 실패")
-        print(f"return code: {e.returncode}")
-
-        if e.stdout:
-            print("[힌팅 stdout]")
-            print(e.stdout)
-
-        if e.stderr:
-            print("[힌팅 stderr]")
-            print(e.stderr)
-
-        print("힌팅 없이 원본 TTF를 최종 파일로 사용합니다.")
-
+        print(f"참고: ttfautohint 실행에 실패해서 힌팅 없이 저장합니다. ({e.stderr[:200]})")
         shutil.move(unhinted_path, output_path)
         return False
 
-    except OSError as e:
-        print("[힌팅] ttfautohint 실행 자체에 실패했습니다.")
-        print(f"오류: {e}")
-
-        print("힌팅 없이 원본 TTF를 최종 파일로 사용합니다.")
-
-        shutil.move(unhinted_path, output_path)
-        return False
 
 def assemble_fontbuilder(
     hangul_glyphs, hangul_cmap,
@@ -180,10 +110,19 @@ def assemble_fontbuilder(
     )
 
     fb.setupNameTable({
-        "familyName": family_name,
-        "styleName": style_name,
-        "fullName": f"{family_name} {style_name}",
-        "psName": f"{family_name}-{style_name}".replace(" ", ""),
+        "familyName": FONT_FAMILY_NAME,
+        "styleName": FONT_STYLE_NAME,
+        "fullName": f"{FONT_FAMILY_NAME} {FONT_STYLE_NAME}",
+        "psName": f"{FONT_FAMILY_NAME}-{FONT_STYLE_NAME}".replace(" ", ""),
+
+        "version": f"Version {FONT_SETUP_VERSION}",        # 버전 정보
+        "copyright": f"Copyright © {FONT_SETUP_COPYRIGHT_YEAR} {FONT_SETUP_COPYRIGHT_NAME}. All rights reserved.", # 저작권
+        "designer": FONT_SETUP_DESIGNER,       # 디자이너 이름
+        "designerURL": FONT_SETUP_DESIGNER_URL, # 디자이너 웹사이트
+        "manufacturer": FONT_SETUP_MANUFACTURER,             # 제작/배포사
+        "vendorURL": FONT_SETUP_VENDOR_URL, # 제작사 웹사이트
+        "licenseDescription": FONT_SETUP_LICENSE_DESCRIPTION, # 라이선스 설명
+        "licenseInfoURL": FONT_SETUP_LICENSE_URL , # 라이선스 안내 주소
     })
 
     fb.setupPost()
@@ -243,8 +182,10 @@ def build_font(
     else:
         fb.save(output_path)
 
-    print(f"한글 {hangul_built}자 (미완성 컴포넌트로 {hangul_skipped}자 제외) + "
-          f"단독 자모 {standalone_built}개 + "
-          f"영문/숫자/특수문자 {latin_built}자, 총 {hangul_built + standalone_built + latin_built}자, "
-          f"커닝 {kern_pairs}쌍 적용, '{output_path}' 생성 완료")
+    print(f"\n\n한글 {hangul_built}자 (미완성 컴포넌트로 {hangul_skipped}자 제외) + "
+          f"\n단독 자모 {standalone_built}개 + "
+          f"\n영문/숫자/특수문자 {latin_built}자, 총 {hangul_built + standalone_built + latin_built}자, "
+          f"\n커닝 {kern_pairs}쌍 적용, '{output_path}' 생성 완료"
+          f"\n\n버전 {FONT_SETUP_VERSION}"
+          f"\n이름 {FONT_FAMILY_NAME}-{FONT_STYLE_NAME}")
     return output_path

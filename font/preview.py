@@ -64,7 +64,7 @@ def _make_hangul_preview_rows():
     데이터(ALL_SUBGROUPS, VOWEL_GROUP, JONG_LIST)로부터 예시 음절을 계산해서
     만든다. 자유롭게 이 함수를 수정해서 원하는 예시를 추가/삭제해도 된다.
     """
-    from modules.hangul import compose_char, ALL_SUBGROUPS, VOWEL_GROUP, JONG_LIST, CHO_LIST
+    from modules.hangul import compose_char, ALL_SUBGROUPS, VOWEL_GROUP, JONG_LIST, CHO_LIST, JUNG_LIST
 
     rep_vowel = {}
     for v, g in VOWEL_GROUP.items():
@@ -80,8 +80,8 @@ def _make_hangul_preview_rows():
     row4 = "".join(
         compose_char("ㄱ", "ㅏ", j) for j in JONG_LIST if j not in CHO_LIST
     )  # 초성에는 없는(=겹받침 전용) 자모만
-    row5 = "".join(compose_char("ㄷ", rep_vowel[g]) for g in ALL_SUBGROUPS)
-    row6 = "".join(compose_char("ㄴ", rep_vowel[g], "ㄴ") for g in ALL_SUBGROUPS)
+    row5 = "".join(compose_char("ㄷ", g) for g in JUNG_LIST)
+    row6 = "".join(compose_char("ㄴ", g, "ㄴ") for g in JUNG_LIST)
     row7 = "".join(
             compose_char(c, "ㅗ")
             for c in ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ",
