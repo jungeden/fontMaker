@@ -7,7 +7,7 @@ FONT_STYLE_NAME = "regular"
 # ────────────────────────────────
 # 폰드 설정
 # ────────────────────────────────
-FONT_SETUP_VERSION = "2.0"  # 버전 정보
+FONT_SETUP_VERSION = "3.0"  # 버전 정보
 # 저작권
 FONT_SETUP_COPYRIGHT_YEAR = "2026"
 FONT_SETUP_COPYRIGHT_NAME = "Jeong Sejin"
@@ -51,7 +51,7 @@ CELL_SIZE = 18     # mm, 칸 한 변의 길이
 #   줄이면 글자 크기는 그대로 두고 글자 사이 간격만 좁아진다("한글 자간이
 #   너무 넓다" -> 이 값을 줄인다, 예: 1000 -> 900).
 HANGUL_FILL_RATIO = 0.93
-ADVANCE_WIDTH = 500
+ADVANCE_WIDTH = 450
 
 # ────────────────────────────────
 # 칸 분할 시 테두리 여백
