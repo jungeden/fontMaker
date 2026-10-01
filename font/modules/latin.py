@@ -19,7 +19,7 @@ import numpy as np
 
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-from config import UNITS_PER_EM, GLYPH_SIZE, ASCENDER, DESCENDER, LATIN_TARGET_CAP_HEIGHT
+from config import UNITS_PER_EM, GLYPH_SIZE, ASCENDER, DESCENDER, LATIN_TARGET_CAP_HEIGHT, MIN_HOLE_AREA_RATIO
 from modules.vectorize import find_contours_with_holes, simplify, fix_winding
 from modules.glyph import draw_contour
 
@@ -40,6 +40,12 @@ EXTRA_CHARS = [
     "※", "→", "←", "↑", "↓",
     # 통화/저작권 기호
     "₩", "©", "®", "™",
+    # 수학/물리 기호
+    "±", "×", "÷", "≠", "≤", "≥", "≈", "∞", "√", "∑", "∏", "∫", "∂", "∇", "°", "‰",
+
+    # 그리스 문자 (수식/물리에서 자주 쓰는 것 위주)
+    "α", "β", "γ", "δ", "ε", "θ", "λ", "μ", "π", "σ", "φ", "ψ", "ω",
+    "Δ", "Σ", "Ω",
 ]
 
 LATIN_CHARS = ASCII_CHARS + EXTRA_CHARS  # 총 94 + 33 = 127자
@@ -60,8 +66,13 @@ MIN_AUTO_SCALE = 0.5
 MAX_AUTO_SCALE = 2.5
 
 SIDE_BEARING = 60
-SPACE_ADVANCE = UNITS_PER_EM // 3
 
+
+SIDE_BEARING_BASE = 60      # 기준 폭(NARROW_WIDTH_THRESHOLD)에서의 좌우 여백
+SIDE_BEARING_MIN = 40       # 아주 넓은/두꺼운 문자의 여백 하한
+SIDE_BEARING_MAX = 130      # 아주 좁은/얇은 문자의 여백 상한
+NARROW_WIDTH_THRESHOLD = 220  # 이 폭(폰트 유닛) 기준으로 여백을 반비례 조정
+SPACE_ADVANCE = UNITS_PER_EM // 3
 
 def component_id(ch):
     return f"latin_{ord(ch):04X}"
@@ -96,12 +107,16 @@ def _scale_flip_latin(pt, upm=UNITS_PER_EM, image_size=GLYPH_SIZE):
     return (fx, fy)
 
 
+
+
 def image_to_contours_latin(path):
     img = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
     if img is None:
         return None
 
-    contours, hierarchy = find_contours_with_holes(img)
+    contours, hierarchy, depth = find_contours_with_holes(
+        img, min_hole_area_ratio=MIN_HOLE_AREA_RATIO
+    )
     if len(contours) == 0:
         return []
 
@@ -112,7 +127,7 @@ def image_to_contours_latin(path):
         if pts.ndim != 2 or len(pts) < 3:
             continue
 
-        is_hole = hierarchy[i][3] != -1
+        is_hole = depth[i] % 2 == 1
         font_pts = np.array([_scale_flip_latin(p) for p in pts])
         font_pts = fix_winding(font_pts, is_hole)
         result.append((font_pts.tolist(), is_hole))
@@ -157,34 +172,37 @@ def _calc_global_scale(raw_glyphs):
     return scale, len(cap_heights)
 
 
+
+
+def _side_bearing_for_width(glyph_w, ref_width=NARROW_WIDTH_THRESHOLD):
+    """
+    글자 폭에 반비례하는 여백. i,l,.,! 처럼 폭이 좁은 문자는 옆 글자와
+    붙어 보이기 쉬우므로 여백을 더 주고, m,W처럼 넓은 문자는 여백을
+    줄여서 전체 자간이 고르게 보이게 한다.
+    """
+    if glyph_w <= 0:
+        return SIDE_BEARING_MAX
+    bearing = SIDE_BEARING_BASE * (ref_width / glyph_w)
+    return int(round(max(SIDE_BEARING_MIN, min(SIDE_BEARING_MAX, bearing))))
+
+
 def build_latin_glyphs(glyph_dir, manifest):
-    """
-    manifest(전체 컴포넌트 목록, data/manifest.json)를 순회하면서
-    kind == "latin" 인 항목만 글리프로 만든다.
-    (인덱스는 manifest 안에서의 절대 위치를 그대로 쓰므로, 한글 컴포넌트와
-    섞여 있어도 파일명({idx:03}.png)이 어긋나지 않는다)
-    """
     glyph_dir = Path(glyph_dir)
 
-    # 1차: 모든 라틴/기호 컴포넌트의 원본 윤곽선을 먼저 읽어온다.
     raw = {}
     for i, comp in enumerate(manifest):
         if comp["kind"] != "latin":
             continue
-
         png = glyph_dir / f"{i:03}.png"
         if not png.exists():
             continue
-
         contours = image_to_contours_latin(png)
         if not contours:
             continue
-
         ch = comp["jamo"]
         gname = f"latin{ord(ch):04X}"
         raw[gname] = {"contours": contours, "char": ch}
 
-    # 2차: 대문자 높이를 기준으로 전체 배율을 한 번 계산해서 모두에게 적용.
     global_scale, n_samples = _calc_global_scale(raw)
     if n_samples:
         print(f"라틴 문자 크기 보정: 대문자 {n_samples}개 기준 배율 {global_scale:.2f}배 적용")
@@ -195,18 +213,29 @@ def build_latin_glyphs(glyph_dir, manifest):
 
     built = 0
     for gname, entry in raw.items():
-        pen = TTGlyphPen(None)
+        scaled_contours = []
         xs = []
-        for pts, _is_hole in entry["contours"]:
+        for pts, is_hole in entry["contours"]:
             scaled = [(x * global_scale, y * global_scale) for x, y in pts]
             xs.extend(x for x, _ in scaled)
-            draw_contour(pen, scaled)
-
-        glyphs[gname] = pen.glyph()
+            scaled_contours.append((scaled, is_hole))
 
         glyph_w = (max(xs) - min(xs)) if xs else 0
-        advance = int(round(glyph_w + SIDE_BEARING * 2))
-        metrics[gname] = (advance, SIDE_BEARING)
+        side_bearing = _side_bearing_for_width(glyph_w)
+
+        # 사용자가 칸의 어느 위치에 글자를 썼든 상관없이, 잉크의 왼쪽
+        # 끝(xMin)이 항상 side_bearing 위치에서 시작하도록 평행이동한다.
+        # (기존에는 이 정렬이 없어서 글자마다 좌우 여백이 들쭉날쭉했다)
+        shift = (side_bearing - min(xs)) if xs else 0
+
+        pen = TTGlyphPen(None)
+        for scaled, _is_hole in scaled_contours:
+            shifted = [(x + shift, y) for x, y in scaled]
+            draw_contour(pen, shifted)
+
+        glyphs[gname] = pen.glyph()
+        advance = int(round(glyph_w + side_bearing * 2))
+        metrics[gname] = (advance, side_bearing)
 
         cmap[ord(entry["char"])] = gname
         built += 1

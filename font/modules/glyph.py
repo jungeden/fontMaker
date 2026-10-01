@@ -3,7 +3,7 @@ import numpy as np
 
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-from config import UNITS_PER_EM, GLYPH_SIZE, CURVE_SMOOTHING
+from config import UNITS_PER_EM, GLYPH_SIZE, CURVE_SMOOTHING, MIN_HOLE_AREA_RATIO
 from modules.vectorize import find_contours_with_holes, simplify, fix_winding
 
 
@@ -21,20 +21,15 @@ def _midpoint(a, b):
     return ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
 
 
-def image_to_contours(path):
-    """
-    글자 PNG 한 장을 (font-space 점 리스트, is_hole) 튜플들의 리스트로 변환한다.
-    pen에 바로 그리지 않고 "폰트 좌표계로 변환된 윤곽선 데이터"만 반환하므로,
-    이후 compose.py에서 이 데이터를 이동/확대해서 여러 글자를 조합하는 데 재사용할 수 있다.
 
-    - RETR_TREE 기반으로 안쪽 구멍(ㅇ,ㅎ,ㅁ,ㅂ 등)을 지원한다.
-    - 각 contour의 winding(방향)을 TrueType 규칙에 맞게 보정해서 반환한다.
-    """
+def image_to_contours(path):
     img = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
     if img is None:
         return None
 
-    contours, hierarchy = find_contours_with_holes(img)
+    contours, hierarchy, depth = find_contours_with_holes(
+        img, min_hole_area_ratio=MIN_HOLE_AREA_RATIO
+    )
     if len(contours) == 0:
         return []
 
@@ -42,19 +37,16 @@ def image_to_contours(path):
     for i, contour in enumerate(contours):
         simplified = simplify(contour)
         pts = simplified.squeeze()
-
         if pts.ndim != 2 or len(pts) < 3:
             continue
 
-        is_hole = hierarchy[i][3] != -1  # parent가 있으면 구멍(내부 윤곽선)
+        is_hole = depth[i] % 2 == 1  # 짝수 depth=채움, 홀수 depth=구멍
 
         font_pts = np.array([_scale_flip(p) for p in pts])
         font_pts = fix_winding(font_pts, is_hole)
-
         result.append((font_pts.tolist(), is_hole))
 
     return result
-
 
 def draw_contour(pen, pts, smooth=CURVE_SMOOTHING):
     """

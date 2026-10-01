@@ -14,13 +14,13 @@ assemble_fontbuilder)을 그대로 재사용한다 - 그래서 여기서 보이�
 전체가 아니라 지정한 샘플 글자만 넣으므로 훨씬 빠르다 (보통 1~5초).
 
 사용법:
-    python preview.py hangul     # 한글 대표 음절 미리보기 (9개 모음 세부그룹 +
+    python3 preview.py hangul     # 한글 대표 음절 미리보기 (9개 모음 세부그룹 +
                                   #   받침 유무 + 여러 자음 비교, 한 장의 이미지로)
-    python preview.py latin      # 영문/숫자/특수문자 미리보기
-    python preview.py kerning    # 커닝 적용 전/후 비교
-    python preview.py stroke     # 획 굵기 보정 전/후 비교 (실제 컴포넌트 PNG 기준)
-    python preview.py hinting    # 힌팅 적용 전/후 비교 (작은 크기로 렌더링)
-    python preview.py all        # 위 다섯 가지를 전부 실행
+    python3 preview.py latin      # 영문/숫자/특수문자 미리보기
+    python3 preview.py kerning    # 커닝 적용 전/후 비교
+    python3 preview.py stroke     # 획 굵기 보정 전/후 비교 (실제 컴포넌트 PNG 기준)
+    python3 preview.py hinting    # 힌팅 적용 전/후 비교 (작은 크기로 렌더링)
+    python3 preview.py all        # 위 다섯 가지를 전부 실행
 
 결과 이미지는 output/preview_*.png 로 저장된다. data/glyphs 에 이미 분할된
 컴포넌트 PNG가 있어야 한다 (즉, `python app.py build`를 최소 한 번은

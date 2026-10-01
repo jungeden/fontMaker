@@ -5,41 +5,96 @@ from pathlib import Path
 from config import APPROX_EPSILON
 
 
-def find_contours_with_holes(img):
-    """
-    바깥 윤곽선뿐 아니라 안쪽 구멍(ㅇ,ㅎ,ㅁ,ㅂ 등의 속이 빈 부분)까지 찾는다.
+def _compute_depths(hierarchy):
+    """각 contour의 중첩 깊이. 0=바깥 윤곽선, 1=구멍, 2=구멍 속 채움(예: @의 안쪽 원)..."""
+    n = len(hierarchy)
+    depth = [None] * n
 
-    기존 코드는 cv2.RETR_EXTERNAL 을 사용했는데, 이 모드는 가장 바깥
-    윤곽선만 반환하기 때문에 "ㅇ"이 속이 꽉 찬 "●"으로 만들어지는
-    문제가 있었다. RETR_TREE + hierarchy 를 사용해야 안쪽 구멍을
-    별도 contour로 받아올 수 있다.
+    def depth_of(i):
+        if depth[i] is not None:
+            return depth[i]
+        parent = hierarchy[i][3]
+        d = 0 if parent == -1 else depth_of(parent) + 1
+        depth[i] = d
+        return d
 
-    반환값:
-        contours  : contour 리스트
-        hierarchy : 각 contour의 [next, prev, first_child, parent] (N,4) 배열
-                    hierarchy[i][3] != -1 이면 i번째 contour는 "구멍"이다.
+    for i in range(n):
+        depth_of(i)
+    return depth
+
+
+def find_contours_with_holes(img, min_hole_area_ratio=None):
     """
-    binary = 255 - img  # 흰색=배경 -> 0, 검은색(글자)=255 로 반전
+    바깥 윤곽선뿐 아니라 안쪽 구멍까지 찾는다.
+
+    min_hole_area_ratio: 구멍 후보의 면적이 "바로 위" 부모 윤곽선 면적의
+    이 비율보다 작으면, 의도한 구멍(ㅇ,ㅎ,☆,○,□,◇,△ 등)이 아니라 손으로
+    칠할 때 생긴 작은 흰 얼룩(스캔/필기 노이즈)으로 보고 버린다(뚫지 않음).
+    ★,♥,●,■,◆,▲ 처럼 원래 꽉 차야 하는 도형에서 노이즈 때문에 구멍이
+    뚫리던 문제를 이걸로 막는다. 노이즈로 판정된 윤곽선의 자손(그 안에
+    또 중첩된 것)도 같이 버린다.
+
+    반환값: contours, hierarchy, depth (depth[i]가 홀수면 구멍, 짝수면 채움)
+    """
+    binary = 255 - img
 
     contours, hierarchy = cv2.findContours(
-        binary,
-        cv2.RETR_TREE,
-        cv2.CHAIN_APPROX_SIMPLE,
+        binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE,
     )
 
     if hierarchy is None:
-        return [], np.zeros((0, 4), dtype=int)
+        return [], np.zeros((0, 4), dtype=int), []
 
-    return contours, hierarchy[0]  # cv2가 (1, N, 4) 형태로 주므로 [0]
+    hierarchy = hierarchy[0]
+    n = len(contours)
+    depth = _compute_depths(hierarchy)
+
+    drop = [False] * n
+    if min_hole_area_ratio:
+        areas = [cv2.contourArea(c) for c in contours]
+        for i in range(n):
+            parent = hierarchy[i][3]
+            if parent == -1:
+                continue
+            parent_area = areas[parent]
+            if parent_area > 0 and areas[i] / parent_area < min_hole_area_ratio:
+                drop[i] = True
+
+        changed = True
+        while changed:
+            changed = False
+            for i in range(n):
+                parent = hierarchy[i][3]
+                if parent != -1 and drop[parent] and not drop[i]:
+                    drop[i] = True
+                    changed = True
+
+    keep_idx = [i for i in range(n) if not drop[i]]
+    remap = {old: new for new, old in enumerate(keep_idx)}
+
+    kept_contours = [contours[i] for i in keep_idx]
+    kept_hierarchy = []
+    kept_depth = []
+    for i in keep_idx:
+        nxt, prev, child, parent = hierarchy[i]
+        kept_hierarchy.append([
+            remap.get(nxt, -1), remap.get(prev, -1),
+            remap.get(child, -1), remap.get(parent, -1),
+        ])
+        kept_depth.append(depth[i])
+
+    kept_hierarchy = (
+        np.array(kept_hierarchy, dtype=int) if kept_hierarchy else np.zeros((0, 4), dtype=int)
+    )
+
+    return kept_contours, kept_hierarchy, kept_depth
 
 
 def simplify(contour, epsilon=APPROX_EPSILON):
-    """점 개수를 줄여 다각형을 단순화한다 (곡선화 이전 전처리)."""
     return cv2.approxPolyDP(contour, epsilon, True)
 
 
 def signed_area(pts):
-    """Shoelace 공식. y축이 위로 향하는(y-up) 좌표계 기준 부호 있는 면적."""
     pts = np.asarray(pts, dtype=np.float64)
     x = pts[:, 0]
     y = pts[:, 1]
@@ -47,25 +102,15 @@ def signed_area(pts):
 
 
 def fix_winding(pts, is_hole):
-    """
-    TrueType(glyf) 규칙:
-      - 바깥 윤곽선은 시계방향(CW)  -> signed_area < 0
-      - 안쪽 구멍(hole)은 반시계방향(CCW) -> signed_area > 0
-    이 규칙과 반대로 감겨 있으면 점 순서를 뒤집어 바로잡는다.
-    이 처리를 안 하면 구멍이 안 뚫리거나, 반대로 바깥 윤곽선이
-    구멍 취급되어 글자가 통째로 사라질 수 있다.
-    """
     pts = np.asarray(pts, dtype=np.float64)
     area = signed_area(pts)
-
     should_be_positive = is_hole
-
     if should_be_positive and area < 0:
         pts = pts[::-1]
     elif not should_be_positive and area > 0:
         pts = pts[::-1]
-
     return pts
+
 
 
 # ── 아래는 디버그/미리보기용 SVG 출력 (폰트 생성 파이프라인 필수 요소는 아님) ──
