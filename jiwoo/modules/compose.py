@@ -182,8 +182,12 @@ def compose_syllable_glyph(cache, calibration, cho, jung, jong=None):
         jong_id = component_id("jong", jong)
         all_contours += _fit_contours(
             jong_entry, layout["jong"], jong_id,
-            layout_scale=get_layout_component_scale("jong", True, None),
-            layout_offset=get_layout_component_offset("jong", True, None),
+            # macro_group(V/H/C)에 따라 종성 위치/크기를 따로 조정할 수 있게
+            # None 대신 실제 그룹을 넘긴다. (받침 글씨 자체는 27개로 하나뿐이지만,
+            # "각"(V)/"곡"(H)/"곽"(C)처럼 초성·중성 모양이 달라지면 받침이
+            # 놓일 자리도 달라질 수 있어서, 그룹별로 따로 미세조정 가능해야 한다)
+            layout_scale=get_layout_component_scale("jong", True, macro_group),
+            layout_offset=get_layout_component_offset("jong", True, macro_group),
         )
 
     pen = TTGlyphPen(None)

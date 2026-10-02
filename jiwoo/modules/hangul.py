@@ -156,15 +156,91 @@ for (_batchim, _macro), _layout in _BASE_ZONE_LAYOUTS.items():
 
 # 컴포넌트별 크기 배율. 예: COMPONENT_SCALE = {"cho_ㄷ_N_V": 0.94}
 COMPONENT_SCALE = {
-    
+  "cho_ㄹ_N_V": 0.95,
+  "cho_ㄹ_N_C": 0.92,
+  "cho_ㄹ_N_H": 0.95,
+  "jung_ㅘ_B": 1.05,
+
 
 }
 
-
+"""
+모음 세부 그룹 (9개, 배치 좌표 전용)
+------------------------------------
+- V1 (ㅏ계열): ㅏ ㅑ ㅐ ㅒ
+- V2 (ㅓ계열): ㅓ ㅕ ㅔ ㅖ
+- V3 (ㅣ계열): ㅣ
+- H1 (ㅗ계열): ㅗ ㅛ
+- H2 (ㅜ계열): ㅜ ㅠ
+- H3 (ㅡ계열): ㅡ
+- C1 (ㅘ계열): ㅘ ㅚ ㅙ
+- C2 (ㅝ계열): ㅝ ㅟ ㅞ
+- C3 (ㅢ계열): ㅢ
+"""
 # 컴포넌트별 위치 이동 (dx, dy), 폰트 유닛(UPM=1000) 기준.
 # 예: COMPONENT_OFFSET = {"cho_ㄷ_N_V": (-12, 8)}
 COMPONENT_OFFSET = {
+  "cho_ㄴ_B_V": (-30, -50),
+  "cho_ㄷ_B_V": (-30, -40),
+  "cho_ㄹ_B_V": (-30, 0),
+  "cho_ㅁ_B_V": (-70, -50),
+  "cho_ㅂ_B_V": (-30, 0),
+  "cho_ㅃ_B_V": (30, 0),
+  "cho_ㅈ_B_V": (20, 30),
+  "cho_ㅉ_B_V": (0, -80),
+  "cho_ㅆ_B_V": (-20, 0),
+  "cho_ㅋ_B_V": (-20, 0),
+  "cho_ㄲ_B_V": (-60, 0),
+  "cho_ㅌ_B_V": (-20, 0),
+  "cho_ㅍ_B_V": (-10, -60),
+  "cho_ㅇ_B_V": (-30, 0),
+  "cho_ㅎ_B_V": (-20, 50),
+  "cho_ㅌ_B_V": (-30, 0),
+  "jung_ㅓ_B": (0, 20),
+  "jung_ㅒ_B": (70, 0),
+  "jung_ㅏ_B": (20, 0),
+  "jung_ㅓ_B": (10, 40),
+  "jung_ㅔ_B": (10, 40),
+  "jung_ㅖ_B": (-10, -20),
+
+ "jung_ㅓ_N": (0, 40),
+  "jung_ㅔ_N": (0, 40),
+  "jung_ㅑ_N": (-30, 0),
+  "jung_ㅐ_N": (-30, 0),
+  "jung_ㅞ_N": (0, 40),
+
+  "jung_ㅞ_B": (-10, 30),
+  "jung_ㅝ_B": (0, -60),
+  "jung_ㅛ_B": (-30, -20),
+  "jung_ㅠ_B": (-10, -50),
+#   "jung_ㅗ_B": (0, 40),
   
+
+
+  "cho_ㄹ_N_V": (-25, 20),
+
+  "cho_ㄹ_N_H": (-30, -20),
+  "cho_ㅅ_N_H": (90, 0),
+
+  "cho_ㄹ_N_C": (-30, 0),
+
+  "jong_ㄳ": (-20, 0),
+  "jong_ㄴ": (-20, 0),
+  "jong_ㄶ": (30, 0),
+  "jong_ㄷ": (-30, -20),
+  "jong_ㄹ": (30, -20),
+  "jong_ㄼ": (0, 20),
+  "jong_ㄾ": (-20, -20),
+  "jong_ㄿ": (-20, -20),
+  "jong_ㅄ": (20, 0),
+  "jong_ㅅ": (30, 0),
+  "jong_ㅆ": (30, 0),
+  "jong_ㅇ": (30, 0),
+  "jong_ㅈ": (90, 0),
+  "jong_ㅊ": (20, -30),
+  "jong_ㅍ": (20, 0),
+
+
 }
 
 # 한 조합 위치에 들어가는 자모 전체의 크기/위치 조정.
@@ -173,7 +249,7 @@ COMPONENT_OFFSET = {
 #   LAYOUT_COMPONENT_OFFSET = {("cho", False, "H2"): (0, 12)}
 # 받침 유무와 무관하게 H2 초성 전체에 적용하려면 batchim 자리에 None을 쓴다:
 #   LAYOUT_COMPONENT_SCALE = {("cho", None, "H2"): 0.96}
-# 종성은 모음과 무관하므로 세부그룹 대신 None을 쓴다: ("jong", True, None)
+
 LAYOUT_COMPONENT_SCALE = {
   
 }
@@ -193,7 +269,45 @@ LAYOUT_COMPONENT_SCALE = {
 """
 # ("jung", False, "C1"): (50, 50),
 LAYOUT_COMPONENT_OFFSET = {
+   ("cho", False, "V1"): (20, -50),
    
+   
+   ("jung", False, "V1"): (80, 10),
+   ("jung", False, "V2"): (50, 40),
+
+   ("cho", False, "H1"): (50, -70),
+   ("cho", False, "H2"): (0, -70),
+   ("cho", False, "H3"): (0, -80),
+
+   ("jung", False, "H1"): (50, -50),
+
+   ("jung", False, "C1"): (50, 0),
+   ("jung", False, "C2"): (50, -50),
+
+   ("jung", True, "V1"): (20, -20),
+   ("jung", True, "V2"): (50, 0),
+
+   ("cho", True, "H1"): (0, -30),
+   ("cho", True, "H2"): (0, -30),
+   ("cho", True, "H3"): (0, -30),
+
+   ("jung", True, "H1"): (90, 0),
+   ("jung", True, "H2"): (100, 0),
+   ("jung", True, "H3"): (150, 60),
+
+   ("cho", True, "C1"): (50, -70),
+   ("cho", True, "C2"): (0, -70),
+   ("cho", True, "C3"): (60, -90),
+
+
+   ("jung", True, "C1"): (70, 40),
+   ("jung", True, "C2"): (40, 60),
+   ("jung", True, "C3"): (120, 80),
+
+   
+   ("jong", True, "V"): (70, 50),
+   ("jong", True, "H"): (60, 30),
+   ("jong", True, "C"): (170, 30),
 
   
 
