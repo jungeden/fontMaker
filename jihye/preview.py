@@ -237,9 +237,9 @@ def preview_latin():
         ("Lowercase", "abcdefghijklmnop"),
         ("Digits", "0123456789"),
         ("Punctuation", "!?.,:;\"'—…"),
-        ("Symbols", "★☆♥♡○●□■◇◆→←"),
-        ("Mixed", "Hello 가나다 123 Ab"),
-    ]
+        ("Symbols", "★☆♥♡○●□■◇◆→←₩©®™"),
+        ("Mixed", "Hello 가나다 123 aAb"),
+    ] #"₩", "©", "®", "™",
     sample = "".join(t for _l, t in lines)
     ttf = build_preview_font(hangul_sample_rows=[("혼합", "가나다")], latin_sample=sample, apply_hinting=False)
     img = _render_lines(ttf, lines, font_size=90)
