@@ -3,7 +3,7 @@
 (한글 11,172자 자동 조합 + 영문/숫자/특수문자 지원)
 
 사용법:
-    python app.py template
+    python3 app.py template
         -> 손글씨 작성용 원고지 PDF 생성 (output/template.pdf, 여러 페이지 + 범례)
            한글 컴포넌트 183개(초성 6종/중성 2종/종성 1종) +
            영문 대소문자/숫자/특수문자 94개, 총 277개 컴포넌트 정보는
@@ -11,7 +11,7 @@
            인쇄 후 손글씨로 채워서, 페이지 순서대로 스캔/촬영한 뒤
            data/scans/page1.jpg, page2.jpg ... 로 저장한다.
 
-    python app.py build
+    python3 app.py build
         -> data/scans 안의 모든 page*.jpg 를 순서대로 전처리 -> 컴포넌트 분할
            -> 한글 11,172자(가능한 만큼) 자동 조합 + 영문/숫자/특수문자
            -> 폰트(.ttf) 생성까지 한 번에 실행

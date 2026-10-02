@@ -14,13 +14,13 @@ assemble_fontbuilder)을 그대로 재사용한다 - 그래서 여기서 보이�
 전체가 아니라 지정한 샘플 글자만 넣으므로 훨씬 빠르다 (보통 1~5초).
 
 사용법:
-    python preview.py hangul     # 한글 대표 음절 미리보기 (9개 모음 세부그룹 +
+    python3 preview.py hangul     # 한글 대표 음절 미리보기 (9개 모음 세부그룹 +
                                   #   받침 유무 + 여러 자음 비교, 한 장의 이미지로)
-    python preview.py latin      # 영문/숫자/특수문자 미리보기
-    python preview.py kerning    # 커닝 적용 전/후 비교
-    python preview.py stroke     # 획 굵기 보정 전/후 비교 (실제 컴포넌트 PNG 기준)
-    python preview.py hinting    # 힌팅 적용 전/후 비교 (작은 크기로 렌더링)
-    python preview.py all        # 위 다섯 가지를 전부 실행
+    python3 preview.py latin      # 영문/숫자/특수문자 미리보기
+    python3 preview.py kerning    # 커닝 적용 전/후 비교
+    python3 preview.py stroke     # 획 굵기 보정 전/후 비교 (실제 컴포넌트 PNG 기준)
+    python3 preview.py hinting    # 힌팅 적용 전/후 비교 (작은 크기로 렌더링)
+    python3 preview.py all        # 위 다섯 가지를 전부 실행
 
 결과 이미지는 output/preview_*.png 로 저장된다. data/glyphs 에 이미 분할된
 컴포넌트 PNG가 있어야 한다 (즉, `python app.py build`를 최소 한 번은
@@ -83,7 +83,7 @@ def _make_hangul_preview_rows():
     row5 = "".join(compose_char("ㄷ", g) for g in JUNG_LIST)
     row6 = "".join(compose_char("ㄴ", g, "ㄴ") for g in JUNG_LIST)
     row7 = "".join(
-            compose_char(c, "ㅜ")
+            compose_char(c, "ㅗ")
             for c in ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ",
                     "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"]
         )
@@ -186,12 +186,11 @@ def build_preview_font(
     return output_path
 
 
-def _render_lines(ttf_path, lines, font_size=90, pad=20, line_gap=14, label_width=340):
+def _render_lines(ttf_path, lines, font_size=90, pad=20, line_gap=14):
     """
     (라벨, 텍스트) 쌍의 목록을 세로로 쌓아서 하나의 이미지로 그린다.
-    라벨은 작은 글씨로 왼쪽에, 텍스트는 미리보기 폰트로 렌더링한다.
+    라벨은 출력하지 않고 오직 미리보기 폰트의 글자 이미지만 렌더링한다.
     """
-    label_font = ImageFont.load_default()
     text_font = ImageFont.truetype(ttf_path, font_size)
 
     dummy = Image.new("L", (10, 10))
@@ -204,17 +203,19 @@ def _render_lines(ttf_path, lines, font_size=90, pad=20, line_gap=14, label_widt
         row_widths.append(bbox[2] - bbox[0])
         row_heights.append(bbox[3] - bbox[1])
 
-    W = label_width + max(row_widths, default=0) + pad * 2
+    # 라벨 너비(label_width) 항목을 제거하고 순수 글자 너비와 여백만 계산
+    W = max(row_widths, default=0) + pad * 2
     H = sum(max(h, font_size) + line_gap for h in row_heights) + pad * 2
 
     img = Image.new("RGB", (W, H), "white")
     draw = ImageDraw.Draw(img)
 
     y = pad
-    for (label, text), h in zip(lines, row_heights):
+    for (_label, text), h in zip(lines, row_heights):
         row_h = max(h, font_size)
-        draw.text((pad, y + row_h // 2 - 6), label, font=label_font, fill=(120, 120, 120))
-        draw.text((label_width, y), text, font=text_font, fill=(0, 0, 0))
+        # draw.text(...) 라벨을 그리는 코드를 완전히 삭제했습니다.
+        # 시작 x 좌표를 pad(왼쪽 여백)로 설정하여 왼쪽 정렬합니다.
+        draw.text((pad, y), text, font=text_font, fill=(0, 0, 0))
         y += row_h + line_gap
 
     return img
@@ -223,11 +224,11 @@ def _render_lines(ttf_path, lines, font_size=90, pad=20, line_gap=14, label_widt
 def preview_hangul():
     print("한글 미리보기 폰트 생성 중...")
     ttf = build_preview_font(hangul_sample_rows=HANGUL_PREVIEW_ROWS, latin_sample="", apply_hinting=False)
+    # _render_lines 호출 시 변경된 구조에 맞게 전달
     img = _render_lines(ttf, HANGUL_PREVIEW_ROWS, font_size=90)
     out = f"{OUTPUT_DIR}/preview_hangul.png"
     img.save(out)
     print(f"저장됨: {out}")
-
 
 def preview_latin():
     print("영문/숫자/특수문자 미리보기 폰트 생성 중...")

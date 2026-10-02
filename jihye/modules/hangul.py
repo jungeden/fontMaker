@@ -160,25 +160,23 @@ COMPONENT_SCALE = {
 
 }
 
-
+"""
+모음 세부 그룹 (9개, 배치 좌표 전용)
+------------------------------------
+- V1 (ㅏ계열): ㅏ ㅑ ㅐ ㅒ
+- V2 (ㅓ계열): ㅓ ㅕ ㅔ ㅖ
+- V3 (ㅣ계열): ㅣ
+- H1 (ㅗ계열): ㅗ ㅛ
+- H2 (ㅜ계열): ㅜ ㅠ
+- H3 (ㅡ계열): ㅡ
+- C1 (ㅘ계열): ㅘ ㅚ ㅙ
+- C2 (ㅝ계열): ㅝ ㅟ ㅞ
+- C3 (ㅢ계열): ㅢ
+"""
 # 컴포넌트별 위치 이동 (dx, dy), 폰트 유닛(UPM=1000) 기준.
 # 예: COMPONENT_OFFSET = {"cho_ㄷ_N_V": (-12, 8)}
 COMPONENT_OFFSET = {
-  "jong_ㄴ": (-30, 20),
-  "jong_ㄹ": (10, -30),
-  "jong_ㅆ": (20, 10),
-  "jong_ㅅ": (20, 10),
-
-  "cho_ㄷ_N_V": (-20, -20),
-  "jung_ㅓ_N": (-20, 60),
-  "jung_ㅔ_N": (-20, 60),
-  "jung_ㅓ_B": (0, 60),
-  "jung_ㅔ_B": (0, 60),
-
-  "cho_ㄷ_N_H": (-20, -10),
-  "cho_ㅌ_N_H": (-20, 10),
-
-
+  
 }
 
 # 한 조합 위치에 들어가는 자모 전체의 크기/위치 조정.
@@ -187,7 +185,7 @@ COMPONENT_OFFSET = {
 #   LAYOUT_COMPONENT_OFFSET = {("cho", False, "H2"): (0, 12)}
 # 받침 유무와 무관하게 H2 초성 전체에 적용하려면 batchim 자리에 None을 쓴다:
 #   LAYOUT_COMPONENT_SCALE = {("cho", None, "H2"): 0.96}
-# 종성은 모음과 무관하므로 세부그룹 대신 None을 쓴다: ("jong", True, None)
+
 LAYOUT_COMPONENT_SCALE = {
   
 }
@@ -207,22 +205,7 @@ LAYOUT_COMPONENT_SCALE = {
 """
 # ("jung", False, "C1"): (50, 50),
 LAYOUT_COMPONENT_OFFSET = {
-   ("jung", False, "V1"): (50, 0),
-   ("jung", False, "V2"): (50, 50),
-
-    ("jong", True, None): (30, -10),
-
-    ("jung", True, "H1"): (30, 50),
-    ("jung", True, "H2"): (70, 50),
-    ("jung", True, "H3"): (30, 50),
-
-    ("jung", True, "C1"): (-30, 50),
-    ("jung", True, "C2"): (-40, 35),
-    ("jung", True, "C3"): (-30, 50),
-
-    ("cho", False, "H1"): (-20, -10),
-    ("cho", False, "H2"): (0, -20),
-    ("cho", False, "H3"): (-30, -20),
+   
 
   
 

@@ -186,12 +186,11 @@ def build_preview_font(
     return output_path
 
 
-def _render_lines(ttf_path, lines, font_size=90, pad=20, line_gap=14, label_width=340):
+def _render_lines(ttf_path, lines, font_size=90, pad=20, line_gap=14):
     """
     (라벨, 텍스트) 쌍의 목록을 세로로 쌓아서 하나의 이미지로 그린다.
-    라벨은 작은 글씨로 왼쪽에, 텍스트는 미리보기 폰트로 렌더링한다.
+    라벨은 출력하지 않고 오직 미리보기 폰트의 글자 이미지만 렌더링한다.
     """
-    label_font = ImageFont.load_default()
     text_font = ImageFont.truetype(ttf_path, font_size)
 
     dummy = Image.new("L", (10, 10))
@@ -204,17 +203,19 @@ def _render_lines(ttf_path, lines, font_size=90, pad=20, line_gap=14, label_widt
         row_widths.append(bbox[2] - bbox[0])
         row_heights.append(bbox[3] - bbox[1])
 
-    W = label_width + max(row_widths, default=0) + pad * 2
+    # 라벨 너비(label_width) 항목을 제거하고 순수 글자 너비와 여백만 계산
+    W = max(row_widths, default=0) + pad * 2
     H = sum(max(h, font_size) + line_gap for h in row_heights) + pad * 2
 
     img = Image.new("RGB", (W, H), "white")
     draw = ImageDraw.Draw(img)
 
     y = pad
-    for (label, text), h in zip(lines, row_heights):
+    for (_label, text), h in zip(lines, row_heights):
         row_h = max(h, font_size)
-        draw.text((pad, y + row_h // 2 - 6), label, font=label_font, fill=(120, 120, 120))
-        draw.text((label_width, y), text, font=text_font, fill=(0, 0, 0))
+        # draw.text(...) 라벨을 그리는 코드를 완전히 삭제했습니다.
+        # 시작 x 좌표를 pad(왼쪽 여백)로 설정하여 왼쪽 정렬합니다.
+        draw.text((pad, y), text, font=text_font, fill=(0, 0, 0))
         y += row_h + line_gap
 
     return img
@@ -223,11 +224,11 @@ def _render_lines(ttf_path, lines, font_size=90, pad=20, line_gap=14, label_widt
 def preview_hangul():
     print("한글 미리보기 폰트 생성 중...")
     ttf = build_preview_font(hangul_sample_rows=HANGUL_PREVIEW_ROWS, latin_sample="", apply_hinting=False)
+    # _render_lines 호출 시 변경된 구조에 맞게 전달
     img = _render_lines(ttf, HANGUL_PREVIEW_ROWS, font_size=90)
     out = f"{OUTPUT_DIR}/preview_hangul.png"
     img.save(out)
     print(f"저장됨: {out}")
-
 
 def preview_latin():
     print("영문/숫자/특수문자 미리보기 폰트 생성 중...")

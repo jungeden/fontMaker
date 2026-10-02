@@ -3,8 +3,9 @@ import numpy as np
 
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-from config import UNITS_PER_EM, GLYPH_SIZE, CURVE_SMOOTHING, MIN_HOLE_AREA_RATIO
+from config import UNITS_PER_EM, GLYPH_SIZE, CURVE_SMOOTHING, MIN_HOLE_WIDTH_RATIO
 from modules.vectorize import find_contours_with_holes, simplify, fix_winding
+
 
 
 def _scale_flip(pt, upm=UNITS_PER_EM, image_size=GLYPH_SIZE):
@@ -22,13 +23,14 @@ def _midpoint(a, b):
 
 
 
+
 def image_to_contours(path):
     img = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
     if img is None:
         return None
 
     contours, hierarchy, depth = find_contours_with_holes(
-        img, min_hole_area_ratio=MIN_HOLE_AREA_RATIO
+        img, min_hole_width_ratio=MIN_HOLE_WIDTH_RATIO
     )
     if len(contours) == 0:
         return []
@@ -40,8 +42,7 @@ def image_to_contours(path):
         if pts.ndim != 2 or len(pts) < 3:
             continue
 
-        is_hole = depth[i] % 2 == 1  # 짝수 depth=채움, 홀수 depth=구멍
-
+        is_hole = depth[i] % 2 == 1
         font_pts = np.array([_scale_flip(p) for p in pts])
         font_pts = fix_winding(font_pts, is_hole)
         result.append((font_pts.tolist(), is_hole))
