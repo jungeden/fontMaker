@@ -160,7 +160,19 @@ COMPONENT_SCALE = {
 
 }
 
-
+"""
+모음 세부 그룹 (9개, 배치 좌표 전용)
+------------------------------------
+- V1 (ㅏ계열): ㅏ ㅑ ㅐ ㅒ
+- V2 (ㅓ계열): ㅓ ㅕ ㅔ ㅖ
+- V3 (ㅣ계열): ㅣ
+- H1 (ㅗ계열): ㅗ ㅛ
+- H2 (ㅜ계열): ㅜ ㅠ
+- H3 (ㅡ계열): ㅡ
+- C1 (ㅘ계열): ㅘ ㅚ ㅙ
+- C2 (ㅝ계열): ㅝ ㅟ ㅞ
+- C3 (ㅢ계열): ㅢ
+"""
 # 컴포넌트별 위치 이동 (dx, dy), 폰트 유닛(UPM=1000) 기준.
 # 예: COMPONENT_OFFSET = {"cho_ㄷ_N_V": (-12, 8)}
 COMPONENT_OFFSET = {
@@ -173,7 +185,7 @@ COMPONENT_OFFSET = {
 #   LAYOUT_COMPONENT_OFFSET = {("cho", False, "H2"): (0, 12)}
 # 받침 유무와 무관하게 H2 초성 전체에 적용하려면 batchim 자리에 None을 쓴다:
 #   LAYOUT_COMPONENT_SCALE = {("cho", None, "H2"): 0.96}
-# 종성은 모음과 무관하므로 세부그룹 대신 None을 쓴다: ("jong", True, None)
+
 LAYOUT_COMPONENT_SCALE = {
   
 }

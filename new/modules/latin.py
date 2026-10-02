@@ -19,9 +19,11 @@ import numpy as np
 
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-from config import UNITS_PER_EM, GLYPH_SIZE, ASCENDER, DESCENDER, LATIN_TARGET_CAP_HEIGHT, MIN_HOLE_AREA_RATIO
+from config import UNITS_PER_EM, GLYPH_SIZE, ASCENDER, DESCENDER, LATIN_TARGET_CAP_HEIGHT, MIN_HOLE_WIDTH_RATIO
 from modules.vectorize import find_contours_with_holes, simplify, fix_winding
 from modules.glyph import draw_contour
+
+
 
 # 출력 가능한 기본 ASCII 문자 전체: 숫자, 영문 대소문자, 대부분의 특수문자/기호.
 # (공백은 그려지는 모양이 없으므로 별도 처리)
@@ -68,9 +70,9 @@ MAX_AUTO_SCALE = 2.5
 SIDE_BEARING = 60
 
 
-SIDE_BEARING_BASE = 60      # 기준 폭(NARROW_WIDTH_THRESHOLD)에서의 좌우 여백
-SIDE_BEARING_MIN = 40       # 아주 넓은/두꺼운 문자의 여백 하한
-SIDE_BEARING_MAX = 130      # 아주 좁은/얇은 문자의 여백 상한
+SIDE_BEARING_BASE = 55      # 기준 폭(NARROW_WIDTH_THRESHOLD)에서의 좌우 여백
+SIDE_BEARING_MIN = 35       # 아주 넓은/두꺼운 문자의 여백 하한
+SIDE_BEARING_MAX = 70      # 아주 좁은/얇은 문자의 여백 상한
 NARROW_WIDTH_THRESHOLD = 220  # 이 폭(폰트 유닛) 기준으로 여백을 반비례 조정
 SPACE_ADVANCE = UNITS_PER_EM // 3
 
@@ -109,13 +111,24 @@ def _scale_flip_latin(pt, upm=UNITS_PER_EM, image_size=GLYPH_SIZE):
 
 
 
-def image_to_contours_latin(path):
+
+
+# 항상 꽉 차야 하는 문자: 바깥 윤곽선만 쓰고 안쪽은 전부 무시한다.
+# (☆,♡,○,□,◇,△는 반대로 속이 비어야 하는 문자라서 이 목록에 넣지 않는다)
+FORCE_SOLID_CHARS = {"★", "♥", "●", "■", "◆", "▲"}
+
+
+def image_to_contours_latin(path, ch=None):
     img = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
     if img is None:
         return None
 
+    force_solid = ch in FORCE_SOLID_CHARS
+
     contours, hierarchy, depth = find_contours_with_holes(
-        img, min_hole_area_ratio=MIN_HOLE_AREA_RATIO
+        img,
+        min_hole_width_ratio=None if force_solid else MIN_HOLE_WIDTH_RATIO,
+        force_solid=force_solid,
     )
     if len(contours) == 0:
         return []
@@ -127,13 +140,12 @@ def image_to_contours_latin(path):
         if pts.ndim != 2 or len(pts) < 3:
             continue
 
-        is_hole = depth[i] % 2 == 1
+        is_hole = False if force_solid else (depth[i] % 2 == 1)
         font_pts = np.array([_scale_flip_latin(p) for p in pts])
         font_pts = fix_winding(font_pts, is_hole)
         result.append((font_pts.tolist(), is_hole))
 
     return result
-
 
 def _calc_global_scale(raw_glyphs):
     """
@@ -196,7 +208,8 @@ def build_latin_glyphs(glyph_dir, manifest):
         png = glyph_dir / f"{i:03}.png"
         if not png.exists():
             continue
-        contours = image_to_contours_latin(png)
+        contours = image_to_contours_latin(png, ch=comp["jamo"])
+        
         if not contours:
             continue
         ch = comp["jamo"]

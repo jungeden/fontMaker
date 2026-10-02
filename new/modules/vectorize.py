@@ -6,7 +6,7 @@ from config import APPROX_EPSILON
 
 
 def _compute_depths(hierarchy):
-    """각 contour의 중첩 깊이. 0=바깥 윤곽선, 1=구멍, 2=구멍 속 채움(예: @의 안쪽 원)..."""
+    """각 contour의 중첩 깊이. 0=바깥 윤곽선, 1=구멍, 2=구멍 속 채움..."""
     n = len(hierarchy)
     depth = [None] * n
 
@@ -23,18 +23,40 @@ def _compute_depths(hierarchy):
     return depth
 
 
-def find_contours_with_holes(img, min_hole_area_ratio=None):
+def _estimate_ink_stroke_width(binary_mask):
+    """잉크 전체 면적/둘레로 평균 획 굵기를 추정한다 (segment.py의
+    _estimate_stroke_width와 동일한 근사법: area ≈ width*length,
+    perimeter ≈ 2*length 이므로 width ≈ 2*area/perimeter)."""
+    contours, _ = cv2.findContours(binary_mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+    area = cv2.countNonZero(binary_mask)
+    perimeter = sum(cv2.arcLength(c, True) for c in contours)
+    if perimeter <= 0:
+        return 0
+    return 2 * area / perimeter
+
+
+def _contour_max_inscribed_width(contour, canvas_shape):
+    """이 윤곽선 안에 들어가는 가장 큰 원의 지름(=윤곽선이 감싼 영역의
+    실제 "폭"). 가는 틈(노이즈)은 이 값이 작고, 진짜 구멍은 크다."""
+    mask = np.zeros(canvas_shape, dtype=np.uint8)
+    cv2.drawContours(mask, [contour], -1, 255, thickness=cv2.FILLED)
+    dist = cv2.distanceTransform(mask, cv2.DIST_L2, 5)
+    max_val = float(dist.max()) if dist.size else 0.0
+    return max_val * 2  # 반지름 -> 지름
+
+
+def find_contours_with_holes(img, min_hole_width_ratio=None, force_solid=False):
     """
     바깥 윤곽선뿐 아니라 안쪽 구멍까지 찾는다.
 
-    min_hole_area_ratio: 구멍 후보의 면적이 "바로 위" 부모 윤곽선 면적의
-    이 비율보다 작으면, 의도한 구멍(ㅇ,ㅎ,☆,○,□,◇,△ 등)이 아니라 손으로
-    칠할 때 생긴 작은 흰 얼룩(스캔/필기 노이즈)으로 보고 버린다(뚫지 않음).
-    ★,♥,●,■,◆,▲ 처럼 원래 꽉 차야 하는 도형에서 노이즈 때문에 구멍이
-    뚫리던 문제를 이걸로 막는다. 노이즈로 판정된 윤곽선의 자손(그 안에
-    또 중첩된 것)도 같이 버린다.
+    - force_solid=True: 바깥 윤곽선(depth 0)만 남기고 안쪽은 전부 버린다.
+      ★,♥,●,■,◆,▲처럼 "항상 꽉 차야 함"이 이미 확정된 글자에 쓴다.
+    - min_hole_width_ratio: 구멍 후보의 "최대 내접 폭"이 그 글자 전체
+      획 굵기의 이 배수보다 좁으면 노이즈(손으로 칠할 때 생긴 가는 틈)로
+      보고 버린다. 면적이 아니라 폭 기준이라서 글자 크기와 무관하게
+      ㅇ,ㅎ,☆,○,□,◇,△ 같은 진짜 넓은 구멍과 구분된다.
 
-    반환값: contours, hierarchy, depth (depth[i]가 홀수면 구멍, 짝수면 채움)
+    반환값: contours, hierarchy, depth (depth[i] 홀수=구멍, 짝수=채움)
     """
     binary = 255 - img
 
@@ -50,16 +72,23 @@ def find_contours_with_holes(img, min_hole_area_ratio=None):
     depth = _compute_depths(hierarchy)
 
     drop = [False] * n
-    if min_hole_area_ratio:
-        areas = [cv2.contourArea(c) for c in contours]
-        for i in range(n):
-            parent = hierarchy[i][3]
-            if parent == -1:
-                continue
-            parent_area = areas[parent]
-            if parent_area > 0 and areas[i] / parent_area < min_hole_area_ratio:
-                drop[i] = True
 
+    if force_solid:
+        for i in range(n):
+            if depth[i] != 0:
+                drop[i] = True
+    elif min_hole_width_ratio:
+        stroke_width = _estimate_ink_stroke_width(binary)
+        if stroke_width > 0:
+            min_width = stroke_width * min_hole_width_ratio
+            for i in range(n):
+                if depth[i] % 2 != 1:
+                    continue  # 구멍 후보(홀수 depth)만 검사
+                hole_width = _contour_max_inscribed_width(contours[i], img.shape)
+                if hole_width < min_width:
+                    drop[i] = True
+
+    if any(drop):
         changed = True
         while changed:
             changed = False
@@ -110,8 +139,6 @@ def fix_winding(pts, is_hole):
     elif not should_be_positive and area > 0:
         pts = pts[::-1]
     return pts
-
-
 
 # ── 아래는 디버그/미리보기용 SVG 출력 (폰트 생성 파이프라인 필수 요소는 아님) ──
 
