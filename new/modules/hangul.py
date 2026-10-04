@@ -176,7 +176,22 @@ COMPONENT_SCALE = {
 # 컴포넌트별 위치 이동 (dx, dy), 폰트 유닛(UPM=1000) 기준.
 # 예: COMPONENT_OFFSET = {"cho_ㄷ_N_V": (-12, 8)}
 COMPONENT_OFFSET = {
-  
+  "jung_ㅞ_B": (-50, 50),
+  "jung_ㅜ_B": (30, 0),
+
+  "jong_ㄴ": (-30, 30),
+  "jong_ㅅ": (130, 0),
+  "jong_ㄹ": (50, 0),
+  "jong_ㅁ": (60, 0),
+  "jong_ㅂ": (50, 50),
+  "jong_ㅆ": (50, 0),
+  "jong_ㅇ": (30, 0),
+  "jong_ㅎ": (90, 0),
+  "jong_ㅍ": (50, 0),
+  "jong_ㅌ": (70, 0),
+  "jong_ㅋ": (70, 30),
+  "jong_ㅈ": (20, 30),
+  "jong_ㅊ": (70, 30),
 }
 
 # 한 조합 위치에 들어가는 자모 전체의 크기/위치 조정.
@@ -205,8 +220,14 @@ LAYOUT_COMPONENT_SCALE = {
 """
 # ("jung", False, "C1"): (50, 50),
 LAYOUT_COMPONENT_OFFSET = {
-   
+   ("jong", True, "V"): (-80, 60),
+   ("jong", True, "H"): (-80, 0),
+   ("jong", True, "C"): (0, 0),
 
+
+   ("jung", True, "H1"): (40, 60),
+   ("jung", True, "H2"): (40, 60),
+   ("jung", True, "H3"): (30, 60),
   
 
     
